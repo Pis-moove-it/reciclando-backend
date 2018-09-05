@@ -1,0 +1,43 @@
+AllCops:
+  Exclude:
+    - db/**/*
+    - vendor/**/*
+    - config/environments/*
+    - bin/**/*
+    - config/**/*
+
+# 15 is too low, but 20 seems like a good goal for us
+Metrics/AbcSize:
+  Max: 20
+
+# 80 is too low, but 250 seems like a good goal for us
+Metrics/LineLength:
+  Max: 120
+
+# 10 is too low, but 15 seems like a good goal for us
+Metrics/MethodLength:
+  Max: 15
+
+Metrics/ClassLength:
+  Max: 120
+
+Metrics/BlockLength:
+  Max: 60
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/ModuleFunction:
+  Enabled: false
+
+Rails/ActiveRecordAliases:
+  Enabled: false
+
+Rails:
+  Enabled: true

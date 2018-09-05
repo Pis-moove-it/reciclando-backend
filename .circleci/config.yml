@@ -1,0 +1,130 @@
+# Ruby CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-ruby/ for more details
+#
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build
+      - deploy-staging:
+          requires:
+            - build
+          filters:
+            branches:
+              only: staging
+      - deploy-production:
+          requires:
+            - build
+          filters:
+            branches:
+              only: production
+
+version: 2
+
+jobs:
+  build:
+    working_directory: ~/reciclando-backend
+    docker:
+      # specify the version you desire here
+      - image: circleci/ruby:2.5.1-browsers
+        environment:
+          PGHOST: localhost
+          PGUSER: reciclando-backend
+          RAILS_ENV: test
+          RACK_ENV: test
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      - image: circleci/postgres:9.5
+        environment:
+          POSTGRES_USER: reciclando-backend
+
+      - image: redis
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "Gemfile.lock" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run:
+          name: install dependencies
+          command: |
+            bundle install --jobs=4 --retry=3 --path vendor/bundle
+
+      - save_cache:
+          paths:
+            - ./vendor/bundle
+          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+
+      # Wait for DB
+      - run:
+          name: Waiting for Database
+          command: |
+            dockerize -wait tcp://localhost:5432 -timeout 1m
+
+      - run:
+          name: Database setup
+          command: |
+            bundle exec rake db:create db:migrate --trace
+          environment:
+            RAILS_ENV: test
+            RACK_ENV: test
+
+      # Run tests!
+      - run:
+          name: run tests
+          command: |
+            bundle exec rspec --format progress
+
+      # Run linter!
+      - run:
+          name: run rubocop linter
+          command: bundle exec rubocop
+
+  deploy-staging:
+    working_directory: ~/reciclando-backend
+    docker:
+      - image: circleci/ruby:2.5.1-browsers
+
+    steps:
+      - checkout
+
+      - add_ssh_keys
+
+      - run:
+          name: Bundle Install
+          command: bundle check || bundle install
+
+      - run:
+          name: Deploy Staging to AWS
+          command: |
+            eval `ssh-agent` && ssh-add ~/.ssh/id_rsa* && bundle exec cap production deploy BRANCH_TO_DEPLOY=staging
+
+  deploy-production:
+    working_directory: ~/reciclando-backend
+    docker:
+      - image: circleci/ruby:2.5.1-browsers
+
+    steps:
+      - checkout
+
+      - add_ssh_keys
+
+      - run:
+          name: Bundle Install
+          command: bundle check || bundle install
+
+    steps:
+      - checkout
+
+      - run:
+          name: Deploy Production to AWS
+          command: |
