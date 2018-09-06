@@ -59,3 +59,7 @@
 #     auth_methods: %w(publickey password)
 #     # password: "please use keys"
 #   }
+
+server ENV.fetch('EC2_IP_STAGING'), port: ENV.fetch('EC2_PORT_STAGING'), roles: [:web, :app, :db], primary: true
+
+set :branch, :staging
