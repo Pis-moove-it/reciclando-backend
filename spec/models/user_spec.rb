@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
+<<<<<<< HEAD
   describe 'validations' do
     let!(:organization) { FactoryBot.create(:organization) }
     let!(:user) { FactoryBot.build(:user, organization: organization) }
@@ -24,4 +25,7 @@ RSpec.describe User, type: :model do
       expect(user).not_to be_valid
     end
   end
+=======
+  pending "add some examples to (or delete) #{__FILE__}"
+>>>>>>> Organization & User: +Model,+Controller,+Serializer,+Under active admin. Not done yet
 end
