@@ -33,7 +33,7 @@ class UsersController < ApplicationController
 
   def user_by_id
     # variable loaded once
-    @user_by_id ||= User.find(params[:id])
+    @user_by_id ||= User.find(params[:ci])
   end
 
   def organization
