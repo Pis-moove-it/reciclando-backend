@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :user do
-    ci "MyString"
-    name "MyString"
-    surname "MyString"
-    email "MyString"
+    ci { Faker::Number.number(8) }
+    name { Faker::Name.name }
+    surname { Faker::Name.name }
+    email { Faker::Internet.email }
   end
 end
