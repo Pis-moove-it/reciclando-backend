@@ -10,5 +10,5 @@ Rails.application.routes.draw do
   resources :organizations do
     resources :users
   end
-  resources :users
+  #resources :users
 end
