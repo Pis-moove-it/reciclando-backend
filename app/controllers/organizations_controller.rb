@@ -1,4 +1,8 @@
 class OrganizationsController < ApplicationController
+  def index
+    render json: Organization.all
+  end
+
   def create
     organization = Organization.new(organization_params)
     if organization.save
