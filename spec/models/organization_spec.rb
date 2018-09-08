@@ -13,8 +13,8 @@ RSpec.describe Organization, type: :model do
       expect(organization).not_to be_valid
     end
 
-    it 'should not let create new ones, with name value already taken' do
-
-    end
+  #  it 'should not let create new ones, with name value already taken' do
+#
+#    end
   end
 end
