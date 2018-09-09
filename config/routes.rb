@@ -6,8 +6,4 @@ Rails.application.routes.draw do
 
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
-  resources :organizations do
-    resources :users
-  end
-  #resources :users
 end
