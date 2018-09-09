@@ -1,4 +1,5 @@
 class User < ApplicationRecord
-  validates :ci, presence: true, uniqueness: true
+  validates :ci, uniqueness: true
+  validates :name, :surname, :email, :ci, presence: true
   belongs_to :organization
 end

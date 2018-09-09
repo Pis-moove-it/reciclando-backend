@@ -12,9 +12,5 @@ RSpec.describe Organization, type: :model do
       organization.name = nil
       expect(organization).not_to be_valid
     end
-
-  #  it 'should not let create new ones, with name value already taken' do
-#
-#    end
   end
 end

@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   def index
-    render json: User.all
+    render json: organization.users
   end
 
   def create
@@ -33,7 +33,11 @@ class UsersController < ApplicationController
 
   def user_by_id
     # variable loaded once
-    @user_by_id ||= User.find(params[:ci])
+    @user_by_id ||= User.find(params[:id])
+  end
+
+  def organization
+    # idem user_by_id , .find(params[:organization_id])
   end
 
   def user_params
