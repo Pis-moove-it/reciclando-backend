@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
   describe 'validations' do
-    let!(:organization) { FactoryBot.build(:organization) }
+    let!(:organization) { FactoryBot.create(:organization) }
     let!(:user) { FactoryBot.build(:user, organization: organization) }
 
     it 'should let create new ones, with appropiate data' do
