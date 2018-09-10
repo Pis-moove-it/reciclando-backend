@@ -1,7 +1,6 @@
 class UsersController < ApplicationController
   def index
     render json: organization.users
-    # render json: User.includes(:organization)
   end
 
   def create
