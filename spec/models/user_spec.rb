@@ -13,5 +13,15 @@ RSpec.describe User, type: :model do
       user.ci = nil
       expect(user).not_to be_valid
     end
+
+    it 'should not let create new ones, with nil name value' do
+      user.name = nil
+      expect(user).not_to be_valid
+    end
+
+    it 'should not let create new ones, with nil surname value' do
+      user.surname = nil
+      expect(user).not_to be_valid
+    end
   end
 end
