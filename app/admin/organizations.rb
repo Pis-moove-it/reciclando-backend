@@ -1,15 +1,20 @@
 ActiveAdmin.register Organization do
-# See permitted parameters documentation:
-# https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-#
-# permit_params :list, :of, :attributes, :on, :model
-#
-# or
-#
-# permit_params do
-#   permitted = [:permitted, :attributes]
-#   permitted << :other if params[:action] == 'create' && current_user.admin?
-#   permitted
-# end
-permit_params :name
+    permit_params :name
+    show title: :name do 
+        attributes_table do 
+            rows :name
+        end
+        panel 'Users' do
+            table_for(organization.users) do |_user|
+                column(:id){ |user| link_to(user.id, admin_user_path(user)) }
+                column(:name, &:name)
+                column(:ci, &:ci)
+                
+                tr class: "action_items" do 
+                    td link_to("Crear usuario", new_admin_organization_user_path(organization), class: :button)
+                end
+            end    
+        end
+    end      
 end
+
