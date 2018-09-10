@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
   def index
-    render json: organization.users
+    #render json: organization.Users
+    render json: User.includes(:organization)
   end
 
   def create
@@ -37,7 +38,8 @@ class UsersController < ApplicationController
   end
 
   def organization
-    # idem user_by_id , .find(params[:organization_id])
+    @organization ||= Organization.find(params[:organization_id])
+    #@organization ||= User.where( { 'organization_id': organization_id } )
   end
 
   def user_params
