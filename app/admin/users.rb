@@ -1,6 +1,6 @@
 ActiveAdmin.register User do
   belongs_to :organization, optional: true
-  permit_params :ci, :name, :surname, :email, :organization_id, organization_attributes: %(id name)
+  permit_params :ci, :name, :surname, :email, :organization_id
   form do |f|
     f.inputs 'Details' do
       f.semantic_errors(*f.user.errors.keys)
