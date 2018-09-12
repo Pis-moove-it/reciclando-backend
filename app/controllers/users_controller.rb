@@ -37,10 +37,6 @@ class UsersController < ApplicationController
   end
 
   def organization
-    # idem user_by_id , .find(params[:organization_id])
-  end
-
-  def organization
     @organization ||= Organization.find(params[:organization_id])
   end
 
