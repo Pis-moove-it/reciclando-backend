@@ -6,7 +6,7 @@ RSpec.describe User, type: :model do
     let!(:user) { FactoryBot.build(:user, organization: organization) }
 
     it 'should let create new ones, with appropiate data' do
-      expect(user). to be_valid
+      expect(user).to be_valid
     end
 
     it 'should not let create new ones, with nil ci value' do
