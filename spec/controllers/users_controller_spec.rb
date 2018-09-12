@@ -1,11 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe UsersController, type: :controller do
-  let(:json_response) { JSON.parse(response.body) }
+  let(:json_response) { JSON.parse(response.body, symbolize_keys: true) }
 
   describe 'GET #index' do
     let!(:organization) { FactoryBot.create(:organization) }
     let!(:user) { FactoryBot.create(:user, organization: organization) }
+    let(:u_serializer) { UserSerializer }
 
     context 'Success cases' do
       def users_from_organization
@@ -20,6 +21,10 @@ RSpec.describe UsersController, type: :controller do
 
       it 'should return all users from an organization' do
         expect(json_response.count).to eql 1
+      end
+
+      it 'should return users, as specified in the serializer' do
+        expect(json_response).to eq [u_serializer.new(user).attributes.as_json]
       end
     end
 
