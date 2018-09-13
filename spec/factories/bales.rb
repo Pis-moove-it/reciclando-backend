@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :bale do
-    weight 1.5
-    type 1
+    weight { Faker::Number.decimal(2, 2) }
+    material { Faker::Number.between(0, 2) }
   end
 end

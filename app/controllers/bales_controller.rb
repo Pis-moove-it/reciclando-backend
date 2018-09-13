@@ -8,28 +8,12 @@ class BalesController < ApplicationController
     if bale.save
       render json: bale
     else
-      render json: bale.errors, status: bad_request
+      render json: bale.errors, status: :bad_request
     end
   end
 
   def show
     render json: bale_by_id
-  end
-
-  def update
-    if bale_by_id.update(bale_params)
-      head :ok
-    else
-      render json: bale.errors, status: bad_request
-    end
-  end
-
-  def destroy
-    if bale_by_id.destroy
-      head :ok
-    else
-      render json bale.errors, status: bad_request
-    end
   end
 
   private
