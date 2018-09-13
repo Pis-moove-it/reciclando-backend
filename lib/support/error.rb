@@ -4,12 +4,12 @@ module Error
   extend self
 
   def status_for(code)
-    errors[code][:http_status]
+    errors[code]['http_status']
   end
 
-  def error_for(code, details = {})
-    error = error[code]
-    error[:details] = details if details.present?
+  def error_for(code, details)
+    error = errors[code]
+    error['details'] = details if details.present?
     error
   end
 
@@ -17,6 +17,6 @@ module Error
 
   def errors
     return @errors unless @errors.nil?
-    @errors = YAML.load_file('errors.yaml')
+    @errors = YAML.load_file(Rails.root.join('lib', 'support', 'errors.yaml'))
   end
 end
