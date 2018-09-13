@@ -16,19 +16,6 @@ class UsersController < ApplicationController
     render json: user_by_id
   end
 
-  def destroy
-    user_by_id.destroy
-    head :ok
-  end
-
-  def update
-    if user_by_id.update(user_params)
-      head :ok
-    else
-      render json: user.errors, status: :bad_request
-    end
-  end
-
   private
 
   def user_by_id
