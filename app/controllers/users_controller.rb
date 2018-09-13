@@ -19,7 +19,6 @@ class UsersController < ApplicationController
   private
 
   def user_by_id
-    # variable loaded once
     @user_by_id ||= User.find(params[:id])
   end
 
