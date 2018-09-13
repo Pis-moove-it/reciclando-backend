@@ -1,0 +1,46 @@
+swagger: '2.0'
+info:
+  title: Reciclando API
+  description: API description in Markdown.
+  version: 1.0.0
+
+paths:
+  /organization/{id}/users
+    get:
+      summary: Returns all users of an organization by its ID.
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        404:
+          description: An organization with the specified ID was not found.
+        500:
+          description: Unexpected error.
+definitions:
+  User:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      surname:
+        type: string
+      ci:
+        type: string
+      email:
+        type: string
+    required:
+      - id
+      - name
+      - surname
+      - ci
+      - email
