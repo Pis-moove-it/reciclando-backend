@@ -4,18 +4,17 @@ RSpec.describe User, type: :model do
   describe 'validations' do
     let!(:organization) { FactoryBot.create(:organization) }
     let!(:user) { FactoryBot.build(:user, organization: organization) }
-    # let!(:a)  FactoryBot.create_list(FactoryBot.build(:user, 10)
-    let!(:a) { FactoryBot.build_list(:user, 10) }
+    let!(:user_list) { FactoryBot.build_list(:user, 10) }
 
     it 'should let create a new one, with appropiate data' do
-      a[1].organization = organization
-      expect(user).to be_valid
+      user_list[1].organization = organization
+      expect(user_list[1]).to be_valid
     end
 
     context 'validations wrong cases' do
       it 'should not let create a new one, with nil ci value' do
-        user.ci = nil
-        expect(user).not_to be_valid
+        user_list[2].ci = nil
+        expect(user_list[2]).not_to be_valid
       end
 
       it 'should not let create a new one, with nil name value' do
