@@ -4,8 +4,11 @@ RSpec.describe User, type: :model do
   describe 'validations' do
     let!(:organization) { FactoryBot.create(:organization) }
     let!(:user) { FactoryBot.build(:user, organization: organization) }
+    # let!(:a)  FactoryBot.create_list(FactoryBot.build(:user, 10)
+    let!(:a) { FactoryBot.build_list(:user, 10) }
 
     it 'should let create a new one, with appropiate data' do
+      a[1].organization = organization
       expect(user).to be_valid
     end
 

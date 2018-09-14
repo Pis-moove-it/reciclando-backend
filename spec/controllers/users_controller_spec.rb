@@ -26,6 +26,10 @@ RSpec.describe UsersController, type: :controller do
       it 'should return users, as specified in the serializer' do
         expect(json_response).to eq [u_serializer.new(user).attributes.as_json]
       end
+
+      # it 'should return just the fields needed' do
+       # expect(json_response.keys).to match_array['name','surname','email','ci']
+      # end
     end
 
     context 'Failure cases' do
