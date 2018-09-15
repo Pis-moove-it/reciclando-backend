@@ -27,11 +27,6 @@ RSpec.describe User, type: :model do
         expect(user).not_to be_valid
       end
 
-      it 'should not let create new one, with wrong surname format value' do
-        user.surname = 'se1nfeld'
-        expect(user).not_to be_valid
-      end
-
       it 'should not let create new one, without @ character in email value' do
         user.email = 'hitest.com'
         expect(user).not_to be_valid
