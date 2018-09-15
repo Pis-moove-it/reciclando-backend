@@ -30,7 +30,7 @@ RSpec.describe UsersController, type: :controller do
 
     context 'Failure cases' do
       it 'should not find an organization if organization_id does not exist' do
-        get :index, params: { organization_id: '985741254' }
+        get :index, params: { organization_id: User.pluck(:id).max + 1 }
         expect(response).to have_http_status(404)
       end
     end
