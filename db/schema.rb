@@ -46,19 +46,19 @@ ActiveRecord::Schema.define(version: 2018_09_09_220737) do
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
   end
 
-<<<<<<< HEAD
-  create_table "organizations", force: :cascade do |t|
-    t.string "name"
-=======
   create_table "bales", force: :cascade do |t|
     t.float "weight"
     t.integer "material"
->>>>>>> Bale: model + controller
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-<<<<<<< HEAD
+  create_table "organizations", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "surname"
@@ -71,6 +71,4 @@ ActiveRecord::Schema.define(version: 2018_09_09_220737) do
   end
 
   add_foreign_key "users", "organizations"
-=======
->>>>>>> Bale: model + controller
 end
