@@ -1,4 +1,4 @@
-class BalesController < ApplicationController
+class BalesController < BaseController
   def index
     render json: Bale.all
   end
@@ -8,7 +8,7 @@ class BalesController < ApplicationController
     if bale.save
       render json: bale
     else
-      render json: bale.errors, status: :bad_request
+      render_error(1, bale.errors)
     end
   end
 
