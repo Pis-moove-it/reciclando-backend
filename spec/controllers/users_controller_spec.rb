@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe UsersController, type: :controller do
-  let(:json_response) { JSON.parse(response.body, symbolize_keys: true) }
+  let(:json_response) { JSON.parse(response.body, symbolize_names: true) }
 
   describe 'GET #index' do
     let!(:organization) { FactoryBot.create(:organization) }
@@ -24,7 +24,7 @@ RSpec.describe UsersController, type: :controller do
       end
 
       it 'should return users, as specified in the serializer' do
-        expect(json_response.first.keys).to eq %w[name surname email ci]
+        expect(json_response).to eq [u_serializer.new(user).as_json]
       end
     end
 
