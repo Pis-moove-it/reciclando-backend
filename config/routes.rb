@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
-  resources :organizations do
-    resources :users
+  resources :organizations, only: [] do
+    resources :users, only: %i[index show]
   end
   mount SwaggerUiEngine::Engine, at: '/api_docs'
 
