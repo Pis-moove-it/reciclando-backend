@@ -36,6 +36,11 @@ RSpec.describe BalesController, type: :controller do
         get :index
         expect(response).to have_http_status(:ok)
       end
+
+      it 'should return bales, as specified in the serializer' do
+        get :index
+        expect(json_response.first.keys).to eq %w[weight material]
+      end
     end
   end
 
@@ -52,7 +57,7 @@ RSpec.describe BalesController, type: :controller do
 
     context 'Failure cases' do
       it 'should return not found' do
-        get :show, params: { id: '5000000' }
+        get :show, params: { id: Bale.pluck(:id).max + 1 }
         expect(response).to have_http_status(:not_found)
       end
     end
