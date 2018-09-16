@@ -1,0 +1,16 @@
+1:
+  error_code: 1
+  http_status: 400
+  description: 'Bad Request'
+2:
+  error_code: 2
+  http_status: 401
+  description: 'Unauthorized'
+3:
+  error_code: 3
+  http_status: 404
+  description: 'Not Found'
+4:
+  error_code: 4
+  http_status: 500
+  description: 'Internal error'
