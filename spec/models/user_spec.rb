@@ -41,7 +41,7 @@ RSpec.describe User, type: :model do
 
   describe 'serializer' do
     it 'should return users, as specified in the serializer' do
-      expect(u_serializer.new(user).attributes.keys).to eq %i[name surname email ci]
+      expect(u_serializer.new(user).attributes.keys).to eq %i[id name surname email ci]
     end
   end
 end
