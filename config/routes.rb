@@ -3,7 +3,7 @@ Rails.application.routes.draw do
     resources :users, only: %i[index show]
   end
 
-  resources :bales
+  resources :bales, only: %i[index create show]
 
   mount SwaggerUiEngine::Engine, at: '/api_docs'
 
