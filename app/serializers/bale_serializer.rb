@@ -1,3 +1,3 @@
 class BaleSerializer < ActiveModel::Serializer
-  attributes :weight, :material
+  attributes :id, :weight, :material
 end
