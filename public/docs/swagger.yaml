@@ -1,18 +1,25 @@
+swagger: '2.0'
 info:
   title: Reciclando
   version: 1.0.0
 produces:
   - application/json
-swagger: '2.0'
+externalDocs:
+  description: "Reciclando Invision"
+  url: "https://projects.invisionapp.com/share/5RNT0ZQQUPM#/screens"
+tags:
+  - "Users"
 
 paths:
-  /organization/{id}/users/:
+  /organizations/{organization_id}/users:
     get:
+      tags:
+        - "Users"
       operationId: getUsersFromOrganization
       summary: List users from an organization.
       parameters:
         - in: path
-          name: id
+          name: organization_id
           required: true
           type: integer
       responses:
@@ -24,8 +31,40 @@ paths:
               $ref: '#/definitions/User'
         404:
           description: An organization with the specified ID was not found.
+          schema:
+            $ref: '#/definitions/Error'
         500:
           description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+  /organizations/{organization_id}/users/{id}:
+    get:
+      tags:
+        - "Users"
+      operationId: getAUserFromAnOrganization
+      summary: Get one user from an organization.
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          type: integer
+        - in: path
+          name: id
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        404:
+          description: An organization or user with the specified ID was not found.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
 
 definitions:
   User:
@@ -47,4 +86,12 @@ definitions:
       - surname
       - ci
       - email
-
+  Error:
+    type: object
+    properties:
+      http_status:
+        type: "integer"
+      description:
+        type: string
+      details:
+        type: string
