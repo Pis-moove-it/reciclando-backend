@@ -83,6 +83,25 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+    post:
+      tags:
+        - "Bales"
+      operationId: createBale
+      summary: Create a bale.
+      parameters:
+        - in: body
+          name: "body"
+          required: true
+          schema:
+            $ref: '#definitions/Bale'
+      responses:
+        200:
+          description: OK
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+
   /bales/{bale_id}:
     get:
       tags:
@@ -107,6 +126,7 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+
 
 definitions:
   User:
