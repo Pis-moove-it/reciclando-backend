@@ -76,7 +76,9 @@ paths:
         200:
           description: OK
           schema:
-            $ref: '#/definitions/Bale'
+            type: array
+            items:
+              $ref: '#/definitions/Bale'
         500:
           description: Unexpected error.
           schema:
@@ -96,9 +98,7 @@ paths:
         200:
           description: OK
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/Bale'
+            $ref: '#/definitions/Bale'
         404:
           description: A bale with the specified ID was not found.
           schema:
