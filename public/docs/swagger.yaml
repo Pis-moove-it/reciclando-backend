@@ -9,6 +9,7 @@ externalDocs:
   url: "https://projects.invisionapp.com/share/5RNT0ZQQUPM#/screens"
 tags:
   - "Users"
+  - "Bales"
 
 paths:
   /organizations/{organization_id}/users:
@@ -65,6 +66,47 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+  /bales:
+    get:
+      tags:
+        - "Bales"
+      operationId: getBales
+      summary: List bales.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Bale'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+  /bales/{bale_id}:
+    get:
+      tags:
+        - "Bales"
+      operationId: getBale
+      summary: Get one bale.
+      parameters:
+        - in: path
+          name: bale_id
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Bale'
+        404:
+          description: A bale with the specified ID was not found.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
 
 definitions:
   User:
@@ -86,6 +128,19 @@ definitions:
       - surname
       - ci
       - email
+  Bale:
+    type: object
+    properties:
+      id:
+        type: integer
+      weight:
+        type: float
+      material:
+        type: integer
+    required:
+      - id
+      - weight
+      - material
   Error:
     type: object
     properties:
