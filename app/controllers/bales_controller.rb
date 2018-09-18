@@ -1,4 +1,7 @@
 class BalesController < BaseController
+
+  protect_from_forgery with: :null_session
+  
   def index
     render json: Bale.all
   end
@@ -14,6 +17,14 @@ class BalesController < BaseController
 
   def show
     render json: bale_by_id
+  end
+
+  def update
+    if bale_by_id.update(bale_params)
+      head :ok
+    else
+      render_error(1, bale_by_id.errors)
+    end
   end
 
   private
