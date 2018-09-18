@@ -89,11 +89,14 @@ paths:
       operationId: createBale
       summary: Create a bale.
       parameters:
-        - in: body
-          name: "body"
+        - name: body
+          in: body
           required: true
           schema:
-            $ref: '#definitions/Bale'
+            type: object
+            properties:
+              bale:
+                $ref: '#definitions/Bale'
       responses:
         200:
           description: OK
@@ -126,7 +129,6 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
-
 
 definitions:
   User:
