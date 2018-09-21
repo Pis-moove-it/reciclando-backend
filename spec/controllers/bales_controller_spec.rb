@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe BalesController, type: :controller do
   let(:json_response) { JSON.parse(response.body, symbolize_keys: true) }
   let!(:bale) { FactoryBot.create(:bale) }
+  let!(:updated_bale) { FactoryBot.build(:bale) }
   let(:b_serializer) { BaleSerializer }
 
   describe 'POST #create' do
@@ -58,6 +59,31 @@ RSpec.describe BalesController, type: :controller do
       it 'does return not found' do
         bale_by_id_call(Bale.pluck(:id).max + 1)
         expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
+  describe 'PUT#update' do
+    def update_bale_call(id, weight, material)
+      put :update, params: { id: id, bale: { weight: weight, material: material } }
+    end
+
+    context 'when a succesful response is expected' do
+      it 'should return success' do
+        update_bale_call(bale.id, updated_bale.weight, updated_bale.material)
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context 'when a failure response is expected' do
+      it 'should return not found' do
+        update_bale_call(Bale.pluck(:id).max + 1, updated_bale.weight, updated_bale.material)
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it 'should not update a bale because it has empty attributes' do
+        update_bale_call(bale.id, nil, nil)
+        expect(response).to have_http_status(:bad_request)
       end
     end
   end
