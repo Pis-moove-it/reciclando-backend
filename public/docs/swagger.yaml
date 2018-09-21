@@ -142,6 +142,10 @@ paths:
       responses:
         200:
           description: OK
+        404:
+          description: A bale with the specified ID was not found.
+          schema:
+            $ref: '#/definitions/Error'
         500:
           description: Unexpected error.
           schema:
