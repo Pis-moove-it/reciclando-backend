@@ -4,23 +4,26 @@ RSpec.describe Bale, type: :model do
   let!(:bale) { FactoryBot.create(:bale) }
   let(:b_serializer) { BaleSerializer }
   describe 'validations' do
-    it 'should let create new ones, with appropiate data' do
-      expect(bale).to be_valid
+    context 'when create bales with appropiate data' do
+      it 'does let create new ones' do
+        expect(bale).to be_valid
+      end
     end
 
-    it 'should not let create new ones, with nil weight value' do
-      bale.weight = nil
-      expect(bale).not_to be_valid
-    end
-
-    it 'should not let create new ones, with nil material value' do
-      bale.material = nil
-      expect(bale).not_to be_valid
+    context 'when create bales with wrong values' do
+      it 'does not let create new ones, nil weight value' do
+        bale.weight = nil
+        expect(bale).not_to be_valid
+      end
+      it 'does not let create new ones, nil material value' do
+        bale.material = nil
+        expect(bale).not_to be_valid
+      end
     end
   end
 
   describe 'serializer' do
-    it 'should return bales, as specified in the serializer' do
+    it 'does return bales, as specified in the serializer' do
       expect(b_serializer.new(bale).attributes.keys).to eq %i[id weight material]
     end
   end

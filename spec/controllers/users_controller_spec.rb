@@ -8,28 +8,26 @@ RSpec.describe UsersController, type: :controller do
     let!(:user) { FactoryBot.create(:user, organization: organization) }
     let(:u_serializer) { UserSerializer }
 
-    context 'Success cases' do
+    context 'when listing users' do
       def users_from_organization
         get :index, params: { organization_id: organization.id }
       end
 
       before(:each) { users_from_organization }
 
-      it 'should return success' do
+      it 'does return success' do
         expect(response).to have_http_status(:ok)
       end
-
-      it 'should return all users from an organization' do
+      it 'does return all users from an organization' do
         expect(json_response.count).to eql 1
       end
-
-      it 'should return users, as specified in the serializer' do
+      it 'does return users as specified in the serializer' do
         expect(json_response).to eq [u_serializer.new(user).as_json]
       end
     end
 
-    context 'Failure cases' do
-      it 'should not find an organization if organization_id does not exist' do
+    context 'when organization does not exist' do
+      it 'does return not found' do
         get :index, params: { organization_id: User.pluck(:id).max + 1 }
         expect(response).to have_http_status(404)
         expect(json_response[:error_code]).to eq 3
@@ -46,29 +44,27 @@ RSpec.describe UsersController, type: :controller do
       get :show, params: { organization_id: organization_id, id: user_id }
     end
 
-    context 'success cases' do
+    context 'when shows valid users' do
       before(:each) { user_from_organization_call(organization.id, user.id) }
-
-      it 'should return success' do
+      it 'does return success' do
         expect(response).to have_http_status(200)
       end
-
-      it 'should return the user' do
+      it 'does return the user' do
         expect(json_response).to eql u_serializer.new(user).as_json
       end
     end
 
-    context 'failure cases' do
-      it 'should return an error if the organization doesnt exist' do
+    context 'when organization does not exist' do
+      it 'does return not found' do
         user_from_organization_call(Organization.pluck(:id).max + 1, user.id)
-
         expect(response).to have_http_status(404)
         expect(json_response[:error_code]).to eql 3
       end
+    end
 
-      it 'should return an error if the user doesnt exist' do
+    context 'when shows invalid users' do
+      it 'does return not found' do
         user_from_organization_call(organization.id, User.pluck(:id).max + 1)
-
         expect(response).to have_http_status(404)
         expect(json_response[:error_code]).to eql 3
       end
