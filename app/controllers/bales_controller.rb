@@ -13,21 +13,21 @@ class BalesController < BaseController
   end
 
   def show
-    render json: bale
+    render json: bale_by_id
   end
 
   def update
-    if bale.update(bale_params)
+    if bale_by_id.update(bale_params)
       head :ok
     else
-      render_error(1, bale.errors)
+      render_error(1, bale_by_id.errors)
     end
   end
 
   private
 
-  def bale
-    @bale ||= Bale.find(params[:id])
+  def bale_by_id
+    @bale_by_id ||= Bale.find(params[:id])
   end
 
   def bale_params
