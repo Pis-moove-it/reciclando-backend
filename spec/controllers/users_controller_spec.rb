@@ -8,7 +8,7 @@ RSpec.describe UsersController, type: :controller do
     let!(:user) { FactoryBot.create(:user, organization: organization) }
     let(:u_serializer) { UserSerializer }
 
-    context 'when lists the users' do
+    context 'when listing users' do
       def users_from_organization
         get :index, params: { organization_id: organization.id }
       end
@@ -26,7 +26,7 @@ RSpec.describe UsersController, type: :controller do
       end
     end
 
-    context 'when organization_id does not exists' do
+    context 'when organization does not exist' do
       it 'does return not found' do
         get :index, params: { organization_id: User.pluck(:id).max + 1 }
         expect(response).to have_http_status(404)
@@ -54,7 +54,7 @@ RSpec.describe UsersController, type: :controller do
       end
     end
 
-    context 'when the organization does not exit' do
+    context 'when organization does not exist' do
       it 'does return not found' do
         user_from_organization_call(Organization.pluck(:id).max + 1, user.id)
         expect(response).to have_http_status(404)

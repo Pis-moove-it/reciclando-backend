@@ -10,14 +10,14 @@ RSpec.describe BalesController, type: :controller do
       post :create, params: { bale: { weight: weight, material: material } }
     end
 
-    context 'when creates valid bales' do
+    context 'when creating valid bales' do
       it 'does return success' do
         create_bale_call(bale.weight, bale.material)
         expect(response).to have_http_status(:ok)
       end
     end
 
-    context 'when creates invalid bales' do
+    context 'when creating invalid bales' do
       it 'does not create bales without material' do
         create_bale_call(bale.weight, nil)
         expect(response).to have_http_status(:bad_request)
@@ -32,7 +32,7 @@ RSpec.describe BalesController, type: :controller do
   describe 'GET #index' do
     before(:each) { get :index }
 
-    context 'when lists the bales' do
+    context 'when listing bales' do
       it 'does return succes' do
         expect(response).to have_http_status(:ok)
       end
