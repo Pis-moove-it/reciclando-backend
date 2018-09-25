@@ -89,14 +89,10 @@ paths:
       operationId: createBale
       summary: Create a bale.
       parameters:
-        - name: body
-          in: body
-          required: true
+        - in: body
+          name: bale
           schema:
-            type: object
-            properties:
-              bale:
-                $ref: '#definitions/Bale'
+            $ref: '#/definitions/Bale'
       responses:
         200:
           description: OK
@@ -129,6 +125,31 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+    put:
+      tags:
+        - "Bales"
+      operationId: updateBale
+      summary: Update a bale.
+      parameters:
+        - in: path
+          name: bale_id
+          required: true
+          type: integer
+        - in: body
+          name: bale
+          schema:
+            $ref: '#/definitions/Bale'
+      responses:
+        200:
+          description: OK
+        404:
+          description: A bale with the specified ID was not found.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
 
 definitions:
   User:
@@ -152,17 +173,21 @@ definitions:
       - email
   Bale:
     type: object
-    properties:
-      id:
-        type: integer
-      weight:
-        type: float
-      material:
-        type: integer
     required:
-      - id
       - weight
       - material
+    properties:
+      weight:
+        type: number
+      material:
+        type: string
+        enum:
+          - Trash
+          - Glass
+          - Plastic
+    example:
+      weight: 13.7
+      material: Glass
   Error:
     type: object
     properties:
