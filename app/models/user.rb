@@ -4,4 +4,5 @@ class User < ApplicationRecord
   validates :name, :surname, format: { with: /\A[[:alpha:]]+\z/ }
   validates :email, format: { with: /.+@.+\..+/ }
   belongs_to :organization
+  has_many :devices, dependent: :destroy
 end
