@@ -4,13 +4,13 @@ class UsersController < BaseController
   end
 
   def show
-    render json: user_by_id
+    render json: user
   end
 
   private
 
-  def user_by_id
-    @user_by_id ||= organization.users.find(params[:id])
+  def user
+    @user ||= User.find_by!(organization_id: params[:organization_id], id: params[:id])
   end
 
   def organization
