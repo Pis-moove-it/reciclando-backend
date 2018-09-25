@@ -5,7 +5,7 @@ RSpec.describe BalesController, type: :controller do
   let!(:bale) { FactoryBot.create(:bale) }
   let!(:updated_bale) { FactoryBot.build(:bale) }
   let(:b_serializer) { BaleSerializer }
-  let(:invalid_id) {Bale.pluck(:id).max + 1}
+  let(:invalid_id) { Bale.pluck(:id).max + 1 }
 
   describe 'POST #create' do
     def create_bale_call(weight, material)
@@ -64,27 +64,27 @@ RSpec.describe BalesController, type: :controller do
     end
   end
 
-  describe 'PUT#update' do
+  describe 'PUT #update' do
     def update_bale_call(id, weight, material)
       put :update, params: { id: id, bale: { weight: weight, material: material } }
     end
 
-    context 'when a succesful response is expected' do
-      it 'should return success' do
+    context 'when updating valid bales' do
+      it 'does return success' do
         update_bale_call(bale.id, updated_bale.weight, updated_bale.material)
         expect(response).to have_http_status(:ok)
       end
     end
 
-    context 'when a failure response is expected' do
-      it 'should return not found' do
+    context 'when creating invalid bales' do
+      it 'does return not found' do
         update_bale_call(invalid_id, updated_bale.weight, updated_bale.material)
-        expect(json_response).to eq Error.error_for(3, "Couldn't find Bale with 'id'=" + invalid_id.to_s)
+        expect(json_response['error_code']).to eq 3
       end
 
-      it 'should not update a bale because it has empty attributes' do
+      it 'does not update a bale because it has empty attributes' do
         update_bale_call(bale.id, nil, nil)
-        expect(json_response).to eq Error.error_for(1, 'weight' => ["can't be blank"], 'material' => ["can't be blank"])
+        expect(json_response['error_code']).to eq 1
       end
     end
   end
