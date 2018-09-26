@@ -6,6 +6,7 @@ ruby '2.5.1'
 gem 'active_admin_theme', '1.0.3'
 gem 'active_model_serializers', '0.10.7'
 gem 'activeadmin', '~> 1.3.1'
+gem 'bcrypt', '3.1.12'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'byebug', '10.0.2'
 gem 'devise', '4.4.3'

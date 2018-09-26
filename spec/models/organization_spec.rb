@@ -11,8 +11,13 @@ RSpec.describe Organization, type: :model do
     end
 
     context 'when create organizations with wrong values' do
-      it 'should not let create new ones, nil name value' do
+      it 'does not create new ones without name' do
         organization.name = nil
+        expect(organization).not_to be_valid
+      end
+
+      it 'does not create new ones without password' do
+        organization.password = nil
         expect(organization).not_to be_valid
       end
     end
