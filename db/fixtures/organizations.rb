@@ -1,10 +1,12 @@
 module Fixtures
   ORGANIZATIONS = [
     {
-      name: 'Abrojo'
+      name: 'Abrojo',
+      password: 'password'
     },
     {
-      name: 'IMM'
+      name: 'IMM',
+      password: 'password'
     }
   ].freeze
 end
