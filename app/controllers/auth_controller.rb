@@ -1,7 +1,7 @@
 class AuthController < BaseController
   def session
-    return render json: device if check_credentials
-    render_error(1, 'wrong credentials')
+    return render_error(1, 'wrong credentials') unless check_credentials
+    render json: device
   end
 
   private
@@ -12,6 +12,6 @@ class AuthController < BaseController
 
   def check_credentials
     org = Organization.find_by(name: request.headers['name']).try(:authenticate, request.headers['password'])
-    @check_credentials = org.is_a?(Organization)
+    @check_credentials ||= org.is_a?(Organization)
   end
 end
