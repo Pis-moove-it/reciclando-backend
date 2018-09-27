@@ -1,8 +1,15 @@
 ActiveAdmin.register Organization do
-  permit_params :name
+  permit_params :name, :password
+
+  index do
+    id_column
+    column :name
+    actions
+  end
+
   show title: :name do
     attributes_table do
-      rows :name
+      rows :id, :name
     end
     panel 'Users' do
       table_for(organization.users) do |_user|
@@ -14,5 +21,15 @@ ActiveAdmin.register Organization do
         end
       end
     end
+  end
+
+  filter :name
+
+  form do |f|
+    f.inputs do
+      f.input :name
+      f.input :password
+    end
+    f.actions
   end
 end
