@@ -78,6 +78,13 @@ ActiveRecord::Schema.define(version: 2018_09_30_214200) do
     t.index ["collection_point_id"], name: "index_collections_on_collection_point_id"
   end
 
+  create_table "containers", force: :cascade do |t|
+    t.integer "status"
+    t.boolean "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "devices", force: :cascade do |t|
     t.string "device_id"
     t.string "device_type"
