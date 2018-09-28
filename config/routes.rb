@@ -5,6 +5,8 @@ Rails.application.routes.draw do
 
   resources :bales, only: %i[index create show update]
 
+  resources :containers, only: %i[update]
+
   mount SwaggerUiEngine::Engine, at: '/api_docs'
 
   devise_for :admin_users, ActiveAdmin::Devise.config
