@@ -4,6 +4,7 @@
 require_relative 'fixtures/admin_users'
 require_relative 'fixtures/organizations'
 require_relative 'fixtures/users'
+require_relative 'fixtures/containers'
 
 unless AdminUser.count.positive?
   Fixtures::ADMIN_USERS.each do |admin|
@@ -20,5 +21,11 @@ end
 unless User.count.positive?
   Fixtures::USERS.each do |user|
     User.create!(user)
+  end
+end
+
+unless Container.count.positive?
+  Fixtures::CONTAINERS.each do |container|
+    Container.create!(container)
   end
 end
