@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
   resources :organizations, only: [] do
-    resources :users, only: %i[index show]
+    resources :users, only: %i[index show] do
+      collection do
+        post :login
+      end
+    end
   end
 
   resources :bales, only: %i[index create show update]
