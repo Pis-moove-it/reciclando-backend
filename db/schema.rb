@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2018_09_30_214200) do
+=======
+ActiveRecord::Schema.define(version: 2018_09_28_221937) do
+>>>>>>> Database changed. Date and PocketWeigth removed from Collections. PocketWeigth added to CollectionPocket
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
