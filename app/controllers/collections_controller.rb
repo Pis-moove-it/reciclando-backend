@@ -1,6 +1,6 @@
 class CollectionsController < BaseController
   def create
-    collection = Collection.new(collection_params.merge(route: route))
+    collection = Collection.new(collection_params.except(:pocket_serial_numbers).merge(route: route))
     serials = params[:pocket_serial_numbers]
     pockets = serials.collect { |s| { serial_number: s, state: 'Unweighed', organization: Organization.first } }
     # The organization above is incorrect. It must be a global variable
@@ -19,6 +19,6 @@ class CollectionsController < BaseController
   end
 
   def collection_params
-    params.require(:collection).permit(:pocket_weigth, :date, :collection_point_id)
+    params.require(:collection).permit(:collection_point_id, :pocket_serial_numbers)
   end
 end
