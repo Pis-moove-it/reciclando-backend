@@ -9,7 +9,7 @@ class ContainersController < BaseController
 
   private
 
-  def container_by_id
+  def container
     @container ||= Container.find(params[:id])
   end
 
