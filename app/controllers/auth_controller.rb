@@ -1,17 +1,24 @@
 class AuthController < BaseController
-  def session
+  #include Authenticable
+
+  def authenticate
     return render_error(1, 'wrong credentials') unless check_credentials
-    render json: device
+    response.set_header('access_token', device.auth_token)
+    head :ok
   end
 
   private
 
+  # logica de la organizacion <-
   def device
-    @device = Device.create_with(device_type: params[:device_type]).find_or_create_by(device_id: params[:device_id])
+    # logica de este controlador
+    #byebug
+    @device = Device.create_with(device_type: request.headers['device_type']).find_or_create_by(device_id: request.headers['device_id'])
   end
 
   def check_credentials
-    org = Organization.find_by(name: request.headers['name']).try(:authenticate, request.headers['password'])
-    @check_credentials ||= org.is_a?(Organization)
+    @check_credentials ||= Organization.find_by(name: params['name']).try(:authenticate, params['password'])
   end
+
+  # organization <- viene
 end

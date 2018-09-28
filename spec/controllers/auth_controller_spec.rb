@@ -12,6 +12,13 @@ RSpec.describe AuthController, type: :controller do
     end
     context 'when name is invalid' do
       it 'return invalid credentials' do
+        headers = {
+          'name' => 'phoenix fundation',
+          'password' => '123'
+        }
+        post '/authenticate', params: => { device_id: 'a33f', device_type: 'smartphone' } headers
+
+        expect(response).to have_http_status(not_found)
       end
     end
     context 'when password is invalid' do
