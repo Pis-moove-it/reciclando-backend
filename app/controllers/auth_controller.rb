@@ -12,8 +12,7 @@ class AuthController < BaseController
   # logica de la organizacion <-
   def device
     # logica de este controlador
-    #byebug
-    @device = Device.create_with(device_type: request.headers['device_type']).find_or_create_by(device_id: request.headers['device_id'])
+    @device = Device.create_with(device_type: request.headers['HTTP_DEVICE_TYPE']).find_or_create_by(device_id: request.headers['HTTP_DEVICE_ID'])
   end
 
   def check_credentials
