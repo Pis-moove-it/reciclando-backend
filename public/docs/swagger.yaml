@@ -10,6 +10,7 @@ externalDocs:
 tags:
   - "Users"
   - "Bales"
+  - "Containers"
 
 paths:
   /organizations/{organization_id}/users:
@@ -205,6 +206,32 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+  /containers/{container_id}:
+    put:
+      tags:
+        - "Containers"
+      operationId: updateContainer
+      summary: Update the container status.
+      parameters:
+        - in: path
+          name: container_id
+          required: true
+          type: integer
+        - in: body
+          name: container
+          schema:
+            $ref: '#/definitions/Container'
+      responses:
+        200:
+          description: Ok
+        400:
+          description: A container with specified Id was not found.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
 
 definitions:
   User:
@@ -273,3 +300,17 @@ definitions:
         type: string
       details:
         type: string
+  Container:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - Ok
+            - Damaged
+            - Removed
+      example:
+        status: Ok
+
