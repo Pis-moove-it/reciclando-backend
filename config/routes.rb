@@ -7,6 +7,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :pockets, only: [:index]
+
   resources :bales, only: %i[index create show update]
 
   mount SwaggerUiEngine::Engine, at: '/api_docs'
