@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :container do
-    status 1
-    active false
+    status { Faker::Number.between(0, 2) }
+    active true
   end
 end
