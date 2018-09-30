@@ -1,7 +1,8 @@
+# TODO, authenticate this services
 class ContainersController < BaseController
   def update
     if container.update(container_params)
-      head :ok
+      render json: container
     else
       render_error(1, container.errors)
     end
