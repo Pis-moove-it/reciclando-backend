@@ -5,4 +5,10 @@ class Pocket < ApplicationRecord
 
   has_many :collection_pockets, dependent: :destroy
   has_many :collections, through: :collection_pockets
+
+  class << self
+    def unclassified
+      where(state: %w[Unweighed Weighed])
+    end
+  end
 end
