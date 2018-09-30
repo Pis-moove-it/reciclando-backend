@@ -21,6 +21,13 @@ ActiveAdmin.register Organization do
         end
       end
     end
+    panel 'Pockets' do
+      table_for(organization.pockets) do |_pocket|
+        column(:id) { |pocket| link_to(pocket.id, admin_pocket_path(pocket)) }
+        column(:serial_number, &:serial_number)
+        column(:state, &:state)
+      end
+    end
   end
 
   filter :name
