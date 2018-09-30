@@ -21,6 +21,7 @@ RSpec.describe ContainersController, type: :controller do
     context 'when updating non-existent containers' do
       it 'does return not found' do
         update_container_call(invalid_id, updated_container.status)
+        expect(response).to have_http_status(404)
         expect(json_response['error_code']).to eq 3
       end
     end
@@ -28,10 +29,12 @@ RSpec.describe ContainersController, type: :controller do
     context 'when updating containers with wrong values' do
       it 'does return bad request, nil status value' do
         update_container_call(container.id, nil)
+        expect(response).to have_http_status(400)
         expect(json_response['error_code']).to eq 1
       end
       it 'does return internal error, invalid status value' do
         update_container_call(container.id, 'invalid_value')
+        expect(response).to have_http_status(500)
         expect(json_response['error_code']).to eq 4
       end
     end
