@@ -38,6 +38,7 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+
   /organizations/{organization_id}/users/{id}:
     get:
       tags:
@@ -66,6 +67,42 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+
+  /organizations/{organization_id}/users/{id}/login:
+    post:
+      tags:
+        - "Users"
+      operationId: userEnterSystem
+      summary: User enter to the app.
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          type: integer
+        - in: path
+          name: id
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        401:
+          description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: An organization or user with the specified ID was not found.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - ApiKey: []
+
   /bales:
     get:
       tags:
@@ -151,6 +188,24 @@ paths:
           schema:
             $ref: '#/definitions/Error'
 
+  /pockets:
+    get:
+      tags:
+        - "Pockets"
+      operationId: getPockets
+      summary: List pockets.
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Pocket'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+
 definitions:
   User:
     type: object
@@ -188,6 +243,18 @@ definitions:
     example:
       weight: 13.7
       material: Glass
+  Pocket:
+    type: object
+    properties:
+      id:
+        type: integer
+      serial_number:
+        type: string
+      state:
+        enum:
+        - "Unweighed"
+        - "Weighed"
+        - "Classified"
   Error:
     type: object
     properties:
