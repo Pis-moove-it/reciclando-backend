@@ -17,16 +17,14 @@ RSpec.describe AuthController, type: :controller do
         post :authenticate, params: { name: organization.name, password: organization.password }
         @request.headers['device_id'] = device.device_id
         @request.headers['device_type'] = device.device_type
-        #@request.headers['Content-type'] = 'application/json'
-        byebug
-        expect(response.headers['access_token']).not_to eq nil
+        expect(response.headers['access_token']).not_to eq device.auth_token
       end
     end
 
     context 'when name is invalid' do
       it 'return invalid credentials' do
         post :authenticate, params: { name: 'no organization', password: '123123' }
-        @request.headers["Content-Type"] = "application/pdf"
+        @request.headers['Content-Type'] = 'application/pdf'
         expect(response).to have_http_status(:bad_request)
       end
     end
