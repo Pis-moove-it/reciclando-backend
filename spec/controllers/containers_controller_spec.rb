@@ -5,6 +5,7 @@ RSpec.describe ContainersController, type: :controller do
   let!(:container) { FactoryBot.create(:container) }
   let!(:updated_container) { FactoryBot.build(:container) }
   let(:invalid_id) { Container.pluck(:id).max + 1 }
+  let(:c_serializer) { ContainerSerializer }
 
   describe 'PUT #update' do
     def update_container_call(id, status)
@@ -12,9 +13,13 @@ RSpec.describe ContainersController, type: :controller do
     end
 
     context 'when updating valid containers' do
+      before(:each) { update_container_call(container.id, updated_container.status) }
+
       it 'does return success' do
-        update_container_call(container.id, updated_container.status)
         expect(response).to have_http_status(:ok)
+      end
+      it 'does return the container as specified in the serializer' do
+        expect(json_response.keys).to eq %w[id status active]
       end
     end
 

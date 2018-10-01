@@ -7,7 +7,6 @@ RSpec.describe Container, type: :model do
     context 'when create containers with appropiate data' do
       it 'does let create new ones' do
         expect(container).to be_valid
-        expect(container.active).to eq true
       end
     end
 
