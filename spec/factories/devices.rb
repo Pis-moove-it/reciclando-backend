@@ -1,8 +1,9 @@
 FactoryBot.define do
   factory :device do
-    device_id { Faker::Device.serial }
-    device_type { Faker::Device.platform }
+    device_id '33fa'#{ Faker::Device.serial }
+    device_type 'smartphone'#{ Faker::Device.platform }
     organization_id nil
     user_id nil
+    auth_token '3efg78'
   end
 end
