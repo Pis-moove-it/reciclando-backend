@@ -25,7 +25,7 @@ RSpec.describe BalesController, type: :controller do
         expect(response).to have_http_status(:bad_request)
       end
       it 'does not create bales without weight' do
-        create_bale_call(bale.weight, nil)
+        create_bale_call(nil, bale.material)
         expect(response).to have_http_status(:bad_request)
       end
     end
