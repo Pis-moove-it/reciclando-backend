@@ -1,5 +1,6 @@
 class Pocket < ApplicationRecord
   enum state: %i[Unweighed Weighed Classified]
+  validates :state, presence: true
 
   belongs_to :organization
 
