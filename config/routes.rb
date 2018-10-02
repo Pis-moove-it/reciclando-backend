@@ -8,6 +8,14 @@ Rails.application.routes.draw do
   end
 
   resources :pockets, only: [:index]
+  
+  resources :routes, only: [] do
+    resources :collections, only: %i[create]
+  end
+
+  resources :routes, only: [] do
+    resources :collections, only: %i[create]
+  end
 
   resources :bales, only: %i[index create show update]
 

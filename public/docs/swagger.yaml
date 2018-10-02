@@ -10,6 +10,7 @@ externalDocs:
 tags:
   - "Users"
   - "Bales"
+  - "Collections"
 
 paths:
   /organizations/{organization_id}/users:
@@ -187,6 +188,32 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+  /routes/{route_id}/collections:
+    post:
+      tags:
+        - "Collections"
+      operationId: addPocket
+      summary: Adds a pocket.
+      parameters:
+        - in: path
+          name: route_id
+          required: true
+          type: integer
+        - in: body
+          name: collection
+          schema:
+            $ref: '#/definitions/Collection'
+      responses:
+        200:
+          description: OK
+        404:
+          description: A route with the specified ID was not found.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
 
   /pockets:
     get:
@@ -264,6 +291,22 @@ definitions:
       state:
         enum:
         - "Classified"
+  Collection:
+    type: object
+    required:
+      - collection_point_id
+      - pocket_serial_numbers
+    properties:
+      collection_point_id:
+        type: integer
+      pocket_serial_numbers:
+        type: array
+        items:
+          type: string
+    example:
+      collection_point_id: 1
+      pocket_serial_numbers: ['B17', 'B58']
+
   Error:
     type: object
     properties:

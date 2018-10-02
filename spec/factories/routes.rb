@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :route do
-    length 1
+    length { Faker::Number.number(2) }
     user nil
   end
 end
