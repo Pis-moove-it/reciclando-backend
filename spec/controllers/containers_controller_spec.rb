@@ -5,29 +5,27 @@ RSpec.describe ContainersController, type: :controller do
 
   describe 'PUT #update' do
     let!(:container) { FactoryBot.create(:container) }
-    let!(:updated_container) { FactoryBot.build(:container) }
     let(:invalid_id) { Container.pluck(:id).max + 1 }
-    let(:c_serializer) { ContainerSerializer }
-    let(:s_container) { Container.new(id: container.id, status: updated_container.status) }
+    let(:serializer) { ContainerSerializer }
 
     def update_container_call(id, status)
       put :update, params: { id: id, container: { status: status } }
     end
 
     context 'when updating valid containers' do
-      before(:each) { update_container_call(container.id, updated_container.status) }
+      before(:each) { update_container_call(container.id, %w[Ok Damaged Removed].sample) }
 
       it 'does return success' do
         expect(response).to have_http_status(:ok)
       end
       it 'does return the container as specified in the serializer' do
-        expect(json_response).to eq c_serializer.new(s_container).as_json
+        expect(json_response).to eq serializer.new(container.reload).as_json
       end
     end
 
     context 'when updating non-existent containers' do
       it 'does return not found' do
-        update_container_call(invalid_id, updated_container.status)
+        update_container_call(invalid_id, %w[Ok Damaged Removed].sample)
         expect(response).to have_http_status(404)
         expect(json_response[:error_code]).to eq 3
       end
