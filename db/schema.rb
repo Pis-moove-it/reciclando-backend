@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_30_214200) do
+ActiveRecord::Schema.define(version: 2018_09_30_222516) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -76,6 +76,13 @@ ActiveRecord::Schema.define(version: 2018_09_30_214200) do
     t.datetime "updated_at", null: false
     t.bigint "collection_point_id"
     t.index ["collection_point_id"], name: "index_collections_on_collection_point_id"
+  end
+
+  create_table "containers", force: :cascade do |t|
+    t.integer "status"
+    t.boolean "active", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "devices", force: :cascade do |t|
