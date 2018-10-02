@@ -2,19 +2,21 @@ require 'rails_helper'
 
 RSpec.describe ContainersController, type: :controller do
   let(:json_response) { JSON.parse(response.body, symbolize_names: true) }
-  let!(:container) { FactoryBot.create(:container) }
-  let!(:updated_container) { FactoryBot.build(:container) }
-  let(:invalid_id) { Container.pluck(:id).max + 1 }
-  let(:c_serializer) { ContainerSerializer }
 
   describe 'PUT #update' do
+    let!(:container) { FactoryBot.create(:container) }
+    let!(:updated_container) { FactoryBot.build(:container) }
+    let(:invalid_id) { Container.pluck(:id).max + 1 }
+    let(:c_serializer) { ContainerSerializer }
+    let(:s_container) { Container.new(id: container.id, status: updated_container.status) }
+
     def update_container_call(id, status)
       put :update, params: { id: id, container: { status: status } }
     end
 
     context 'when updating valid containers' do
-      let(:s_container) { Container.new(id: container.id, status: updated_container.status) }
       before(:each) { update_container_call(container.id, updated_container.status) }
+
       it 'does return success' do
         expect(response).to have_http_status(:ok)
       end
