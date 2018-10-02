@@ -36,10 +36,36 @@ ActiveAdmin.register User do
     end
 
     panel 'Bales' do
-      table_for(user.bales) do |_bale|
-        column(:id) { |bale| link_to(bale.id, admin_bale_path(bale)) }
-        column(:material, &:material)
-        column(:weight, &:weight)
+      table do
+        thead do
+          tr do
+            th 'Trash'
+            th 'Plastic'
+            th 'Glass'
+          end
+        end
+        tbody do
+          tr do
+            td do
+              table_for(Bale.where(user_id: user.id, material: 'Trash')) do
+                column(:id) { |bale| link_to(bale.id, admin_bale_path(bale)) }
+                column(:weight, &:weight)
+              end
+            end
+            td do
+              table_for(Bale.where(user_id: user.id, material: 'Plastic')) do
+                column(:id) { |bale| link_to(bale.id, admin_bale_path(bale)) }
+                column(:weight, &:weight)
+              end
+            end
+            td do
+              table_for(Bale.where(user_id: user.id, material: 'Glass')) do
+                column(:id) { |bale| link_to(bale.id, admin_bale_path(bale)) }
+                column(:weight, &:weight)
+              end
+            end
+          end
+        end
       end
     end
   end
