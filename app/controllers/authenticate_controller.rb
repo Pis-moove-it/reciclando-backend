@@ -17,11 +17,16 @@ class AuthenticateController < BaseController
     logged_device
   end
 
-  def device_for(organization)
+  def create_device(organization)
     Device.transaction do
       device = Device.create_with(device_type: device_type).find_or_create_by!(device_id: device_id)
       device.update!(organization: organization)
     end
+  end
+
+  def device_for(organization)
+    return nil unless device_type && device_id && (device = create_device(organization))
+    device
   end
 
   def device_type
