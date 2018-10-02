@@ -1,9 +1,9 @@
-class OrganizationController < AuthenticateController
+class OrganizationsController < AuthenticateController
   skip_before_action :authenticated_user
 
   def login
     return render_error(1, 'wrong credentials') unless check_credentials_of(organization_by_name)
-    authenticate_device_with(organization)
+    authenticate_device_with(organization_by_name)
     render json: organization_by_name
   end
 

@@ -21,6 +21,7 @@ class AuthenticateController < BaseController
     Device.transaction do
       device = Device.create_with(device_type: device_type).find_or_create_by!(device_id: device_id)
       device.update!(organization: organization)
+      return device
     end
   end
 
@@ -30,10 +31,13 @@ class AuthenticateController < BaseController
   end
 
   def device_type
+    false if request.headers['HTTP_DEVICE_TYPE'].nil?
+    byebug
     request.headers['HTTP_DEVICE_TYPE']
   end
 
   def device_id
+    false if request.headers['HTTP_DEVICE_ID'].nil?
     request.headers['HTTP_DEVICE_ID']
   end
 
