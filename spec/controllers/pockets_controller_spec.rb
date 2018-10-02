@@ -12,11 +12,12 @@ RSpec.describe PocketsController, type: :controller do
     end
 
     context 'when the user is authenticated' do
-      let!(:auth_user) { create_an_authenticated_user_with(organization, '1', 'android') }
-      let!(:pocket) { create(:pocket, organization: organization) }
-
       let!(:another_organization) { create(:organization) }
-      let!(:another_pocket) { create(:pocket, organization: another_organization) }
+      let!(:auth_user) { create_an_authenticated_user_with(organization, '1', 'android') }
+
+      let!(:unclassified_pocket) { create(:unclassified_pocket, organization: organization) }
+      let!(:classified_pocket) { create(:classified_pocket, organization: organization) }
+      let!(:another_unclassified_pocket) { create(:unclassified_pocket, organization: another_organization) }
 
       before(:each) { list_pockets_call }
 
@@ -24,12 +25,16 @@ RSpec.describe PocketsController, type: :controller do
         expect(response).to have_http_status(200)
       end
 
-      it 'does return all the pockets' do
-        expect(json_response).to eql [serializer.new(pocket).as_json]
+      it 'does return all the unclassified pockets' do
+        expect(json_response).to eql [serializer.new(unclassified_pocket).as_json]
+      end
+
+      it 'does not return the classfied pockets' do
+        expect(json_response.pluck(:id)).not_to include classified_pocket.id
       end
 
       it 'does not return the pockets from another organization' do
-        expect(json_response.pluck(:id)).not_to include another_pocket.id
+        expect(json_response.pluck(:id)).not_to include another_unclassified_pocket.id
       end
     end
 

@@ -192,15 +192,15 @@ paths:
     get:
       tags:
         - "Pockets"
-      operationId: getPockets
-      summary: List pockets.
+      operationId: getUnclassifiedPockets
+      summary: List unclassified pockets.
       responses:
         200:
           description: OK
           schema:
             type: array
             items:
-              $ref: '#/definitions/Pocket'
+              $ref: '#/definitions/UnclassifiedPocket'
         500:
           description: Unexpected error.
           schema:
@@ -243,7 +243,7 @@ definitions:
     example:
       weight: 13.7
       material: Glass
-  Pocket:
+  UnclassifiedPocket:
     type: object
     properties:
       id:
@@ -254,6 +254,15 @@ definitions:
         enum:
         - "Unweighed"
         - "Weighed"
+  ClassifiedPocket:
+    type: object
+    properties:
+      id:
+        type: integer
+      serial_number:
+        type: string
+      state:
+        enum:
         - "Classified"
   Error:
     type: object
