@@ -11,19 +11,10 @@ RSpec.describe CollectionsController, type: :controller do
                               collection: { collection_point_id: cp_id, pocket_serial_numbers: serials } }
     end
 
-<<<<<<< HEAD
-    context 'when creating valid collections' do
-      it 'does return success' do
-        create_collection_call(route.id, collection_point.id, %w[B03 B17 B59])
-        expect(response).to have_http_status(:ok)
-      end
-    end
-=======
     context 'when the user is authenticated' do
       let!(:auth_user) { create_an_authenticated_user_with(organization, '1', 'android') }
       let!(:auth_route) { FactoryBot.create(:route, user: auth_user) }
       let(:invalid_route_id) { Route.pluck(:id).max + 1 }
->>>>>>> Collection controller test now test if the user is authenticated or not. Authentication added to addPocket
 
       context 'when creating valid collections' do
         it 'does return success' do

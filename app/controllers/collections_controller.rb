@@ -2,8 +2,7 @@ class CollectionsController < AuthenticateController
   def create
     collection = Collection.new(collection_params.except(:pocket_serial_numbers).merge(route: route))
     serials = params[:collection][:pocket_serial_numbers]
-    pockets = serials.collect { |s| { serial_number: s, state: 'Unweighed', organization: logged_user.organization } }
-    # The state above should not be assigned. It must be assigned by default in the database.
+    pockets = serials.collect { |s| { serial_number: s, organization: logged_user.organization } }
     collection.pockets.new(pockets)
     if collection.save
       head :ok
