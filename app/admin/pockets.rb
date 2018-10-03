@@ -1,5 +1,6 @@
 ActiveAdmin.register Pocket do
   permit_params :serial_number
+  actions :index, :edit, :update
 
   index do
     id_column
@@ -16,11 +17,6 @@ ActiveAdmin.register Pocket do
   form do |f|
     f.inputs do
       f.input :serial_number if f.object.persisted?
-      if f.object.new_record?
-        f.input :serial_number
-        f.input :state
-        f.input :organization
-      end
     end
     f.actions
   end

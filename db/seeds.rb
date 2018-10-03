@@ -6,6 +6,7 @@ require_relative 'fixtures/organizations'
 require_relative 'fixtures/users'
 require_relative 'fixtures/containers'
 require_relative 'fixtures/bales'
+require_relative 'fixtures/pockets'
 
 unless AdminUser.count.positive?
   Fixtures::ADMIN_USERS.each do |admin|
@@ -34,5 +35,11 @@ end
 unless Bale.count.positive?
   Fixtures::BALES.each do |bale|
     Bale.create!(bale)
+  end
+end
+
+unless Pocket.count.positive?
+  Fixtures::POCKETS.each do |pocket|
+    Pocket.create!(pocket)
   end
 end
