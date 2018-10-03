@@ -1,44 +1,45 @@
 class AuthenticateController < BaseController
   before_action :authenticated_user
 
-  # authenticate OR create a device
   def authenticate_device_with(organization)
-    device = device_for(organization)
-    response.set_header('ApiKey', device.auth_token) if device
+    return false unless (device = device_for(organization))
+    response.set_header('ApiKey', device.auth_token)
   end
 
   private
 
   # This method verify if the user doing the request is authenticated.
   # If not, renders an Unauthorized error.
-
+  #
   def authenticated_user
     return render_error(2, 'Invalid auth token') if logged_device.nil?
     logged_device
   end
 
-  def create_device(organization)
-    Device.transaction do
-      device = Device.create_with(device_type: device_type).find_or_create_by!(device_id: device_id)
+  # Search for device with device_id
+  #   If it is not found, we create a new one
+  #   If there is one, we updated it
+  #
+  def create_or_update_device(organization)
+    if (device = Device.find_by(device_id: device_id))
       device.update!(organization: organization)
-      return device
+    else
+      Device.create!(device_id: device_id, device_type: device_type,
+                     organization: organization)
     end
   end
 
   def device_for(organization)
-    return nil unless device_type && device_id && (device = create_device(organization))
+    return nil unless device_type && device_id && (device = create_or_update_device(organization))
     device
   end
 
   def device_type
-    false if request.headers['HTTP_DEVICE_TYPE'].nil?
-    byebug
-    request.headers['HTTP_DEVICE_TYPE']
+    request.headers['DeviceTypeHeader']
   end
 
   def device_id
-    false if request.headers['HTTP_DEVICE_ID'].nil?
-    request.headers['HTTP_DEVICE_ID']
+    request.headers['DeviceIdHeader']
   end
 
   def logged_device
