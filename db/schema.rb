@@ -51,8 +51,8 @@ ActiveRecord::Schema.define(version: 2018_10_01_212546) do
     t.integer "material"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id"
-    t.index ["user_id"], name: "index_bales_on_user_id"
+    t.bigint "organization_id"
+    t.index ["organization_id"], name: "index_bales_on_organization_id"
   end
 
   create_table "collection_pockets", force: :cascade do |t|
@@ -135,7 +135,7 @@ ActiveRecord::Schema.define(version: 2018_10_01_212546) do
     t.index ["organization_id"], name: "index_users_on_organization_id"
   end
 
-  add_foreign_key "bales", "users"
+  add_foreign_key "bales", "organizations"
   add_foreign_key "collection_pockets", "collections"
   add_foreign_key "collection_pockets", "pockets"
   add_foreign_key "collections", "collection_points"

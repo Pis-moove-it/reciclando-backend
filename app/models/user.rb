@@ -7,5 +7,4 @@ class User < ApplicationRecord
   belongs_to :organization
   has_many :devices, dependent: :destroy
   has_many :routes, dependent: :destroy
-  has_many :bales, dependent: :destroy
 end
