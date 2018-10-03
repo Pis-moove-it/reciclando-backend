@@ -7,8 +7,6 @@ require_relative 'fixtures/users'
 require_relative 'fixtures/routes'
 require_relative 'fixtures/collection_points'
 
-
-
 unless AdminUser.count.positive?
   Fixtures::ADMIN_USERS.each do |admin|
     AdminUser.create!(admin)

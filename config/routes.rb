@@ -13,10 +13,6 @@ Rails.application.routes.draw do
     resources :collections, only: %i[create]
   end
 
-  resources :routes, only: [] do
-    resources :collections, only: %i[create]
-  end
-
   resources :bales, only: %i[index create show update]
 
   mount SwaggerUiEngine::Engine, at: '/api_docs'
