@@ -3,18 +3,18 @@ ActiveAdmin.register Bale do
 
   filter :weight
   filter :material, as: :select, collection: Bale.materials
-  filter :user
+  filter :organization
 
   index do
     id_column
     column :weight
     column :material
-    column :user
+    column :organization
   end
 
   show title: :id do
     attributes_table do
-      rows :id, :weight, :material, :user
+      rows :id, :weight, :material, :organization
     end
   end
 end

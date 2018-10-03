@@ -34,39 +34,5 @@ ActiveAdmin.register User do
     attributes_table do
       rows :id, :name, :surname, :ci, :email, :organization
     end
-
-    panel 'Bales' do
-      table do
-        thead do
-          tr do
-            th 'Trash'
-            th 'Plastic'
-            th 'Glass'
-          end
-        end
-        tbody do
-          tr do
-            td do
-              table_for(Bale.where(user_id: user.id, material: 'Trash')) do
-                column(:id) { |bale| link_to(bale.id, admin_bale_path(bale)) }
-                column(:weight, &:weight)
-              end
-            end
-            td do
-              table_for(Bale.where(user_id: user.id, material: 'Plastic')) do
-                column(:id) { |bale| link_to(bale.id, admin_bale_path(bale)) }
-                column(:weight, &:weight)
-              end
-            end
-            td do
-              table_for(Bale.where(user_id: user.id, material: 'Glass')) do
-                column(:id) { |bale| link_to(bale.id, admin_bale_path(bale)) }
-                column(:weight, &:weight)
-              end
-            end
-          end
-        end
-      end
-    end
   end
 end

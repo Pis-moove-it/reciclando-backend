@@ -28,6 +28,13 @@ ActiveAdmin.register Organization do
         column(:state, &:state)
       end
     end
+    panel 'Bales' do
+      table_for(organization.bales) do |_bale|
+        column(:id) { |bale| link_to(bale.id, admin_bale_path(bale)) }
+        column(:weight, &:weight)
+        column(:material, &:material)
+      end
+    end
   end
 
   filter :name
