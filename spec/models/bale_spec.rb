@@ -1,8 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Bale, type: :model do
-  let!(:bale) { FactoryBot.create(:bale) }
+  let!(:bale) { create(:bale) }
   let(:b_serializer) { BaleSerializer }
+
   describe 'validations' do
     context 'when create bales with appropiate data' do
       it 'does let create new ones' do
@@ -15,8 +16,14 @@ RSpec.describe Bale, type: :model do
         bale.weight = nil
         expect(bale).not_to be_valid
       end
+
       it 'does not let create new ones, nil material value' do
         bale.material = nil
+        expect(bale).not_to be_valid
+      end
+
+      it 'does not let create new ones without organization' do
+        bale.organization = nil
         expect(bale).not_to be_valid
       end
     end

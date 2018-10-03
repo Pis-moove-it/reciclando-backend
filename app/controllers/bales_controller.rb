@@ -1,10 +1,10 @@
-class BalesController < BaseController
+class BalesController < AuthenticateController
   def index
-    render json: Bale.all
+    render json: Bale.where(organization: logged_user.organization)
   end
 
   def create
-    bale = Bale.new(bale_params)
+    bale = Bale.new(bale_params.merge(organization: logged_user.organization))
     if bale.save
       render json: bale
     else
@@ -18,7 +18,7 @@ class BalesController < BaseController
 
   def update
     if bale.update(bale_params)
-      head :ok
+      render json: bale
     else
       render_error(1, bale.errors)
     end
