@@ -1,6 +1,6 @@
 ActiveAdmin.register Pocket do
   permit_params :serial_number
-  actions :index, :edit, :update
+  actions :index, :show, :edit, :update
 
   index do
     id_column
@@ -13,6 +13,12 @@ ActiveAdmin.register Pocket do
   filter :serial_number
   filter :state
   filter :organization
+
+  show title: :serial_number do
+    attributes_table do
+      rows :id, :serial_number, :state, :organization
+    end
+  end
 
   form do |f|
     f.inputs do
