@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
   resources :organizations, only: [] do
+    collection do
+      post :login
+    end
     resources :users, only: %i[index show] do
       member do
         post :login
