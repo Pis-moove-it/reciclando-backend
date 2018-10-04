@@ -2,9 +2,13 @@ require 'rails_helper'
 
 RSpec.describe Pocket, type: :model do
   let!(:organization) { create(:organization) }
+  let!(:user) { create(:user, organization: organization) }
+  let!(:route) { create(:route, user: user) }
+  let!(:collection_point) { create(:collection_point) }
+  let!(:collection) { create(:collection, route: route, collection_point: collection_point) }
 
   describe 'serializer' do
-    let!(:pocket) { FactoryBot.create(:pocket, organization: organization) }
+    let!(:pocket) { create(:pocket, organization: organization, collection: collection) }
     let(:serializer) { PocketSerializer }
 
     it 'does return pockets as specified in the serializer' do
@@ -13,7 +17,7 @@ RSpec.describe Pocket, type: :model do
   end
 
   describe 'validations' do
-    let(:pocket) { build(:pocket, organization: organization) }
+    let(:pocket) { build(:pocket, organization: organization, collection: collection) }
 
     it 'is valid with valid attributes' do
       expect(pocket).to be_valid

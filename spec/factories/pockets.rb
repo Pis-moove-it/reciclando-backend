@@ -2,6 +2,7 @@ FactoryBot.define do
   factory :pocket do
     serial_number { Faker::Number.number(10) }
     organization nil
+    collection nil
   end
 
   factory :classified_pocket, parent: :pocket do

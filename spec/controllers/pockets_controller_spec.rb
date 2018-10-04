@@ -4,6 +4,11 @@ RSpec.describe PocketsController, type: :controller do
   let(:json_response) { JSON.parse(response.body, symbolize_names: true) }
 
   let!(:organization) { create(:organization) }
+  let!(:user) { create(:user, organization: organization) }
+  let!(:route) { create(:route, user: user) }
+  let!(:collection_point) { create(:collection_point) }
+  let!(:collection) { create(:collection, route: route, collection_point: collection_point) }
+
   let(:serializer) { PocketSerializer }
 
   describe 'GET #index' do
