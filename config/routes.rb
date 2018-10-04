@@ -10,7 +10,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :pockets, only: [:index]
+  resources :pockets, only: [:index] do
+    member do
+      post :edit_serial_number
+    end
+  end
 
   resources :routes, only: [] do
     resources :collections, only: %i[create]
