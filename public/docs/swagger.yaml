@@ -9,6 +9,8 @@ externalDocs:
   url: "https://projects.invisionapp.com/share/5RNT0ZQQUPM#/screens"
 tags:
   - "Users"
+  - "Bales"
+  - "Containers"
 
 paths:
   /organizations/{organization_id}/users:
@@ -37,6 +39,7 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+
   /organizations/{organization_id}/users/{id}:
     get:
       tags:
@@ -66,7 +69,217 @@ paths:
           schema:
             $ref: '#/definitions/Error'
 
+  /organizations/{organization_id}/users/{id}/login:
+    post:
+      tags:
+        - "Users"
+      operationId: userEnterSystem
+      summary: User enter to the app.
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          type: integer
+        - in: path
+          name: id
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        401:
+          description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: An organization or user with the specified ID was not found.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+      - ApiKey: []
+
+  /organizations/login:
+    post:
+      tags:
+        - "Organizations"
+      operationId: organizationLogin
+      summary: Organization Login.
+      parameters:
+        - in: body
+          name: name
+          required: true
+          type: string
+        - in: body
+          name: password
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Organization'
+          headers:
+            ApiKey:
+              type: string
+        400:
+          description: Malformed request.
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Organization not found by the given name.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+
+  /bales:
+    get:
+      tags:
+        - "Bales"
+      operationId: getBales
+      summary: List bales.
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Bale'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      tags:
+        - "Bales"
+      operationId: createBale
+      summary: Create a bale.
+      parameters:
+        - in: body
+          name: bale
+          schema:
+            $ref: '#/definitions/Bale'
+      responses:
+        200:
+          description: OK
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+
+  /bales/{bale_id}:
+    get:
+      tags:
+        - "Bales"
+      operationId: getBale
+      summary: Get one bale.
+      parameters:
+        - in: path
+          name: bale_id
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Bale'
+        404:
+          description: A bale with the specified ID was not found.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      tags:
+        - "Bales"
+      operationId: updateBale
+      summary: Update a bale.
+      parameters:
+        - in: path
+          name: bale_id
+          required: true
+          type: integer
+        - in: body
+          name: bale
+          schema:
+            $ref: '#/definitions/Bale'
+      responses:
+        200:
+          description: OK
+        404:
+          description: A bale with the specified ID was not found.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+
+  /pockets:
+    get:
+      tags:
+        - "Pockets"
+      operationId: getUnclassifiedPockets
+      summary: List unclassified pockets.
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UnclassifiedPocket'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+  /containers/{container_id}:
+    put:
+      tags:
+        - "Containers"
+      operationId: updateContainer
+      summary: Update the container status.
+      parameters:
+        - in: path
+          name: container_id
+          required: true
+          type: integer
+        - in: body
+          name: container
+          schema:
+            $ref: '#/definitions/Container'
+      responses:
+        200:
+          description: Ok
+        400:
+          description: A container with specified Id was not found.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+
 definitions:
+  Organization:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    required:
+      - id
+      - name
   User:
     type: object
     properties:
@@ -86,6 +299,44 @@ definitions:
       - surname
       - ci
       - email
+  Bale:
+    type: object
+    required:
+      - weight
+      - material
+    properties:
+      weight:
+        type: number
+      material:
+        type: string
+        enum:
+          - Trash
+          - Glass
+          - Plastic
+    example:
+      weight: 13.7
+      material: Glass
+  UnclassifiedPocket:
+    type: object
+    properties:
+      id:
+        type: integer
+      serial_number:
+        type: string
+      state:
+        enum:
+        - "Unweighed"
+        - "Weighed"
+  ClassifiedPocket:
+    type: object
+    properties:
+      id:
+        type: integer
+      serial_number:
+        type: string
+      state:
+        enum:
+        - "Classified"
   Error:
     type: object
     properties:
@@ -95,3 +346,17 @@ definitions:
         type: string
       details:
         type: string
+  Container:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - Ok
+            - Damaged
+            - Removed
+      example:
+        status: Ok
+

@@ -4,13 +4,22 @@ RSpec.describe Organization, type: :model do
   describe 'validations' do
     let(:organization) { FactoryBot.build(:organization) }
 
-    it 'should let create new ones, with appropiate data' do
-      expect(organization). to be_valid
+    context 'when create organizations with appropiate data' do
+      it 'does let create new ones' do
+        expect(organization). to be_valid
+      end
     end
 
-    it 'should not let create new ones, with nil name value' do
-      organization.name = nil
-      expect(organization).not_to be_valid
+    context 'when create organizations with wrong values' do
+      it 'does not create new ones without name' do
+        organization.name = nil
+        expect(organization).not_to be_valid
+      end
+
+      it 'does not create new ones without password' do
+        organization.password = nil
+        expect(organization).not_to be_valid
+      end
     end
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_09_220737) do
+ActiveRecord::Schema.define(version: 2018_09_30_222516) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,12 +51,77 @@ ActiveRecord::Schema.define(version: 2018_09_09_220737) do
     t.integer "material"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "organization_id"
+    t.index ["organization_id"], name: "index_bales_on_organization_id"
+  end
+
+  create_table "collection_pockets", force: :cascade do |t|
+    t.bigint "pocket_id"
+    t.bigint "collection_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["collection_id"], name: "index_collection_pockets_on_collection_id"
+    t.index ["pocket_id"], name: "index_collection_pockets_on_pocket_id"
+  end
+
+  create_table "collection_points", force: :cascade do |t|
+    t.string "latitude"
+    t.string "longitude"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "collections", force: :cascade do |t|
+    t.integer "pocket_weigth"
+    t.datetime "date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "collection_point_id"
+    t.index ["collection_point_id"], name: "index_collections_on_collection_point_id"
+  end
+
+  create_table "containers", force: :cascade do |t|
+    t.integer "status"
+    t.boolean "active", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "devices", force: :cascade do |t|
+    t.string "device_id"
+    t.string "device_type"
+    t.string "auth_token"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.bigint "organization_id"
+    t.index ["auth_token"], name: "index_devices_on_auth_token", unique: true
+    t.index ["organization_id"], name: "index_devices_on_organization_id"
+    t.index ["user_id"], name: "index_devices_on_user_id"
   end
 
   create_table "organizations", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "password_digest"
+  end
+
+  create_table "pockets", force: :cascade do |t|
+    t.string "serial_number"
+    t.integer "state", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "organization_id"
+    t.index ["organization_id"], name: "index_pockets_on_organization_id"
+  end
+
+  create_table "routes", force: :cascade do |t|
+    t.integer "length"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_routes_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -70,5 +135,13 @@ ActiveRecord::Schema.define(version: 2018_09_09_220737) do
     t.index ["organization_id"], name: "index_users_on_organization_id"
   end
 
+  add_foreign_key "bales", "organizations"
+  add_foreign_key "collection_pockets", "collections"
+  add_foreign_key "collection_pockets", "pockets"
+  add_foreign_key "collections", "collection_points"
+  add_foreign_key "devices", "organizations"
+  add_foreign_key "devices", "users"
+  add_foreign_key "pockets", "organizations"
+  add_foreign_key "routes", "users"
   add_foreign_key "users", "organizations"
 end
