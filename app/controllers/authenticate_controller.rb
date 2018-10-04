@@ -23,6 +23,7 @@ class AuthenticateController < BaseController
   def create_or_update_device(organization)
     if (device = Device.find_by(device_id: device_id))
       device.update!(organization: organization)
+      device
     else
       Device.create!(device_id: device_id, device_type: device_type,
                      organization: organization)
@@ -35,10 +36,12 @@ class AuthenticateController < BaseController
   end
 
   def device_type
+    return false if request.headers['DeviceTypeHeader'].blank?
     request.headers['DeviceTypeHeader']
   end
 
   def device_id
+    return false if request.headers['DeviceTypeHeader'].blank?
     request.headers['DeviceIdHeader']
   end
 
