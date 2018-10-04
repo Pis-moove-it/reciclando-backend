@@ -7,4 +7,10 @@ ActiveAdmin.register Pocket do
     column :state
     column :organization
   end
+
+  show title: :id do
+    attributes_table do
+      rows :id, :serial_number, :state, :organization
+    end
+  end
 end

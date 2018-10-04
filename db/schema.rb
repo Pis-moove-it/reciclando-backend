@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_30_222516) do
+ActiveRecord::Schema.define(version: 2018_10_01_212546) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,6 +51,8 @@ ActiveRecord::Schema.define(version: 2018_09_30_222516) do
     t.integer "material"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "organization_id"
+    t.index ["organization_id"], name: "index_bales_on_organization_id"
   end
 
   create_table "collection_pockets", force: :cascade do |t|
@@ -133,6 +135,7 @@ ActiveRecord::Schema.define(version: 2018_09_30_222516) do
     t.index ["organization_id"], name: "index_users_on_organization_id"
   end
 
+  add_foreign_key "bales", "organizations"
   add_foreign_key "collection_pockets", "collections"
   add_foreign_key "collection_pockets", "pockets"
   add_foreign_key "collections", "collection_points"
