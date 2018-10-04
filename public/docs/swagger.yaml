@@ -104,6 +104,42 @@ paths:
       security:
       - ApiKey: []
 
+  /organizations/login:
+    post:
+      tags:
+        - "Organizations"
+      operationId: organizationLogin
+      summary: Organization Login.
+      parameters:
+        - in: body
+          name: name
+          required: true
+          type: string
+        - in: body
+          name: password
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Organization'
+          headers:
+            ApiKey:
+              type: string
+        400:
+          description: Malformed request.
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Organization not found by the given name.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+
   /bales:
     get:
       tags:
@@ -234,6 +270,16 @@ paths:
             $ref: '#/definitions/Error'
 
 definitions:
+  Organization:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    required:
+      - id
+      - name
   User:
     type: object
     properties:
