@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_04_000250) do
+ActiveRecord::Schema.define(version: 2018_09_30_222516) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,7 +60,6 @@ ActiveRecord::Schema.define(version: 2018_10_04_000250) do
     t.bigint "collection_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.float "pocket_weigth"
     t.index ["collection_id"], name: "index_collection_pockets_on_collection_id"
     t.index ["pocket_id"], name: "index_collection_pockets_on_pocket_id"
   end
@@ -73,6 +72,8 @@ ActiveRecord::Schema.define(version: 2018_10_04_000250) do
   end
 
   create_table "collections", force: :cascade do |t|
+    t.integer "pocket_weigth"
+    t.datetime "date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "collection_point_id"
