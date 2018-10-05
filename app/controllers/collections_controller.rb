@@ -3,7 +3,7 @@ class CollectionsController < AuthenticateController
     collection = Collection.new(collection_params.merge(pockets_attributes: pockets_with_organization,
                                                         route_id: params[:route_id]))
     if collection.save
-      head :ok
+      render json: collection
     else
       render_error(1, collection.errors)
     end
