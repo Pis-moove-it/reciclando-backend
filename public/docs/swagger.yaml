@@ -243,6 +243,33 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+  /pockets/{id}/edit_serial_number:
+    post:
+      tags:
+        - "Pockets"
+      operationId: editSerialNumber
+      summary: Edit the serial number of pocket.
+      parameters:
+        - in: path
+          name: pocket_id
+          required: true
+          type: integer
+        - in: body
+          name: serial_number
+          schema:
+            $ref: '#/definitions/UnclassifiedPocket'
+      responses:
+        200:
+          description: Ok
+        404:
+          description: A pocket with specified Id was not found.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+
   /containers/{container_id}:
     put:
       tags:
