@@ -11,6 +11,7 @@ tags:
   - "Users"
   - "Bales"
   - "Containers"
+  - "Collections"
 
 paths:
   /organizations/{organization_id}/users:
@@ -268,6 +269,32 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+  /routes/{route_id}/collections:
+    post:
+      tags:
+        - "Collections"
+      operationId: addPocket
+      summary: Add a pocket.
+      parameters:
+        - in: path
+          name: route_id
+          required: true
+          type: integer
+        - in: body
+          name: collection
+          schema:
+            $ref: '#/definitions/Collection'
+      responses:
+        200:
+          description: OK
+        404:
+          description: A route with the specified ID was not found.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
 
 definitions:
   Organization:
@@ -337,15 +364,6 @@ definitions:
       state:
         enum:
         - "Classified"
-  Error:
-    type: object
-    properties:
-      http_status:
-        type: "integer"
-      description:
-        type: string
-      details:
-        type: string
   Container:
       type: object
       required:
@@ -359,4 +377,33 @@ definitions:
             - Removed
       example:
         status: Ok
+  Collection:
+    type: object
+    required:
+      - collection_point_id
+      - pockets_attributes
+    properties:
+      collection_point_id:
+        type: integer
+      pockets_attributes:
+        type: array
+        items:
+          type: object
+          properties:
+            serial_number:
+              type: string
+    example:
+      collection_point_id: 1
+      pocket_attributes: [{"serial_number": "B05"},
+                          {"serial_number": "B18"}]
+  Error:
+    type: object
+    properties:
+      http_status:
+        type: "integer"
+      description:
+        type: string
+      details:
+        type: string
+
 
