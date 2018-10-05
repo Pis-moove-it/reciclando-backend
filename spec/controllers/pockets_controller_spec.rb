@@ -72,7 +72,7 @@ RSpec.describe PocketsController, type: :controller do
   end
 
   describe 'POST #edit_serial_number' do
-    let!(:pocket) { create(:pocket, organization: organization) }
+    let!(:pocket) { create(:pocket, organization: organization, collection: collection) }
 
     def edit_serial_number_call(serial_number)
       post :edit_serial_number, params: { id: pocket.id, serial_number: serial_number }
