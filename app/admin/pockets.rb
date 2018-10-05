@@ -24,11 +24,10 @@ ActiveAdmin.register Pocket do
 
   form do |f|
     f.inputs do
-      if f.object.persisted? && f.object.state != 'Unweighed'
-        f.input :serial_number
+      f.input :serial_number
+      if f.object.state != 'Unweighed'
         f.input :weight
-      elsif f.object.persisted?
-        f.input :serial_number
+      else
         f.input :state
       end
     end
