@@ -1,6 +1,4 @@
 class CollectionsController < AuthenticateController
-  skip_before_action :authenticated_user
-
   def create
     collection = Collection.new(collection_params.merge(pockets_attributes: pockets_with_organization,
                                                         route_id: params[:route_id]))
@@ -14,7 +12,7 @@ class CollectionsController < AuthenticateController
   private
 
   def pockets_with_organization
-    collection_params[:pockets_attributes].collect { |pocket| pocket.merge(organization_id: Organization.first.id) }
+    collection_params[:pockets_attributes].collect { |p| p.merge(organization: logged_user.organization) }
   end
 
   def collection_params
