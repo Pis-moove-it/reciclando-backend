@@ -13,5 +13,4 @@ module Fixtures
       active: 'False'
     }
   ].freeze
-
 end

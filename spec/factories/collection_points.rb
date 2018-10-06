@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :collection_point do
-    latitude 'MyString'
-    longitude 'MyString'
+    latitude { Faker::Address.latitude }
+    longitude { Faker::Address.longitude }
   end
 end
