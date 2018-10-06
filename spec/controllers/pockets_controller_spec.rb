@@ -73,14 +73,18 @@ RSpec.describe PocketsController, type: :controller do
 
   describe 'POST #edit_serial_number' do
     let!(:pocket) { create(:pocket, organization: organization, collection: collection) }
+    let!(:device) do
+      create(:device, device_id: '1', device_type: 'android',
+                      organization: organization)
+    end
 
     def edit_serial_number_call(serial_number)
+      @request.headers['ApiKey'] = device.auth_token
       post :edit_serial_number, params: { id: pocket.id, serial_number: serial_number }
     end
 
     context 'when inputs are valid' do
       before(:each) { edit_serial_number_call('123') }
-
       it 'does edit the serial number' do
         expect(json_response[:serial_number]).to eq '123'
       end
@@ -89,19 +93,30 @@ RSpec.describe PocketsController, type: :controller do
       end
     end
 
+    context 'when ApiKey is missing' do
+      it 'does return invalid token' do
+        post :edit_serial_number, params: { id: pocket.id, serial_number: '14592' }
+        expect(response).to have_http_status(401)
+      end
+    end
+
     context 'when pocket id is invalid' do
       it 'does return not found' do
-        post :edit_serial_number, params: { id: Pocket.pluck(:id).max + 1, serial_number: 'serial_number' }
+        @request.headers['ApiKey'] = device.auth_token
+        max_id = Pocket.pluck(:id).max
+        post :edit_serial_number, params: { id: max_id + 1, serial_number: '1', ApiKey: device.auth_token }
         expect(response).to have_http_status(:not_found)
       end
     end
 
     context 'when serial number is invalid or missing' do
       it 'does return bad request' do
+        @request.headers['ApiKey'] = device.auth_token
         post :edit_serial_number, params: { id: pocket.id }
         expect(response).to have_http_status(400)
       end
       it 'does return bad request' do
+        @request.headers['ApiKey'] = device.auth_token
         post :edit_serial_number, params: { id: pocket.id, serial_number: '' }
         expect(response).to have_http_status(400)
       end

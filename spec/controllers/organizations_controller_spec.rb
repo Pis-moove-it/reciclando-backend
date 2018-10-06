@@ -104,7 +104,6 @@ RSpec.describe OrganizationsController, type: :controller do
         create(:device, device_id: '1', device_type: 'android',
                         organization: another_organization)
       end
-
       before(:each) { organization_login_call('1', 'android', organization.name, 'password') }
 
       it 'should return success' do

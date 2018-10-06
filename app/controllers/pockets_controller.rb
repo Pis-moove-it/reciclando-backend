@@ -1,6 +1,4 @@
 class PocketsController < AuthenticateController
-  skip_before_action :authenticated_user, only: :edit_serial_number
-
   def index
     render json: Pocket.unclassified.where(organization_id: logged_user.organization.id)
   end
