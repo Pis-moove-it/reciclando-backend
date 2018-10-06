@@ -243,7 +243,7 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
-  /pockets/{id}/edit_serial_number:
+  /pockets/{pocket_id}/edit_serial_number:
     post:
       tags:
         - "Pockets"
