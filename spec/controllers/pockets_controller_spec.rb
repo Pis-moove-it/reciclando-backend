@@ -70,4 +70,55 @@ RSpec.describe PocketsController, type: :controller do
       end
     end
   end
+
+  describe 'PUT #edit_serial_number' do
+    let!(:pocket) { create(:pocket, organization: organization, collection: collection) }
+    let!(:device) do
+      create(:device, device_id: '1', device_type: 'android',
+                      organization: organization)
+    end
+
+    def edit_serial_number_call(pocket_id, serial_number, token)
+      @request.headers['ApiKey'] = token
+      put :edit_serial_number, params: { id: pocket_id, serial_number: serial_number }
+    end
+
+    context 'when inputs are valid' do
+      before(:each) { edit_serial_number_call(pocket.id, '123', device.auth_token) }
+      it 'does edit the serial number' do
+        expect(json_response[:serial_number]).to eq '123'
+      end
+      it 'does return ok' do
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context 'when ApiKey is missing' do
+      it 'does return invalid token' do
+        put :edit_serial_number, params: { id: pocket.id, serial_number: '14592' }
+        expect(response).to have_http_status(401)
+      end
+    end
+
+    context 'when pocket id is invalid' do
+      it 'does return not found' do
+        max_id = Pocket.pluck(:id).max
+        edit_serial_number_call(max_id + 1, '14592', device.auth_token)
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    context 'when serial number is invalid or missing' do
+      it 'does return bad request' do
+        @request.headers['ApiKey'] = device.auth_token
+        put :edit_serial_number, params: { id: pocket.id }
+        expect(response).to have_http_status(400)
+      end
+      it 'does return bad request' do
+        @request.headers['ApiKey'] = device.auth_token
+        put :edit_serial_number, params: { id: pocket.id, serial_number: '' }
+        expect(response).to have_http_status(400)
+      end
+    end
+  end
 end
