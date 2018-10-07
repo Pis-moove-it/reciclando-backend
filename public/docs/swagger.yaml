@@ -257,7 +257,7 @@ paths:
         - in: body
           name: serial_number
           required: true
-          type: integer
+          type: string
         - in: body
           name: ApiKey
           required: true
