@@ -162,31 +162,26 @@ RSpec.describe PocketsController, type: :controller do
 
     context 'when pocket id is invalid' do
       it 'does return not found' do
-        @request.headers['ApiKey'] = device.auth_token
-        put :edit_weight, params: { id: Pocket.pluck(:id).max + 1, weight: 50.3 }
+        edit_weight_call(Pocket.pluck(:id).max + 1, 50.3, device.auth_token)
         expect(response).to have_http_status(:not_found)
       end
     end
 
     context 'when the weight is invalid or missing' do
       it 'does return bad request, negative weight' do
-        @request.headers['ApiKey'] = device.auth_token
-        put :edit_weight, params: { id: weighed_pocket.id, weight: -28.45 }, as: :json
+        edit_weight_call(weighed_pocket.id, -28.45, device.auth_token)
         expect(response).to have_http_status(400)
       end
       it 'does return bad request, empty weight' do
-        @request.headers['ApiKey'] = device.auth_token
-        put :edit_weight, params: { id: weighed_pocket.id, weight: '' }
+        edit_weight_call(weighed_pocket.id, '', device.auth_token)
         expect(response).to have_http_status(400)
       end
       it 'does return bad request, nil weight' do
-        @request.headers['ApiKey'] = device.auth_token
-        put :edit_weight, params: { id: weighed_pocket.id, weight: nil }
+        edit_weight_call(weighed_pocket.id, nil, device.auth_token)
         expect(response).to have_http_status(400)
       end
       it 'does return bad request, unweighed pocket' do
-        @request.headers['ApiKey'] = device.auth_token
-        put :edit_weight, params: { id: unweighed_pocket.id, weight: 80.8 }
+        edit_weight_call(unweighed_pocket.id, 80.8, device.auth_token)
         expect(response).to have_http_status(400)
       end
     end
