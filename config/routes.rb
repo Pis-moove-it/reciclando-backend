@@ -12,7 +12,7 @@ Rails.application.routes.draw do
 
   resources :pockets, only: [:index] do
     member do
-      post :edit_serial_number
+      put :edit_serial_number
     end
   end
 
