@@ -84,7 +84,7 @@ RSpec.describe PocketsController, type: :controller do
     end
 
     context 'when inputs are valid' do
-      before(:each) { edit_serial_number_call(pocket.id,'123',device.auth_token) }
+      before(:each) { edit_serial_number_call(pocket.id, '123', device.auth_token) }
       it 'does edit the serial number' do
         expect(json_response[:serial_number]).to eq '123'
       end
