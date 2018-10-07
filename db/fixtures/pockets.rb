@@ -18,3 +18,4 @@ module Fixtures
       collection_id: 1
     }
   ].freeze
+end
