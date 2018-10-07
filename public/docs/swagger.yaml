@@ -243,8 +243,9 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+
   /pockets/{pocket_id}/edit_serial_number:
-    post:
+    put:
       tags:
         - "Pockets"
       operationId: editSerialNumber
@@ -262,6 +263,33 @@ paths:
           name: ApiKey
           required: true
           type: string
+      responses:
+        200:
+          description: Ok
+        404:
+          description: A pocket with specified Id was not found.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+
+  /pockets/{pocket_id}/edit_weight:
+    put:
+      tags:
+        - "Pockets"
+      operationId: editWeight
+      summary: Edit the weight of weighead pockets.
+      parameters:
+        - in: path
+          name: pocket_id
+          required: true
+          type: integer
+        - in: body
+          name: weight
+          required: true
+          type: float
       responses:
         200:
           description: Ok

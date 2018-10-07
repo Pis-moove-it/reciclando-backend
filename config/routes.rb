@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   resources :pockets, only: [:index] do
     member do
       put :edit_serial_number
+      put :edit_weight
     end
   end
 

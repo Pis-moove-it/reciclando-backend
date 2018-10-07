@@ -13,4 +13,4 @@ module Fixtures
       user_id: 1
     }
   ].freeze
-  end
+end
