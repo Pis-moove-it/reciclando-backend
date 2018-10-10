@@ -16,6 +16,12 @@ class BalesController < AuthenticateController
     render json: bale
   end
 
+  def show_by_material
+    render_error(1, 'Invalid material.') unless check_entry
+    render json: Bale.where(material: request.headers['material'])
+    byebug
+  end
+
   def update
     if bale.update(bale_params)
       render json: bale
@@ -32,5 +38,10 @@ class BalesController < AuthenticateController
 
   def bale_params
     params.require(:bale).permit(:weight, :material)
+  end
+
+  def check_entry
+    /\A(Glass|Plastic|Trash)\z/.match(request.headers['material'])
+    byebug
   end
 end
