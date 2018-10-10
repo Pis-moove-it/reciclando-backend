@@ -256,12 +256,12 @@ paths:
           name: pocket_id
           required: true
           type: integer
-        - in: body
-          name: serial_number
+        - in: header
+          name: ApiKey
           required: true
           type: string
         - in: body
-          name: ApiKey
+          name: serial_number
           required: true
           type: string
       responses:
