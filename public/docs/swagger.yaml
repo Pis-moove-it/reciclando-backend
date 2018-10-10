@@ -226,6 +226,31 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+  /bales/show_by_material:
+    get:
+      tags:
+        - "Bales"
+      operationId: showBalesByMaterial
+      summary: Return all bales which matches certain material.
+      parameters:
+        - in: header
+          name: ApiKey
+          required: true
+          type: string
+        - in: header
+          name: material
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad request.
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+
 
   /pockets:
     get:
