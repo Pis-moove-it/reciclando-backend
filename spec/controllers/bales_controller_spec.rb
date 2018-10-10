@@ -199,22 +199,60 @@ RSpec.describe BalesController, type: :controller do
     end
   end
   describe 'GET # show_bales_by_material' do
+    let!(:device) do
+      create(:device, device_id: '1', device_type: 'android',
+                      organization: organization)
+    end
+    let!(:bale) { create(:bale, organization: organization) }
+
+    def show_bales_by_material_call(apikey, material)
+      @request.headers['ApiKey'] = apikey
+      @request.headers['material'] = material
+      get :show_by_material
+    end
 
     context 'when user is authenticated' do
-      it 'does return success' do
-        #expect(response).to have_http_status(ok)
+      it 'does return success (Plastic)' do
+        show_bales_by_material_call(device.auth_token, 'Plastic')
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'does return success (Trash)' do
+        show_bales_by_material_call(device.auth_token, 'Trash')
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'does return success (Glass)' do
+        show_bales_by_material_call(device.auth_token, 'Glass')
+        expect(response).to have_http_status(:ok)
       end
 
       it 'does return the bales' do
+        Bale.first.update(material: 'Trash')
+        show_bales_by_material_call(device.auth_token, 'Trash')
+        expect(json_response.count).to eql 1
       end
     end
-    context 'when material is incorrect' do
-      it 'does return the right error' do
+    context 'when material is incorrect or missing' do
+      it 'does return the right error (invalid)' do
+        show_bales_by_material_call(device.auth_token, 'invalid string')
+        expect(response).to have_http_status(:bad_request)
       end
-      it 'does return invalid material' do
-      end
-    end
 
+      it 'does return the right error (nil)' do
+        show_bales_by_material_call(device.auth_token, nil)
+        expect(response).to have_http_status(:bad_request)
+      end
+
+      it 'does return the right error code' do
+        show_bales_by_material_call(device.auth_token, 'invalid string')
+        expect(json_response[:error_code]).to eql 1
+      end
+
+      it 'does return the reason' do
+        show_bales_by_material_call(device.auth_token, 'invalid string')
+        expect(json_response[:details]).to eql 'Invalid material.'
+      end
+    end
   end
-
 end
