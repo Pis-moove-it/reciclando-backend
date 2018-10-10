@@ -11,19 +11,15 @@ RSpec.describe RoutesController, type: :controller do
 
     context 'when user is authenticated' do
       let!(:auth_user) { create_an_authenticated_user_with(organization, '1', 'android') }
-      let(:u_serializer) { UserSerializer }
+      let(:r_serializer) { RouteSerializer }
       before(:each) { create_route_call }
 
       it 'does return success' do
         expect(response).to have_http_status(:ok)
       end
 
-      it 'does return a route id' do
-        expect(json_response[:id]).not_to be_nil
-      end
-
-      it 'does return the logged user' do
-        expect(json_response[:user]).to eql u_serializer.new(auth_user).as_json
+      it 'does return the route as specified in the serializer' do
+        expect(json_response).to eql r_serializer.new(Route.last).as_json
       end
     end
 

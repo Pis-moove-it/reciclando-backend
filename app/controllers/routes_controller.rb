@@ -1,6 +1,6 @@
 class RoutesController < AuthenticateController
   def create
-    route = Route.new(user_id: logged_user.id)
+    route = Route.new(user: logged_user)
     if route.save
       render json: route
     else
