@@ -59,16 +59,17 @@ RSpec.describe BalesController, type: :controller do
   end
 
   describe 'GET #index' do
-    let(:another_organization) { create(:organization) }
-    let!(:bale) { create(:bale, organization: organization) }
-    let!(:another_bale) { create(:bale, organization: another_organization) }
-
     context 'when user is authenticated' do
       let!(:auth_user) { create_an_authenticated_user_with(organization, '1', 'android') }
+      let(:another_organization) { create(:organization) }
+      let!(:another_user) { create(:user, organization: another_organization) }
+
+      let!(:bale) { create(:bale, organization: organization, user: auth_user) }
+      let!(:another_bale) { create(:bale, organization: another_organization, user: another_user) }
 
       before(:each) { get :index }
 
-      it 'does return succes' do
+      it 'does return success' do
         expect(response).to have_http_status(:ok)
       end
 
@@ -82,8 +83,6 @@ RSpec.describe BalesController, type: :controller do
     end
 
     context 'when user is not authenticated' do
-      let!(:user) { create(:user, organization: organization) }
-
       before(:each) { get :index }
 
       it 'does return an error' do
@@ -97,17 +96,16 @@ RSpec.describe BalesController, type: :controller do
   end
 
   describe 'GET #show' do
-    let!(:bale) { create(:bale, organization: organization) }
-
     def bale_by_id_call(id)
       get :show, params: { id: id }
     end
 
     context 'when user is authenticated' do
       let!(:auth_user) { create_an_authenticated_user_with(organization, '1', 'android') }
+      let!(:bale) { create(:bale, organization: organization, user: auth_user) }
 
       context 'when shows valid bales' do
-        it 'does return succes' do
+        it 'does return success' do
           bale_by_id_call(bale.id)
           expect(response).to have_http_status(:ok)
         end
@@ -123,6 +121,7 @@ RSpec.describe BalesController, type: :controller do
 
     context 'when user is not authenticated' do
       let!(:user) { create(:user, organization: organization) }
+      let!(:bale) { create(:bale, organization: organization, user: user) }
 
       before(:each) { bale_by_id_call(bale.id) }
 
@@ -137,14 +136,13 @@ RSpec.describe BalesController, type: :controller do
   end
 
   describe 'PUT #update' do
-    let!(:bale) { create(:bale, organization: organization) }
-
     def update_bale_call(id, weight, material)
       put :update, params: { id: id, bale: { weight: weight, material: material } }
     end
 
     context 'when user is authenticated' do
       let!(:auth_user) { create_an_authenticated_user_with(organization, '1', 'android') }
+      let!(:bale) { create(:bale, organization: organization, user: auth_user) }
 
       context 'when updating valid bales' do
         before(:each) { update_bale_call(bale.id, bale.weight, bale.material) }
@@ -187,6 +185,7 @@ RSpec.describe BalesController, type: :controller do
 
     context 'when user is not authenticated' do
       let!(:user) { create(:user, organization: organization) }
+      let!(:bale) { create(:bale, organization: organization, user: user) }
 
       before(:each) { update_bale_call(bale.id, bale.weight, bale.material) }
 
