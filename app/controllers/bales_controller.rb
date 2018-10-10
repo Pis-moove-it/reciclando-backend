@@ -4,7 +4,7 @@ class BalesController < AuthenticateController
   end
 
   def create
-    bale = Bale.new(bale_params.merge(organization: logged_user.organization))
+    bale = Bale.new(bale_params.merge(organization: logged_user.organization, user: logged_user))
     if bale.save
       render json: bale
     else
