@@ -27,7 +27,7 @@ class PocketsController < AuthenticateController
     return render_error(1, 'Weighead pocket') if pocket.state == 'Weighed'
     return render_error(1, 'Negative weight') if negative_weight?
 
-    pocket.update!(weight: params['weight'])
+    pocket.update!(weight: params['weight'], state: 'Weighed')
     render json: pocket
   end
 
