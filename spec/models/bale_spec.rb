@@ -2,7 +2,8 @@ require 'rails_helper'
 
 RSpec.describe Bale, type: :model do
   let!(:organization) { create(:organization) }
-  let!(:bale) { create(:bale, organization: organization) }
+  let!(:user) { create(:user, organization: organization) }
+  let!(:bale) { create(:bale, organization: organization, user: user) }
   let(:b_serializer) { BaleSerializer }
 
   describe 'validations' do
