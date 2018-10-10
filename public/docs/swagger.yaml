@@ -314,10 +314,13 @@ paths:
           name: pocket_id
           required: true
           type: integer
+        - in: header
+          name: ApiKey
+          required: true
         - in: body
           name: weight
           required: true
-          type: float
+          type: number
       responses:
         200:
           description: Ok
