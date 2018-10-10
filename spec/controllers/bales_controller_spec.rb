@@ -198,4 +198,23 @@ RSpec.describe BalesController, type: :controller do
       end
     end
   end
+  describe 'GET # show_bales_by_material' do
+
+    context 'when user is authenticated' do
+      it 'does return success' do
+        #expect(response).to have_http_status(ok)
+      end
+
+      it 'does return the bales' do
+      end
+    end
+    context 'when material is incorrect' do
+      it 'does return the right error' do
+      end
+      it 'does return invalid material' do
+      end
+    end
+
+  end
+
 end

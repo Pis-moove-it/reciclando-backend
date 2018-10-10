@@ -17,9 +17,8 @@ class BalesController < AuthenticateController
   end
 
   def show_by_material
-    render_error(1, 'Invalid material.') unless check_entry
+    return render_error(1, 'Invalid material.') if check_entry
     render json: Bale.where(material: request.headers['material'])
-    byebug
   end
 
   def update
@@ -42,6 +41,5 @@ class BalesController < AuthenticateController
 
   def check_entry
     /\A(Glass|Plastic|Trash)\z/.match(request.headers['material'])
-    byebug
   end
 end
