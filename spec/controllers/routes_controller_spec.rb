@@ -19,7 +19,11 @@ RSpec.describe RoutesController, type: :controller do
       end
 
       it 'does return the route as specified in the serializer' do
-        expect(json_response).to eql r_serializer.new(Route.last).as_json
+        expect(json_response).to eql r_serializer.new(Route.first).as_json
+      end
+
+      it 'does create only one route' do
+        expect(Route.count).to eql 1
       end
     end
 
