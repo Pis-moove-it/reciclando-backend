@@ -12,6 +12,7 @@ tags:
   - "Bales"
   - "Containers"
   - "Collections"
+  - "Routes"
 
 paths:
   /organizations/{organization_id}/users:
@@ -348,6 +349,23 @@ paths:
           description: OK
         404:
           description: A route with the specified ID was not found.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+  /routes:
+    post:
+      tags:
+        - "Routes"
+      operationId: createRoute
+      summary: Create a route.
+      responses:
+        200:
+          description: OK
+        401:
+          description: Unauthorized request.
           schema:
             $ref: '#/definitions/Error'
         500:

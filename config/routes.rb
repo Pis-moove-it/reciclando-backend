@@ -17,7 +17,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :routes, only: [] do
+  resources :routes, only: %i[create] do
     resources :collections, only: %i[create]
   end
 
