@@ -41,4 +41,42 @@ RSpec.describe RoutesController, type: :controller do
       end
     end
   end
+
+  describe 'PUT #update' do
+    let(:ended_route) { attributes_for(:ended_route) }
+
+    def end_route_call(route_id, length, travel_image)
+      put :update, params: { id: route_id, route: { length: length, travel_image: travel_image } }, as: :json
+    end
+
+    before(:each) { end_route_call(route.id, ended_route[:length], ended_route[:travel_image]) }
+
+    context 'when user is authenticated' do
+      let!(:auth_user) { create_an_authenticated_user_with(organization, '1', 'android') }
+      let!(:route) { create(:route, user: auth_user) }
+
+      let(:r_serializer) { RouteSerializer }
+
+      it 'does return success' do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'does return the route as specified in the serializer' do
+        expect(json_response).to eql r_serializer.new(Route.first).as_json
+      end
+    end
+
+    context 'when user is not authenticated' do
+      let!(:user) { create(:user, organization: organization) }
+      let!(:route) { create(:route, user: user) }
+
+      it 'does return an error' do
+        expect(response).to have_http_status(401)
+      end
+
+      it 'does render the right error' do
+        expect(json_response[:error_code]).to eql 2
+      end
+    end
+  end
 end
