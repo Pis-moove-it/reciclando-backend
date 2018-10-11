@@ -1,3 +1,3 @@
 class RouteSerializer < ActiveModel::Serializer
-  attributes :id
+  attributes :id, :length, :travel_image
 end
