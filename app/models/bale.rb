@@ -3,4 +3,5 @@ class Bale < ApplicationRecord
   validates :weight, :material, presence: true
 
   belongs_to :organization
+  belongs_to :user
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_04_212839) do
+ActiveRecord::Schema.define(version: 2018_10_10_214953) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,7 +52,9 @@ ActiveRecord::Schema.define(version: 2018_10_04_212839) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "organization_id"
+    t.bigint "user_id"
     t.index ["organization_id"], name: "index_bales_on_organization_id"
+    t.index ["user_id"], name: "index_bales_on_user_id"
   end
 
   create_table "collection_points", force: :cascade do |t|
@@ -130,6 +132,7 @@ ActiveRecord::Schema.define(version: 2018_10_04_212839) do
   end
 
   add_foreign_key "bales", "organizations"
+  add_foreign_key "bales", "users"
   add_foreign_key "collections", "collection_points"
   add_foreign_key "collections", "routes"
   add_foreign_key "devices", "organizations"
