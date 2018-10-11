@@ -207,16 +207,16 @@ RSpec.describe PocketsController, type: :controller do
       context 'when inputs are valid' do
         before(:each) { add_weight_call(unweighed_pocket.id, weight) }
 
-        it 'does change the state to Weighed' do
-          expect(json_response[:state]).to eq 'Weighed'
+        it 'does return ok' do
+          expect(response).to have_http_status(:ok)
         end
 
         it 'does add the weight' do
           expect(json_response[:weight]).to eq weight
         end
 
-        it 'does return ok' do
-          expect(response).to have_http_status(:ok)
+        it 'does change the state to Weighed' do
+          expect(json_response[:state]).to eq 'Weighed'
         end
 
         it 'does return the pocket as specified in the serializer' do
