@@ -34,4 +34,8 @@ class RoutesController < AuthenticateController
   def route_params
     params.permit(:length, :travel_image)
   end
+
+  def route
+    @route ||= Route.find(params[:id])
+  end
 end
