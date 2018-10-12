@@ -14,6 +14,7 @@ Rails.application.routes.draw do
     member do
       put :edit_serial_number
       put :edit_weight
+      put :add_weight
     end
   end
 

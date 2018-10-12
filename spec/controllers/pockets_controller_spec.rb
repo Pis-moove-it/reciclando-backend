@@ -2,7 +2,6 @@ require 'rails_helper'
 
 RSpec.describe PocketsController, type: :controller do
   let(:json_response) { JSON.parse(response.body, symbolize_names: true) }
-
   let!(:organization) { create(:organization) }
   let!(:user) { create(:user, organization: organization) }
   let!(:route) { create(:route, user: user) }
@@ -130,8 +129,7 @@ RSpec.describe PocketsController, type: :controller do
       create(:unweighed_pocket, organization: organization, collection: collection)
     end
     let!(:device) do
-      create(:device, device_id: '1', device_type: 'android',
-                      organization: organization)
+      create(:device, device_id: '1', device_type: 'android', organization: organization)
     end
 
     def edit_weight_call(pocket_id, weight, token)
@@ -183,6 +181,86 @@ RSpec.describe PocketsController, type: :controller do
       it 'does return bad request, unweighed pocket' do
         edit_weight_call(unweighed_pocket.id, 80.8, device.auth_token)
         expect(response).to have_http_status(400)
+      end
+    end
+  end
+
+  describe 'PUT #add_weight' do
+    let!(:unweighed_pocket) do
+      create(:unweighed_pocket, organization: organization, collection: collection)
+    end
+    let!(:weighed_pocket) do
+      create(:weighed_pocket, organization: organization, collection: collection)
+    end
+    let!(:device) do
+      create(:device, device_id: '1', device_type: 'android', organization: organization)
+    end
+    let!(:weight) { Faker::Number.decimal(2, 2).to_f }
+
+    def add_weight_call(pocket_id, weight)
+      put :add_weight, params: { id: pocket_id, weight: weight }, as: :json
+    end
+
+    context 'when user is authenticated' do
+      let!(:auth_user) { create_an_authenticated_user_with(organization, '1', 'android') }
+
+      context 'when inputs are valid' do
+        before(:each) { add_weight_call(unweighed_pocket.id, weight) }
+
+        it 'does return ok' do
+          expect(response).to have_http_status(:ok)
+        end
+
+        it 'does add the weight' do
+          expect(json_response[:weight]).to eq weight
+        end
+
+        it 'does change the state to Weighed' do
+          expect(json_response[:state]).to eq 'Weighed'
+        end
+
+        it 'does return the pocket as specified in the serializer' do
+          expect(json_response).to eq serializer.new(unweighed_pocket.reload).as_json
+        end
+      end
+
+      context 'when pocket id is invalid' do
+        it 'does return not found' do
+          add_weight_call(Pocket.pluck(:id).max + 1, weight)
+          expect(response).to have_http_status(:not_found)
+        end
+      end
+
+      context 'when the weight is invalid or missing' do
+        it 'does return bad request, negative weight' do
+          add_weight_call(unweighed_pocket.id, -14)
+          expect(response).to have_http_status(400)
+        end
+
+        it 'does return bad request, empty weight' do
+          add_weight_call(unweighed_pocket.id, '')
+          expect(response).to have_http_status(400)
+        end
+
+        it 'does return bad request, nil weight' do
+          add_weight_call(unweighed_pocket.id, nil)
+          expect(response).to have_http_status(400)
+        end
+
+        it 'does return bad request, weighed pocket' do
+          add_weight_call(weighed_pocket.id, weight)
+          expect(response).to have_http_status(400)
+        end
+      end
+    end
+
+    context 'when user is not authenticated' do
+      let!(:user) { create(:user, organization: organization) }
+
+      before(:each) { add_weight_call(unweighed_pocket.id, weight) }
+
+      it 'does return invalid token' do
+        expect(response).to have_http_status(401)
       end
     end
   end
