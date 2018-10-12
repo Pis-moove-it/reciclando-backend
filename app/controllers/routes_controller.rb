@@ -21,6 +21,10 @@ class RoutesController < AuthenticateController
     end
   end
 
+  def show
+    render json: route
+  end
+
   private
 
   def route
