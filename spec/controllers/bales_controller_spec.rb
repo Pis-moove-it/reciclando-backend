@@ -199,11 +199,12 @@ RSpec.describe BalesController, type: :controller do
     end
   end
   describe 'GET # show_bales_by_material' do
+    let!(:user) { create(:user, organization: organization) }
     let!(:device) do
       create(:device, device_id: '1', device_type: 'android',
                       organization: organization)
     end
-    let!(:bale) { create(:bale, organization: organization) }
+    let!(:bale) { create(:bale, organization: organization, user: user) }
 
     def show_bales_by_material_call(apikey, material)
       @request.headers['ApiKey'] = apikey
@@ -212,18 +213,8 @@ RSpec.describe BalesController, type: :controller do
     end
 
     context 'when user is authenticated' do
-      it 'does return success (Plastic)' do
-        show_bales_by_material_call(device.auth_token, 'Plastic')
-        expect(response).to have_http_status(:ok)
-      end
-
-      it 'does return success (Trash)' do
-        show_bales_by_material_call(device.auth_token, 'Trash')
-        expect(response).to have_http_status(:ok)
-      end
-
-      it 'does return success (Glass)' do
-        show_bales_by_material_call(device.auth_token, 'Glass')
+      it 'does return success' do
+        show_bales_by_material_call(device.auth_token, %w[Plastic Trash Glass].sample)
         expect(response).to have_http_status(:ok)
       end
 
@@ -251,7 +242,7 @@ RSpec.describe BalesController, type: :controller do
 
       it 'does return the reason' do
         show_bales_by_material_call(device.auth_token, 'invalid string')
-        expect(json_response[:details]).to eql 'Invalid material.'
+        expect(json_response[:details]).to eql 'Material must be: "Trash", "Glass" or "Plastic".'
       end
     end
   end

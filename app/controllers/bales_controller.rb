@@ -17,7 +17,7 @@ class BalesController < AuthenticateController
   end
 
   def show_by_material
-    return render_error(1, 'Invalid material.') unless check_entry
+    return render_error(1, 'Material must be: "Trash", "Glass" or "Plastic".') unless check_entry
     render json: Bale.where(material: request.headers['material'])
   end
 
