@@ -18,7 +18,7 @@ class BalesController < AuthenticateController
 
   def show_by_material
     return render_error(1, 'Material must be: "Trash", "Glass" or "Plastic".') unless check_entry
-    render json: Bale.where(material: request.headers['material'])
+    render json: Bale.where(material: params[:material])
   end
 
   def update
@@ -40,6 +40,6 @@ class BalesController < AuthenticateController
   end
 
   def check_entry
-    /\A(Glass|Plastic|Trash)\z/.match(request.headers['material'])
+    /\A(Glass|Plastic|Trash)\z/.match(params[:material])
   end
 end

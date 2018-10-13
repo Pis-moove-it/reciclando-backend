@@ -226,18 +226,18 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
-  /bales/show_by_material:
+  /bales?material=material_name/show_by_material:
     get:
       tags:
         - "Bales"
       operationId: showBalesByMaterial
       summary: Return all bales which matches certain material.
-      parameters:
+      parameters:by_mate
         - in: header
           name: ApiKey
           required: true
           type: string
-        - in: header
+        - in: path
           name: material
           required: true
           type: string
@@ -246,6 +246,10 @@ paths:
           description: OK
         400:
           description: Bad request.
+        401:
+          description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
         500:
           description: Unexpected error.
           schema:

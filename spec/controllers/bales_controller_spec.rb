@@ -207,8 +207,7 @@ RSpec.describe BalesController, type: :controller do
     let!(:bale) { create(:bale, organization: organization, user: auth_user) }
 
     def show_bales_by_material_call(material)
-      @request.headers['material'] = material
-      get :show_by_material
+      get :show_by_material, params: { material: material }
     end
 
     context 'when user is authenticated' do
@@ -224,17 +223,17 @@ RSpec.describe BalesController, type: :controller do
       end
     end
     context 'when material is incorrect or missing' do
-      it 'does return the right error (invalid)' do
+      it 'does return an error when material is invalid' do
         show_bales_by_material_call('invalid string')
         expect(response).to have_http_status(:bad_request)
       end
 
-      it 'does return the right error (nil)' do
+      it 'does return an error when material is is nil' do
         show_bales_by_material_call(nil)
         expect(response).to have_http_status(:bad_request)
       end
 
-      it 'does return the right error code' do
+      it 'does return the corresponding error code' do
         show_bales_by_material_call('invalid string')
         expect(json_response[:error_code]).to eql 1
       end
