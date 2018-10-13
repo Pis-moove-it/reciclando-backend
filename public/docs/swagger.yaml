@@ -359,6 +359,7 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+
   /routes/{route_id}/collections:
     post:
       tags:
@@ -385,6 +386,7 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+
   /routes:
     post:
       tags:
@@ -398,6 +400,22 @@ paths:
           description: Unauthorized request.
           schema:
             $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+
+  /questions:
+    get:
+      tags:
+        - "Questions"
+      operationId: getQuestions
+      summary: Get six random questions.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Question'
         500:
           description: Unexpected error.
           schema:
@@ -512,5 +530,20 @@ definitions:
         type: string
       details:
         type: string
-
-
+  Question:
+    type: object
+    properties:
+      id:
+        type: "integer"
+      question:
+        type: string
+      option_a:
+        type: string
+      option_b:
+        type: string
+      option_c:
+        type: string
+      option_d:
+        type: string
+      correct_option:
+        type: string
