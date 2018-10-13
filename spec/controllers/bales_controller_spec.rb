@@ -246,6 +246,25 @@ RSpec.describe BalesController, type: :controller do
           show_bales_by_material_call(nil)
         end
       end
+
+      context 'when bales are from another orgzanization' do
+        let!(:another_organization) { create(:organization) }
+        let(:material) { %w[Plastic Trash Glass].sample }
+        let!(:bale) do
+          create(:bale, organization: another_organization, user: auth_user,
+                        material: material)
+        end
+
+        before(:each) { show_bales_by_material_call(material) }
+
+        it 'does return success' do
+          expect(response).to have_http_status(200)
+        end
+
+        it 'does not return bales from another organization' do
+          expect(json_response.count).to eql 0
+        end
+      end
     end
 
     context 'when user is not authenticated' do
