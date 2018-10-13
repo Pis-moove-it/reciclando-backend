@@ -198,49 +198,67 @@ RSpec.describe BalesController, type: :controller do
       end
     end
   end
-  describe 'GET # show_bales_by_material' do
-    let!(:device) do
-      create(:device, device_id: '1', device_type: 'android',
-                      organization: organization)
-    end
-    let!(:auth_user) { create_an_authenticated_user_with(organization, device.device_id, device.device_type) }
-    let!(:bale) { create(:bale, organization: organization, user: auth_user) }
 
+  describe 'GET #show_by_material' do
     def show_bales_by_material_call(material)
       get :show_by_material, params: { material: material }
     end
 
     context 'when user is authenticated' do
-      it 'does return success' do
-        show_bales_by_material_call(%w[Plastic Trash Glass].sample)
-        expect(response).to have_http_status(:ok)
+      let!(:auth_user) { create_an_authenticated_user_with(organization, '1', 'android') }
+
+      context 'when material is valid' do
+        let(:material) { %w[Plastic Trash Glass].sample }
+        let!(:bale) { create(:bale, organization: organization, user: auth_user, material: material) }
+
+        before(:each) { show_bales_by_material_call(material) }
+
+        it 'does return success' do
+          expect(response).to have_http_status(:ok)
+        end
+
+        it 'does return the bales' do
+          expect(json_response.count).to eql 1
+        end
+
+        it 'does return the bales as expected in the serializer' do
+          expect(json_response).to eql [b_serializer.new(bale).as_json]
+        end
       end
 
-      it 'does return the bales' do
-        Bale.first.update(material: 'Trash')
-        show_bales_by_material_call('Trash')
-        expect(json_response.count).to eql 1
+      context 'when material is incorrect or missing' do
+        let!(:bale) do
+          create(:bale, organization: organization, user: auth_user,
+                        material: %w[Plastic Trash Glass].sample)
+        end
+
+        after(:each) do
+          expect(response).to have_http_status(:bad_request)
+          expect(json_response[:error_code]).to eql 1
+          expect(json_response[:details]).to eql 'Material must be: "Trash", "Glass" or "Plastic".'
+        end
+
+        it 'does return an error when material is invalid' do
+          show_bales_by_material_call('invalid string')
+        end
+
+        it 'does return an error when material is nil' do
+          show_bales_by_material_call(nil)
+        end
       end
     end
-    context 'when material is incorrect or missing' do
-      it 'does return an error when material is invalid' do
-        show_bales_by_material_call('invalid string')
-        expect(response).to have_http_status(:bad_request)
+
+    context 'when user is not authenticated' do
+      let!(:user) { create(:user, organization: organization) }
+
+      before(:each) { show_bales_by_material_call(%w[Plastic Trash Glass].sample) }
+
+      it 'does return an error' do
+        expect(response).to have_http_status(401)
       end
 
-      it 'does return an error when material is is nil' do
-        show_bales_by_material_call(nil)
-        expect(response).to have_http_status(:bad_request)
-      end
-
-      it 'does return the corresponding error code' do
-        show_bales_by_material_call('invalid string')
-        expect(json_response[:error_code]).to eql 1
-      end
-
-      it 'does return the reason' do
-        show_bales_by_material_call('invalid string')
-        expect(json_response[:details]).to eql 'Material must be: "Trash", "Glass" or "Plastic".'
+      it 'does render the right error' do
+        expect(json_response[:error_code]).to eql 2
       end
     end
   end

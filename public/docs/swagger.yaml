@@ -226,21 +226,22 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
-  /bales?material=material_name/show_by_material:
+  /bales/show_by_material:
     get:
       tags:
         - "Bales"
       operationId: showBalesByMaterial
       summary: Return all bales which matches certain material.
-      parameters:by_mate
+      parameters:
         - in: header
           name: ApiKey
           required: true
           type: string
-        - in: path
+        - in: query
           name: material
           required: true
           type: string
+          enum: ['Trash', 'Glass', 'Plastic']
       responses:
         200:
           description: OK
