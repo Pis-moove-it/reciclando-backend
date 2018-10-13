@@ -226,6 +226,36 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+  /bales/show_by_material:
+    get:
+      tags:
+        - "Bales"
+      operationId: showBalesByMaterial
+      summary: Return all bales which matches certain material.
+      parameters:
+        - in: header
+          name: ApiKey
+          required: true
+          type: string
+        - in: query
+          name: material
+          required: true
+          type: string
+          enum: ['Trash', 'Glass', 'Plastic']
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad request.
+        401:
+          description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+
 
   /pockets:
     get:
@@ -256,12 +286,12 @@ paths:
           name: pocket_id
           required: true
           type: integer
-        - in: body
-          name: serial_number
+        - in: header
+          name: ApiKey
           required: true
           type: string
         - in: body
-          name: ApiKey
+          name: serial_number
           required: true
           type: string
       responses:

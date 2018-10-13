@@ -198,4 +198,87 @@ RSpec.describe BalesController, type: :controller do
       end
     end
   end
+
+  describe 'GET #show_by_material' do
+    def show_bales_by_material_call(material)
+      get :show_by_material, params: { material: material }
+    end
+
+    context 'when user is authenticated' do
+      let!(:auth_user) { create_an_authenticated_user_with(organization, '1', 'android') }
+
+      context 'when material is valid' do
+        let(:material) { %w[Plastic Trash Glass].sample }
+        let!(:bale) { create(:bale, organization: organization, user: auth_user, material: material) }
+
+        before(:each) { show_bales_by_material_call(material) }
+
+        it 'does return success' do
+          expect(response).to have_http_status(:ok)
+        end
+
+        it 'does return the bales' do
+          expect(json_response.count).to eql 1
+        end
+
+        it 'does return the bales as expected in the serializer' do
+          expect(json_response).to eql [b_serializer.new(bale).as_json]
+        end
+      end
+
+      context 'when material is incorrect or missing' do
+        let!(:bale) do
+          create(:bale, organization: organization, user: auth_user,
+                        material: %w[Plastic Trash Glass].sample)
+        end
+
+        after(:each) do
+          expect(response).to have_http_status(:bad_request)
+          expect(json_response[:error_code]).to eql 1
+          expect(json_response[:details]).to eql 'Material must be: "Trash", "Glass" or "Plastic".'
+        end
+
+        it 'does return an error when material is invalid' do
+          show_bales_by_material_call('invalid string')
+        end
+
+        it 'does return an error when material is nil' do
+          show_bales_by_material_call(nil)
+        end
+      end
+
+      context 'when bales are from another orgzanization' do
+        let!(:another_organization) { create(:organization) }
+        let(:material) { %w[Plastic Trash Glass].sample }
+        let!(:bale) do
+          create(:bale, organization: another_organization, user: auth_user,
+                        material: material)
+        end
+
+        before(:each) { show_bales_by_material_call(material) }
+
+        it 'does return success' do
+          expect(response).to have_http_status(200)
+        end
+
+        it 'does not return bales from another organization' do
+          expect(json_response.count).to eql 0
+        end
+      end
+    end
+
+    context 'when user is not authenticated' do
+      let!(:user) { create(:user, organization: organization) }
+
+      before(:each) { show_bales_by_material_call(%w[Plastic Trash Glass].sample) }
+
+      it 'does return an error' do
+        expect(response).to have_http_status(401)
+      end
+
+      it 'does render the right error' do
+        expect(json_response[:error_code]).to eql 2
+      end
+    end
+  end
 end
