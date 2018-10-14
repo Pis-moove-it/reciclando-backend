@@ -138,4 +138,30 @@ RSpec.describe RoutesController, type: :controller do
       end
     end
   end
+
+  describe 'GET #show' do
+    let!(:auth_user) { create_an_authenticated_user_with(organization, '1', 'android') }
+    let!(:route) { create(:route, user: auth_user) }
+
+    def get_routes_call(id)
+      get :show, params: { id: id }
+    end
+
+    context 'when user is authenticated' do
+
+      it 'does return success' do
+        get_routes_call(route.id)
+        byebug
+        expect(response).to have_http_status(:ok)
+      end
+
+      #it 'does return the route' do
+        #get_routes_call(route.id)
+        #expect(response).to have_http_status(:ok)
+      #end
+    end
+
+    context 'when user is not authenticated' do
+    end
+  end
 end

@@ -352,8 +352,6 @@ paths:
         - "Pockets"
       operationId: editWeight
       summary: Edit the weight of weighed pockets.
-<<<<<<< HEAD
-=======
       parameters:
         - in: path
           name: pocket_id
@@ -384,7 +382,6 @@ paths:
         - "Pockets"
       operationId: addWeight
       summary: Add the weight of unweighed pockets.
->>>>>>> swagger doc added
       parameters:
         - in: path
           name: pocket_id
