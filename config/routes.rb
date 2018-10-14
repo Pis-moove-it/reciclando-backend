@@ -30,6 +30,8 @@ Rails.application.routes.draw do
 
   resources :containers, only: %i[update]
 
+  resources :questions, only: %i[index]
+
   mount SwaggerUiEngine::Engine, at: '/api_docs'
 
   devise_for :admin_users, ActiveAdmin::Devise.config

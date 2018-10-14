@@ -10,6 +10,7 @@ require_relative 'fixtures/pockets'
 require_relative 'fixtures/routes'
 require_relative 'fixtures/collections'
 require_relative 'fixtures/collection_points'
+require_relative 'fixtures/questions'
 
 unless AdminUser.count.positive?
   Fixtures::ADMIN_USERS.each do |admin|
@@ -62,5 +63,11 @@ end
 unless Pocket.count.positive?
   Fixtures::POCKETS.each do |pocket|
     Pocket.create!(pocket)
+  end
+end
+
+unless Question.count.positive?
+  Fixtures::QUESTIONS.each do |question|
+    Question.create!(question)
   end
 end

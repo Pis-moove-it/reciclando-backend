@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_10_214953) do
+ActiveRecord::Schema.define(version: 2018_10_13_151739) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -110,6 +110,17 @@ ActiveRecord::Schema.define(version: 2018_10_10_214953) do
     t.bigint "collection_id"
     t.index ["collection_id"], name: "index_pockets_on_collection_id"
     t.index ["organization_id"], name: "index_pockets_on_organization_id"
+  end
+
+  create_table "questions", force: :cascade do |t|
+    t.string "question"
+    t.string "option_a"
+    t.string "option_b"
+    t.string "option_c"
+    t.string "option_d"
+    t.integer "correct_option"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "routes", force: :cascade do |t|
