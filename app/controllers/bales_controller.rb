@@ -23,6 +23,12 @@ class BalesController < AuthenticateController
                             material: params[:material])
   end
 
+  def show_by_date
+    return render_error(1, 'The initial date is after the end date') unless check_date
+    render json: Bale.where(organization: logged_user.organization,
+                            created_at: params[:init_date]..params[:end_date])
+  end
+
   def update
     if bale.update(bale_params)
       render json: bale
@@ -43,5 +49,9 @@ class BalesController < AuthenticateController
 
   def check_entry
     /\A(Glass|Plastic|Trash)\z/.match(params[:material])
+  end
+
+  def check_date
+    params[:end_date] > params[:init_date]
   end
 end
