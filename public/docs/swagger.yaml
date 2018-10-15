@@ -33,6 +33,10 @@ paths:
             type: array
             items:
               $ref: '#/definitions/User'
+        401:
+          description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
         404:
           description: An organization with the specified ID was not found.
           schema:
@@ -421,6 +425,10 @@ paths:
           description: A container with specified Id was not found.
           schema:
             $ref: '#/definitions/Error'
+        401:
+          description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
         500:
           description: Unexpected error.
           schema:
@@ -541,6 +549,8 @@ definitions:
         type: integer
       serial_number:
         type: string
+      weight:
+        type: float
       state:
         enum:
         - "Unweighed"
@@ -552,6 +562,8 @@ definitions:
         type: integer
       serial_number:
         type: string
+      weight:
+        type: float
       state:
         enum:
         - "Classified"

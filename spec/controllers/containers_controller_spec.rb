@@ -9,7 +9,7 @@ RSpec.describe ContainersController, type: :controller do
     let(:serializer) { ContainerSerializer }
 
     def update_container_call(id, status)
-      put :update, params: { id: id, container: { status: status } }
+      put :update, params: { id: id, status: status }
     end
 
     context 'when updating valid containers' do
