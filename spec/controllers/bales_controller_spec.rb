@@ -325,6 +325,38 @@ RSpec.describe BalesController, type: :controller do
         end
       end
 
+      context 'when the range date is missing' do
+        it 'does return bad request' do
+          show_bales_by_date_call(nil, end_date)
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it 'does return the right error' do
+          show_bales_by_date_call(nil, end_date)
+          expect(json_response[:error_code]).to eql 1
+        end
+
+        it 'does return initial date missing' do
+          show_bales_by_date_call(nil, end_date)
+          expect(json_response[:details]).to eql 'Initial date missing'
+        end
+
+        it 'does return bad request' do
+          show_bales_by_date_call(init_date, nil)
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it 'does return the right error' do
+          show_bales_by_date_call(init_date, nil)
+          expect(json_response[:error_code]).to eql 1
+        end
+
+        it 'does return end date missing' do
+          show_bales_by_date_call(init_date, nil)
+          expect(json_response[:details]).to eql 'End date missing'
+        end
+      end
+
       context 'when the range date is invalid' do
         let(:invalid_init_date) { Date.current + 1 }
         let(:invalid_end_date) { Date.current + -1 }

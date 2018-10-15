@@ -24,6 +24,8 @@ class BalesController < AuthenticateController
   end
 
   def show_by_date
+    return render_error(1, 'Initial date missing') if missing_entry('init_date')
+    return render_error(1, 'End date missing') if missing_entry('end_date')
     return render_error(1, 'The initial date is after the end date') unless check_date
 
     render json: Bale.where(organization: logged_user.organization,
@@ -54,5 +56,9 @@ class BalesController < AuthenticateController
 
   def check_date
     params[:init_date] < params[:end_date]
+  end
+
+  def missing_entry(entry)
+    params[entry].nil? || params[entry].blank?
   end
 end
