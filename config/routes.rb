@@ -25,6 +25,7 @@ Rails.application.routes.draw do
   resources :bales, only: %i[index create show update] do
     collection do
       get :show_by_material
+      get :show_by_date
     end
   end
 
