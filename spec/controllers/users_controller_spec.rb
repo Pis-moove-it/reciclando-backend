@@ -7,9 +7,9 @@ RSpec.describe UsersController, type: :controller do
   let(:u_serializer) { UserSerializer }
 
   describe 'GET #index' do
-    let!(:user) { FactoryBot.create(:user, organization: organization) }
+    let!(:auth_user) { create_an_authenticated_user_with(organization, '1', 'android') }
 
-    context 'when listing users' do
+    context 'when user is authenticated' do
       def users_from_organization
         get :index, params: { organization_id: organization.id }
       end
@@ -25,7 +25,7 @@ RSpec.describe UsersController, type: :controller do
       end
 
       it 'does return users as specified in the serializer' do
-        expect(json_response).to eq [u_serializer.new(user).as_json]
+        expect(json_response).to eq [u_serializer.new(auth_user).as_json]
       end
     end
 
@@ -40,18 +40,19 @@ RSpec.describe UsersController, type: :controller do
 
   describe 'GET #show' do
     let!(:user) { FactoryBot.create(:user, organization: organization) }
+    let!(:auth_user) { create_an_authenticated_user_with(organization, '1', 'android') }
 
     def user_from_organization_call(organization_id, user_id)
       get :show, params: { organization_id: organization_id, id: user_id }
     end
 
     context 'when shows valid users' do
-      before(:each) { user_from_organization_call(organization.id, user.id) }
+      before(:each) { user_from_organization_call(organization.id, auth_user.id) }
       it 'does return success' do
         expect(response).to have_http_status(200)
       end
       it 'does return the user' do
-        expect(json_response).to eql u_serializer.new(user).as_json
+        expect(json_response).to eql u_serializer.new(auth_user).as_json
       end
     end
 

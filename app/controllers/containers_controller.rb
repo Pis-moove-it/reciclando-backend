@@ -15,6 +15,6 @@ class ContainersController < BaseController
   end
 
   def container_params
-    params.require(:container).permit(:status)
+    params.permit(:status)
   end
 end
