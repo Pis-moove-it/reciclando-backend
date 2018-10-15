@@ -308,6 +308,17 @@ RSpec.describe BalesController, type: :controller do
         it 'does return the bales as expected in the serializer' do
           expect(json_response).to eql [b_serializer.new(bale).as_json]
         end
+
+        context 'when the initial date its the same that the end date' do
+          it 'does return success' do
+            show_bales_by_date_call(Date.current, Date.current)
+            expect(response).to have_http_status(:ok)
+          end
+
+          it 'does return the bales' do
+            expect(json_response.count).to eql 1
+          end
+        end
       end
 
       context 'when the range date is valid and there are no bales in that range' do

@@ -29,7 +29,7 @@ class BalesController < AuthenticateController
     return render_error(1, 'The initial date is after the end date') unless check_date
 
     render json: Bale.where(organization: logged_user.organization,
-                            created_at: params[:init_date]..params[:end_date])
+                            created_at: params[:init_date]..params[:end_date] + ' 23:59:59')
   end
 
   def update
@@ -55,7 +55,7 @@ class BalesController < AuthenticateController
   end
 
   def check_date
-    params[:init_date] < params[:end_date]
+    params[:init_date] <= params[:end_date]
   end
 
   def missing_entry(entry)
