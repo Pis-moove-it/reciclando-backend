@@ -311,7 +311,7 @@ RSpec.describe BalesController, type: :controller do
       end
 
       context 'when the range date is valid and there are no bales in that range' do
-        let(:valid_init) { Date.current + 29 }
+        let(:valid_init) { Date.current + 28 }
         let(:valid_end) { Date.current + 30 }
 
         before(:each) { show_bales_by_date_call(valid_init, valid_end) }
