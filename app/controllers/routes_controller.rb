@@ -7,7 +7,6 @@ class RoutesController < AuthenticateController
       render_error(1, route.errors)
     end
   end
-  # skip_before_action :authenticated_user
 
   def update
     return render_error(1, 'Missing length') if check_missing_entry('length')

@@ -494,6 +494,7 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+  /routes/{route_id}:
     put:
         tags:
           - "Routes"
