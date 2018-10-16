@@ -8,6 +8,26 @@
 </div>
 
 <script type='text/javascript'>
-  handler = Gmaps.build('Google');
-  handler.buildMap({ provider: {}, internal: {id: 'mapDisplay'}});
+handler = Gmaps.build('Google');
+handler.buildMap(
+  {
+    provider: {
+      zoom: 15
+    },
+    internal: {
+      id: 'mapDisplay'
+    }
+  },
+  function() {
+    markers = handler.addMarkers(<%=raw markers.to_json %>);
+    handler.bounds.extendWith(markers);
+    handler.fitMapToBounds();
+  }
+);
+handler.map.centerOn(
+  {
+    lat: -34.479426,
+    lng: -54.331510
+  }
+);
 </script>
