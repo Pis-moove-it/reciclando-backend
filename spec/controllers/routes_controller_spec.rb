@@ -46,7 +46,7 @@ RSpec.describe RoutesController, type: :controller do
     let(:ended_route) { build(:ended_route) }
 
     def end_route_call(route_id, length, travel_image)
-      put :update, params: { id: route_id, route: { length: length, travel_image: travel_image } }, as: :json
+      put :update, params: { id: route_id, length: length, travel_image: travel_image }, as: :json
     end
 
     context 'when user is authenticated' do
