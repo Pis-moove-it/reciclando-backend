@@ -1,6 +1,7 @@
 class BalesController < AuthenticateController
   def index
-    render json: Bale.where(organization: logged_user.organization)
+    render json: Bale.where(organization: logged_user.organization).page(2).per(3)
+    #render json: Bale.where(organization: logged_user.organization)
   end
 
   def create

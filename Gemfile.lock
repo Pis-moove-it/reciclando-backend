@@ -353,6 +353,7 @@ DEPENDENCIES
   factory_bot_rails (= 4.10.0)
   faker (= 1.8.7)
   foreman (= 0.85.0)
+  kaminari
   letter_opener (= 1.6.0)
   listen (>= 3.0.5, < 3.2)
   pg (>= 0.18, < 2.0)
@@ -370,4 +371,4 @@ RUBY VERSION
    ruby 2.5.1p57
 
 BUNDLED WITH
-   1.16.1
+   1.16.2
