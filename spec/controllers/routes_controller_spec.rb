@@ -148,17 +148,16 @@ RSpec.describe RoutesController, type: :controller do
     end
 
     context 'when user is authenticated' do
-
       it 'does return success' do
         get_routes_call(route.id)
         byebug
         expect(response).to have_http_status(:ok)
       end
 
-      #it 'does return the route' do
-        #get_routes_call(route.id)
-        #expect(response).to have_http_status(:ok)
-      #end
+      # it 'does return the route' do
+        # get_routes_call(route.id)
+        # expect(response).to have_http_status(:ok)
+      # end
     end
 
     context 'when user is not authenticated' do
