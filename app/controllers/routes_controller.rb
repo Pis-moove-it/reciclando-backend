@@ -1,4 +1,6 @@
 class RoutesController < AuthenticateController
+  before_action :validate_ended_route, only: [:update]
+
   def create
     route = Route.new(user: logged_user)
     if route.save
@@ -9,12 +11,6 @@ class RoutesController < AuthenticateController
   end
 
   def update
-    return render_error(1, 'Missing length') unless check_missing_entry('length')
-    return render_error(1, 'Negative length') if negative_length?
-    return render_error(1, 'Missing travel image') unless check_missing_entry('travel_image')
-
-    return render_error(1, 'Route already ended') if route.ended?
-
     if route.update(route_params)
       render json: route
     else
@@ -28,12 +24,15 @@ class RoutesController < AuthenticateController
     @route ||= Route.find(params[:id])
   end
 
-  def negative_length?
-    route_params[:length].negative?
+  def validate_ended_route
+    return render_error(1, 'Missing length') if route_params['length'].blank?
+    return render_error(1, 'Negative length') if negative_length?
+    return render_error(1, 'Missing travel image') if route_params['travel_image'].blank?
+    return render_error(1, 'Route already ended') if route.ended?
   end
 
-  def check_missing_entry(entry)
-    route_params[entry].present?
+  def negative_length?
+    route_params[:length].negative?
   end
 
   def route_params
