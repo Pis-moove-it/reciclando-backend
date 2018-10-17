@@ -4,7 +4,7 @@ class Collection < ApplicationRecord
 
   has_many :pockets, dependent: :destroy
 
-  delegate :organization, to: :route
+  delegate :organization, to: :route, allow_nil: true
 
   accepts_nested_attributes_for :pockets
 end

@@ -1,6 +1,6 @@
 class CollectionsController < AuthenticateController
-  skip_before_action :authenticated_user
   def create
+    return render_error(1, 'Missing pockets') if collection_params[:pockets_attributes].blank?
     collection = Collection.new(collection_params.merge(route_id: params[:route_id]))
     if collection.save
       render json: collection

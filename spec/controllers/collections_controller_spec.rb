@@ -51,12 +51,12 @@ RSpec.describe CollectionsController, type: :controller do
 
         it 'does not create a collection without pocket_serial_numbers' do
           create_collection_call(auth_route.id, collection_point.id, nil)
-          expect(response).to have_http_status(:internal_server_error)
+          expect(response).to have_http_status(:bad_request)
         end
 
         it 'does not create a collection with empty pocket_serial_numbers' do
           create_collection_call(auth_route.id, collection_point.id, [])
-          expect(response).to have_http_status(:internal_server_error)
+          expect(response).to have_http_status(:bad_request)
         end
       end
     end
