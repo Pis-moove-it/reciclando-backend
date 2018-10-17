@@ -6,6 +6,12 @@ class Pocket < ApplicationRecord
 
   validates :serial_number, presence: true
 
+  delegate :organization, to: :collection
+
+  before_validation(on: :create) do
+    self.organization = organization
+  end
+
   class << self
     def unclassified
       where(state: %w[Unweighed Weighed])
