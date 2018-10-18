@@ -1,13 +1,13 @@
 class RouteSerializer < ActiveModel::Serializer
-  attributes :id, :length, :travel_image, :created_at, :pockets, :number_of_pockets
+  attributes :id, :length, :travel_image
+
+  attribute :created_at do
+    object.created_at.to_s
+  end
 
   belongs_to :user
 
-  attribute :pockets do
+  has_many :pockets, each_serializer: PocketSerializer do
     object.collections.map(&:pockets).flatten
-  end
-
-  attribute :number_of_pockets do
-    object.collections.map(&:pockets).flatten.count
   end
 end

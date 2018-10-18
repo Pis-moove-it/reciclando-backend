@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe RoutesController, type: :controller do
   let(:json_response) { JSON.parse(response.body, symbolize_names: true) }
   let!(:organization) { create(:organization) }
+  let(:r_serializer) { RouteSerializer }
 
   describe 'POST #create' do
     def create_route_call
@@ -11,7 +12,6 @@ RSpec.describe RoutesController, type: :controller do
 
     context 'when user is authenticated' do
       let!(:auth_user) { create_an_authenticated_user_with(organization, '1', 'android') }
-      let(:r_serializer) { RouteSerializer }
       before(:each) { create_route_call }
 
       it 'does return success' do
@@ -52,8 +52,6 @@ RSpec.describe RoutesController, type: :controller do
     context 'when user is authenticated' do
       let!(:auth_user) { create_an_authenticated_user_with(organization, '1', 'android') }
       let!(:route) { create(:route, user: auth_user) }
-
-      let(:r_serializer) { RouteSerializer }
 
       context 'when inputs are valid' do
         before(:each) { end_route_call(route.id, ended_route[:length], ended_route[:travel_image]) }
@@ -140,27 +138,55 @@ RSpec.describe RoutesController, type: :controller do
   end
 
   describe 'GET #show' do
-    let!(:auth_user) { create_an_authenticated_user_with(organization, '1', 'android') }
-    let!(:route) { create(:route, user: auth_user) }
-
     def get_routes_call(id)
       get :show, params: { id: id }
     end
 
     context 'when user is authenticated' do
-      it 'does return success' do
-        get_routes_call(route.id)
-        byebug
-        expect(response).to have_http_status(:ok)
+      let!(:auth_user) { create_an_authenticated_user_with(organization, '1', 'android') }
+
+      context 'when the route exists' do
+        let!(:route) { create(:route, user: auth_user) }
+
+        before(:each) { get_routes_call(route.id) }
+
+        it 'does return success' do
+          expect(response).to have_http_status(:ok)
+        end
+
+        it 'does return the route as specified in the serializer' do
+          expect(json_response).to eql r_serializer.new(route).as_json
+        end
       end
 
-      # it 'does return the route' do
-        # get_routes_call(route.id)
-        # expect(response).to have_http_status(:ok)
-      # end
+      context 'when the route does not exist' do
+        let!(:route) { create(:route, user: auth_user) }
+
+        before(:each) { get_routes_call(Route.pluck(:id).max + 1) }
+
+        it 'does return an error' do
+          expect(response).to have_http_status(404)
+        end
+
+        it 'does render the right error' do
+          expect(json_response[:error_code]).to eql 3
+        end
+      end
     end
 
     context 'when user is not authenticated' do
+      let!(:user) { create(:user, organization: organization) }
+      let!(:route) { create(:route, user: user) }
+
+      before(:each) { get_routes_call(route.id) }
+
+      it 'does return an error' do
+        expect(response).to have_http_status(401)
+      end
+
+      it 'does render the right error' do
+        expect(json_response[:error_code]).to eql 2
+      end
     end
   end
 end
