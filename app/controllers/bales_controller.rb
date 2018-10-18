@@ -1,6 +1,6 @@
 class BalesController < AuthenticateController
   def index
-    render json: Bale.where(organization: logged_user.organization).page(2).per(3)
+    render json: { b: Bale.where(organization: logged_user.organization).page(1).per(1) , meta: {total: 1, records: Bale.count }}
     #render json: Bale.where(organization: logged_user.organization)
   end
 
