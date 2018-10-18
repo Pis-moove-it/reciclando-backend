@@ -1,6 +1,4 @@
 class RoutesController < AuthenticateController
-  before_action :validate_ended_route, only: [:update]
-
   def create
     route = Route.new(user: logged_user)
     if route.save
