@@ -8,7 +8,7 @@ AllCops:
 
 # 15 is too low, but 20 seems like a good goal for us
 Metrics/AbcSize:
-  Max: 20
+  Max: 25
 
 # 80 is too low, but 250 seems like a good goal for us
 Metrics/LineLength:
