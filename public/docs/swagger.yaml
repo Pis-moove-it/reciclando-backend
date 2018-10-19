@@ -494,7 +494,21 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
-
+  /routes/{route_id}:
+    put:
+        tags:
+          - "Routes"
+        operationId: endRoute
+        summary: End a route.
+        parameters:
+          - in: path
+            name: route_id
+            required: true
+            type: integer
+          - in: body
+            name: route
+            schema:
+              $ref: '#/definitions/Route'
 definitions:
   Organization:
     type: object
@@ -599,6 +613,19 @@ definitions:
       collection_point_id: 1
       pocket_attributes: [{"serial_number": "B05"},
                           {"serial_number": "B18"}]
+  Route:
+      type: object
+      required:
+        - length
+        - travel_image
+      properties:
+        length:
+          type: number
+        travel_image:
+          type: string
+      example:
+        length: 17.5
+        travel_image: "https://sfbaytransit.org/samtrans/route/61"
   Error:
     type: object
     properties:
