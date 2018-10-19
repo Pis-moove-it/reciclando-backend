@@ -357,6 +357,36 @@ paths:
           name: pocket_id
           required: true
           type: integer
+        - in: header
+          name: ApiKey
+          required: true
+        - in: body
+          name: weight
+          required: true
+          type: number
+      responses:
+        200:
+          description: Ok
+        404:
+          description: A pocket with specified Id was not found.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+
+  /pockets/{pocket_id}/add_weight:
+    put:
+      tags:
+        - "Pockets"
+      operationId: addWeight
+      summary: Add the weight of unweighed pockets.
+      parameters:
+        - in: path
+          name: pocket_id
+          required: true
+          type: integer
         - in: body
           name: weight
           required: true
@@ -509,6 +539,31 @@ paths:
             name: route
             schema:
               $ref: '#/definitions/Route'
+    get:
+        tags:
+          - "Routes"
+        operationId: getRoute
+        summary: Show a route.
+        parameters:
+          - in: path
+            name: route_id
+            required: true
+            type: integer
+      responses:
+        200:
+          description: OK
+        401:
+          description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: A route with the specified ID was not found.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
 definitions:
   Organization:
     type: object
