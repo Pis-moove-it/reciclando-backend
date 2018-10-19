@@ -21,6 +21,7 @@ gem 'redis-namespace', '1.6.0'
 gem 'sidekiq', '5.1.3'
 gem 'swagger_ui_engine', '1.1.0'
 gem 'therubyracer', '0.12.3'
+gem 'will_paginate', '~> 3.1.1'
 
 group :development, :test do
   gem 'dotenv-rails', '2.5.0'

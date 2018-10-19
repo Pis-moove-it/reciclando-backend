@@ -1,6 +1,6 @@
 class BalesController < AuthenticateController
   def index
-    render json: Bale.where(organization: logged_user.organization)
+    render json: Bale.paginate(page: params[:page]).where(organization: logged_user.organization)
   end
 
   def create

@@ -4,4 +4,6 @@ class Bale < ApplicationRecord
 
   belongs_to :organization
   belongs_to :user
+
+  self.per_page = 5
 end
