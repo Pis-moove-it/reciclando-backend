@@ -26,6 +26,10 @@ paths:
           name: organization_id
           required: true
           type: integer
+        - in: header
+          name: ApiKey
+          required: true
+          type: string
       responses:
         200:
           description: OK
@@ -66,6 +70,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/User'
+        401:
+          description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
         404:
           description: An organization or user with the specified ID was not found.
           schema:
@@ -125,6 +133,13 @@ paths:
           name: password
           required: true
           type: string
+        - in: header
+          name: deviceIdHeader
+          type: string
+        - in: header
+          name: deviceTypeHeader
+          type: string
+          enum: ['SmartPhone', 'Tablet']
       responses:
         200:
           description: OK
@@ -202,6 +217,14 @@ paths:
       responses:
         200:
           description: OK
+        400:
+          description: Malformed request.
+          schema:
+            $ref: '#/definitions/Error'
+        401:
+          description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
         500:
           description: Unexpected error.
           schema:
@@ -223,6 +246,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Bale'
+        401:
+          description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
         404:
           description: A bale with the specified ID was not found.
           schema:
@@ -248,6 +275,10 @@ paths:
       responses:
         200:
           description: OK
+        401:
+          description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
         404:
           description: A bale with the specified ID was not found.
           schema:
@@ -270,6 +301,10 @@ paths:
             type: array
             items:
               $ref: '#/definitions/UnclassifiedPocket'
+        401:
+          description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
         500:
           description: Unexpected error.
           schema:
@@ -297,6 +332,10 @@ paths:
       responses:
         200:
           description: Ok
+        401:
+          description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
         404:
           description: A pocket with specified Id was not found.
           schema:
@@ -327,6 +366,10 @@ paths:
       responses:
         200:
           description: Ok
+        401:
+          description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
         404:
           description: A pocket with specified Id was not found.
           schema:
@@ -354,6 +397,10 @@ paths:
       responses:
         200:
           description: Ok
+        401:
+          description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
         404:
           description: A pocket with specified Id was not found.
           schema:
@@ -412,6 +459,10 @@ paths:
       responses:
         200:
           description: OK
+        401:
+          description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
         404:
           description: A route with the specified ID was not found.
           schema:
@@ -450,6 +501,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Question'
+        401:
+          description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
         500:
           description: Unexpected error.
           schema:
