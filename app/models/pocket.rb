@@ -6,7 +6,7 @@ class Pocket < ApplicationRecord
 
   validates :serial_number, presence: true
 
-  delegate :organization, to: :collection, allow_nil: true
+  delegate :organization, to: :collection
 
   before_validation(on: :create) do
     self.organization = organization
