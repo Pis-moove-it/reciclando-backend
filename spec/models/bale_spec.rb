@@ -24,11 +24,6 @@ RSpec.describe Bale, type: :model do
         expect(bale).not_to be_valid
       end
 
-      it 'does not let create new ones without organization' do
-        bale.organization = nil
-        expect(bale).not_to be_valid
-      end
-
       it 'does not let create new ones without user' do
         bale.user = nil
         expect(bale).not_to be_valid

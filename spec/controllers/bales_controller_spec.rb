@@ -247,11 +247,12 @@ RSpec.describe BalesController, type: :controller do
         end
       end
 
-      context 'when bales are from another orgzanization' do
+      context 'when bales are from another organization' do
         let!(:another_organization) { create(:organization) }
+        let!(:another_auth_user) { create_an_authenticated_user_with(another_organization, '1', 'android') }
         let(:material) { %w[Plastic Trash Glass].sample }
         let!(:bale) do
-          create(:bale, organization: another_organization, user: auth_user,
+          create(:bale, user: auth_user,
                         material: material)
         end
 
@@ -385,9 +386,10 @@ RSpec.describe BalesController, type: :controller do
 
       context 'when there are bales for the range date but there are from another organization' do
         let!(:another_organization) { create(:organization) }
+        let!(:another_auth_user) { create_an_authenticated_user_with(another_organization, '1', 'android') }
         let(:material) { %w[Plastic Trash Glass].sample }
         let!(:bale) do
-          create(:bale, organization: another_organization, user: auth_user,
+          create(:bale, user: auth_user,
                         material: material)
         end
 

@@ -4,4 +4,10 @@ class Bale < ApplicationRecord
 
   belongs_to :organization
   belongs_to :user
+
+  delegate :organization, to: :user, allow_nil: true
+
+  before_validation(on: :create) do
+    self.organization = organization
+  end
 end
