@@ -22,12 +22,7 @@ Rails.application.routes.draw do
     resources :collections, only: %i[create]
   end
 
-  resources :bales, only: %i[index create show update] do
-    collection do
-      get :show_by_material
-      get :show_by_date
-    end
-  end
+  resources :bales, only: %i[index create show update]
 
   resources :containers, only: %i[update]
 
