@@ -1,6 +1,9 @@
 class BalesController < AuthenticateController
   def index
-    render json: Bale.where(organization: logged_user.organization)
+    return render_error(1, 'Material must be Trash, Glass or Plastic.') unless valid_material?
+    return render_error(1, 'Invalid dates') unless valid_dates?
+
+    render json: Bale.where(bales_query.merge(organization: logged_user.organization))
   end
 
   def create
@@ -14,22 +17,6 @@ class BalesController < AuthenticateController
 
   def show
     render json: bale
-  end
-
-  def show_by_material
-    return render_error(1, 'Material must be: "Trash", "Glass" or "Plastic".') unless check_entry
-
-    render json: Bale.where(organization: logged_user.organization,
-                            material: params[:material])
-  end
-
-  def show_by_date
-    return render_error(1, 'Initial date missing') if missing_entry('init_date')
-    return render_error(1, 'End date missing') if missing_entry('end_date')
-    return render_error(1, 'The initial date is after the end date') unless check_date
-
-    render json: Bale.where(organization: logged_user.organization,
-                            created_at: params[:init_date]..params[:end_date] + ' 23:59:59')
   end
 
   def update
@@ -50,15 +37,33 @@ class BalesController < AuthenticateController
     params.require(:bale).permit(:weight, :material)
   end
 
-  def check_entry
-    /\A(Glass|Plastic|Trash)\z/.match(params[:material])
+  # Method in charge of creating the optional query from query params (if present)
+  #
+  # Note: compact is used to remove nil values
+  def bales_query
+    material_query.merge(date_query).compact
   end
 
-  def check_date
-    params[:init_date] <= params[:end_date]
+  def material_query
+    { material: params[:material] }
   end
 
-  def missing_entry(entry)
-    params[entry].nil? || params[entry].blank?
+  def date_query
+    return { created_at: params[:init_date]..params[:end_date] + ' 23:59:59' } if are_dates_present?
+    {}
+  end
+
+  def valid_material?
+    return %w[Trash Glass Plastic].include?(params[:material]) if params[:material].present?
+    true
+  end
+
+  def valid_dates?
+    return params[:init_date] <= params[:end_date] if are_dates_present?
+    !(params[:init_date].present? || params[:end_date].present?)
+  end
+
+  def are_dates_present?
+    params[:init_date].present? && params[:end_date].present?
   end
 end

@@ -152,6 +152,22 @@ paths:
         - "Bales"
       operationId: getBales
       summary: List bales.
+      parameters:
+        - in: query
+          name: material
+          required: false
+          type: string
+          enum: ['Trash', 'Glass', 'Plastic']
+        - in: query
+          name: init_date
+          required: false
+          type: string
+          format: date
+        - in: query
+          name: end_date
+          required: false
+          type: string
+          format: date
       responses:
         200:
           description: OK
@@ -159,10 +175,20 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Bale'
+        400:
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/Error'
+        401:
+          description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
         500:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+      security:
+      - ApiKey: []
     post:
       tags:
         - "Bales"
@@ -224,72 +250,6 @@ paths:
           description: OK
         404:
           description: A bale with the specified ID was not found.
-          schema:
-            $ref: '#/definitions/Error'
-        500:
-          description: Unexpected error.
-          schema:
-            $ref: '#/definitions/Error'
-  /bales/show_by_material:
-    get:
-      tags:
-        - "Bales"
-      operationId: showBalesByMaterial
-      summary: Return all bales which matches certain material.
-      parameters:
-        - in: header
-          name: ApiKey
-          required: true
-          type: string
-        - in: query
-          name: material
-          required: true
-          type: string
-          enum: ['Trash', 'Glass', 'Plastic']
-      responses:
-        200:
-          description: OK
-        400:
-          description: Bad request.
-        401:
-          description: Unauthorized request.
-          schema:
-            $ref: '#/definitions/Error'
-        500:
-          description: Unexpected error.
-          schema:
-            $ref: '#/definitions/Error'
-
-  /bales/show_by_date:
-    get:
-      tags:
-        - "Bales"
-      operationId: showBalesByDate
-      summary: Return all the bales contains in the range of dates.
-      parameters:
-        - in: header
-          name: ApiKey
-          required: true
-          type: string
-        - in: query
-          name: init_date
-          required: true
-          type: string
-          format: date
-        - in: query
-          name: end_date
-          required: true
-          type: string
-          format: date
-      responses:
-        200:
-          description: OK
-        400:
-          description: Bad request.
-          schema:
-            $ref: '#/definitions/Error'
-        401:
-          description: Unauthorized request.
           schema:
             $ref: '#/definitions/Error'
         500:
@@ -403,36 +363,6 @@ paths:
           schema:
             $ref: '#/definitions/Error'
 
-  /pockets/{pocket_id}/add_weight:
-    put:
-      tags:
-        - "Pockets"
-      operationId: addWeight
-      summary: Add the weight of unweighed pockets.
-      parameters:
-        - in: path
-          name: pocket_id
-          required: true
-          type: integer
-        - in: header
-          name: ApiKey
-          required: true
-        - in: body
-          name: weight
-          required: true
-          type: number
-      responses:
-        200:
-          description: Ok
-        404:
-          description: A pocket with specified Id was not found.
-          schema:
-            $ref: '#/definitions/Error'
-        500:
-          description: Unexpected error.
-          schema:
-            $ref: '#/definitions/Error'
-
   /containers/{container_id}:
     put:
       tags:
@@ -524,6 +454,7 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+
   /routes/{route_id}:
     put:
         tags:
@@ -540,15 +471,15 @@ paths:
             schema:
               $ref: '#/definitions/Route'
     get:
-        tags:
-          - "Routes"
-        operationId: getRoute
-        summary: Show a route.
-        parameters:
-          - in: path
-            name: route_id
-            required: true
-            type: integer
+      tags:
+        - "Routes"
+      operationId: getRoute
+      summary: Show a route.
+      parameters:
+        - in: path
+          name: route_id
+          required: true
+          type: integer
       responses:
         200:
           description: OK
@@ -564,6 +495,7 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+
 definitions:
   Organization:
     type: object

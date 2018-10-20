@@ -64,21 +64,120 @@ RSpec.describe BalesController, type: :controller do
       let(:another_organization) { create(:organization) }
       let!(:another_user) { create(:user, organization: another_organization) }
 
-      let!(:bale) { create(:bale, organization: organization, user: auth_user) }
-      let!(:another_bale) { create(:bale, organization: another_organization, user: another_user) }
+      context 'when getting all the bales' do
+        let!(:bale) { create(:bale, organization: organization, user: auth_user) }
+        let!(:another_bale) { create(:bale, organization: another_organization, user: another_user) }
 
-      before(:each) { get :index }
+        before(:each) { get :index }
 
-      it 'does return success' do
-        expect(response).to have_http_status(:ok)
+        it 'does return success' do
+          expect(response).to have_http_status(:ok)
+        end
+
+        it 'does return only the organization bales' do
+          expect(json_response).to eql [b_serializer.new(bale).as_json]
+        end
+
+        it 'does not return bales from another organization' do
+          expect(json_response.pluck(:id)).not_to include(another_bale.id)
+        end
       end
 
-      it 'does return only the organization bales' do
-        expect(json_response).to eql [b_serializer.new(bale).as_json]
+      context 'when filtering by material' do
+        let!(:bale) { create(:bale, organization: organization, user: auth_user) }
+        let!(:another_bale) { create(:bale, organization: another_organization, user: another_user) }
+
+        context 'when material is valid and the are bales' do
+          before(:each) { get :index, params: { material: bale.material } }
+
+          it 'does return success' do
+            expect(response).to have_http_status(:ok)
+          end
+
+          it 'does return only the organization bales' do
+            expect(json_response).to eql [b_serializer.new(bale).as_json]
+          end
+
+          it 'does not return bales from another organization' do
+            expect(json_response.pluck(:id)).not_to include(another_bale.id)
+          end
+        end
+
+        context 'when material is invalid' do
+          before(:each) { get :index, params: { material: 'Invalid' } }
+
+          it 'does return an error' do
+            expect(response).to have_http_status(400)
+          end
+
+          it 'does return the specified error code' do
+            expect(json_response[:error_code]).to eql 1
+          end
+        end
       end
 
-      it 'does not return bales from another organization' do
-        expect(json_response.pluck(:id)).not_to include(another_bale.id)
+      context 'when filtering by date' do
+        let!(:bale) { create(:bale, organization: organization, user: auth_user) }
+        let!(:another_bale) { create(:bale, organization: another_organization, user: another_user) }
+
+        context 'when the are bales in the given range' do
+          let(:init_date) { Date.current - 1 }
+          let(:end_date) { Date.current + 1 }
+          before(:each) { get :index, params: { init_date: init_date, end_date: end_date } }
+
+          it 'does return success' do
+            expect(response).to have_http_status(:ok)
+          end
+
+          it 'does return only the organization bales' do
+            expect(json_response).to eql [b_serializer.new(bale).as_json]
+          end
+
+          it 'does not return bales from another organization' do
+            expect(json_response.pluck(:id)).not_to include(another_bale.id)
+          end
+        end
+
+        context 'when the are not bales in that range' do
+          let(:init_date) { Date.current + 1 }
+          let(:end_date) { Date.current + 2 }
+          before(:each) { get :index, params: { init_date: init_date, end_date: end_date } }
+
+          it 'does return success' do
+            expect(response).to have_http_status(:ok)
+          end
+
+          it 'does return no bales' do
+            expect(json_response).to eql []
+          end
+        end
+
+        context 'when a date is missing' do
+          let(:end_date) { Date.current + 1 }
+          before(:each) { get :index, params: { end_date: end_date } }
+
+          it 'does return an error' do
+            expect(response).to have_http_status(400)
+          end
+
+          it 'does return the specified error code' do
+            expect(json_response[:error_code]).to eql 1
+          end
+        end
+
+        context 'when init date happens after end date' do
+          let(:init_date) { Date.current + 10 }
+          let(:end_date) { Date.current + 2 }
+          before(:each) { get :index, params: { init_date: init_date, end_date: end_date } }
+
+          it 'does return success' do
+            expect(response).to have_http_status(400)
+          end
+
+          it 'does return the specified error code' do
+            expect(json_response[:error_code]).to eql 1
+          end
+        end
       end
     end
 
@@ -191,227 +290,6 @@ RSpec.describe BalesController, type: :controller do
 
       it 'does return an error' do
         expect(response).to have_http_status(401)
-      end
-
-      it 'does render the right error' do
-        expect(json_response[:error_code]).to eql 2
-      end
-    end
-  end
-
-  describe 'GET #show_by_material' do
-    def show_bales_by_material_call(material)
-      get :show_by_material, params: { material: material }
-    end
-
-    context 'when user is authenticated' do
-      let!(:auth_user) { create_an_authenticated_user_with(organization, '1', 'android') }
-
-      context 'when material is valid' do
-        let(:material) { %w[Plastic Trash Glass].sample }
-        let!(:bale) { create(:bale, organization: organization, user: auth_user, material: material) }
-
-        before(:each) { show_bales_by_material_call(material) }
-
-        it 'does return success' do
-          expect(response).to have_http_status(:ok)
-        end
-
-        it 'does return the bales' do
-          expect(json_response.count).to eql 1
-        end
-
-        it 'does return the bales as expected in the serializer' do
-          expect(json_response).to eql [b_serializer.new(bale).as_json]
-        end
-      end
-
-      context 'when material is incorrect or missing' do
-        let!(:bale) do
-          create(:bale, organization: organization, user: auth_user,
-                        material: %w[Plastic Trash Glass].sample)
-        end
-
-        after(:each) do
-          expect(response).to have_http_status(:bad_request)
-          expect(json_response[:error_code]).to eql 1
-          expect(json_response[:details]).to eql 'Material must be: "Trash", "Glass" or "Plastic".'
-        end
-
-        it 'does return an error when material is invalid' do
-          show_bales_by_material_call('invalid string')
-        end
-
-        it 'does return an error when material is nil' do
-          show_bales_by_material_call(nil)
-        end
-      end
-
-      context 'when bales are from another organization' do
-        let!(:another_organization) { create(:organization) }
-        let!(:another_auth_user) { create_an_authenticated_user_with(another_organization, '1', 'android') }
-        let(:material) { %w[Plastic Trash Glass].sample }
-        let!(:bale) do
-          create(:bale, user: auth_user,
-                        material: material)
-        end
-
-        before(:each) { show_bales_by_material_call(material) }
-
-        it 'does return success' do
-          expect(response).to have_http_status(200)
-        end
-
-        it 'does not return bales from another organization' do
-          expect(json_response.count).to eql 0
-        end
-      end
-    end
-
-    context 'when user is not authenticated' do
-      let!(:user) { create(:user, organization: organization) }
-
-      before(:each) { show_bales_by_material_call(%w[Plastic Trash Glass].sample) }
-
-      it 'does return an error' do
-        expect(response).to have_http_status(401)
-      end
-
-      it 'does render the right error' do
-        expect(json_response[:error_code]).to eql 2
-      end
-    end
-  end
-
-  describe 'GET #show_by_date' do
-    let(:init_date) { Date.current - 1 }
-    let(:end_date) { Date.current + 1 }
-    def show_bales_by_date_call(init_date, end_date)
-      get :show_by_date, params: { init_date: init_date, end_date: end_date }
-    end
-
-    context 'when user is authenticated' do
-      let!(:auth_user) { create_an_authenticated_user_with(organization, '1', 'android') }
-      let(:material) { %w[Plastic Trash Glass].sample }
-      let!(:bale) { create(:bale, organization: organization, user: auth_user, material: material) }
-
-      context 'when the range date is valid and there are bales in that range' do
-        before(:each) { show_bales_by_date_call(init_date, end_date) }
-
-        it 'does return success' do
-          expect(response).to have_http_status(:ok)
-        end
-
-        it 'does return the bales' do
-          expect(json_response.count).to eql 1
-        end
-
-        it 'does return the bales as expected in the serializer' do
-          expect(json_response).to eql [b_serializer.new(bale).as_json]
-        end
-
-        context 'when the initial date its the same that the end date' do
-          it 'does return success' do
-            show_bales_by_date_call(Date.current, Date.current)
-            expect(response).to have_http_status(:ok)
-          end
-
-          it 'does return the bales' do
-            expect(json_response.count).to eql 1
-          end
-        end
-      end
-
-      context 'when the range date is valid and there are no bales in that range' do
-        let(:valid_init) { Date.current + 28 }
-        let(:valid_end) { Date.current + 30 }
-
-        before(:each) { show_bales_by_date_call(valid_init, valid_end) }
-
-        it 'does return succes' do
-          expect(response).to have_http_status(:ok)
-        end
-
-        it 'does return an empty list' do
-          expect(json_response.count).to eql 0
-        end
-      end
-
-      context 'when the range date is missing' do
-        it 'does return bad request' do
-          show_bales_by_date_call(nil, end_date)
-          expect(response).to have_http_status(:bad_request)
-        end
-
-        it 'does return the right error' do
-          show_bales_by_date_call(nil, end_date)
-          expect(json_response[:error_code]).to eql 1
-        end
-
-        it 'does return initial date missing' do
-          show_bales_by_date_call(nil, end_date)
-          expect(json_response[:details]).to eql 'Initial date missing'
-        end
-
-        it 'does return bad request' do
-          show_bales_by_date_call(init_date, nil)
-          expect(response).to have_http_status(:bad_request)
-        end
-
-        it 'does return the right error' do
-          show_bales_by_date_call(init_date, nil)
-          expect(json_response[:error_code]).to eql 1
-        end
-
-        it 'does return end date missing' do
-          show_bales_by_date_call(init_date, nil)
-          expect(json_response[:details]).to eql 'End date missing'
-        end
-      end
-
-      context 'when the range date is invalid' do
-        let(:invalid_init_date) { Date.current + 1 }
-        let(:invalid_end_date) { Date.current + -1 }
-
-        before(:each) { show_bales_by_date_call(invalid_init_date, invalid_end_date) }
-
-        it 'does return bad request' do
-          expect(response).to have_http_status(:bad_request)
-        end
-
-        it 'does return the right error' do
-          expect(json_response[:error_code]).to eql 1
-        end
-      end
-
-      context 'when there are bales for the range date but there are from another organization' do
-        let!(:another_organization) { create(:organization) }
-        let!(:another_auth_user) { create_an_authenticated_user_with(another_organization, '1', 'android') }
-        let(:material) { %w[Plastic Trash Glass].sample }
-        let!(:bale) do
-          create(:bale, user: auth_user,
-                        material: material)
-        end
-
-        before(:each) { show_bales_by_date_call(init_date, end_date) }
-
-        it 'does return succes' do
-          expect(response).to have_http_status(:ok)
-        end
-
-        it 'does return an empty list' do
-          expect(json_response.count).to eql 0
-        end
-      end
-    end
-
-    context 'when user is not authenticated' do
-      let!(:user) { create(:user, organization: organization) }
-
-      before(:each) { show_bales_by_date_call(init_date, end_date) }
-
-      it 'does return unauthorized' do
-        expect(response).to have_http_status(:unauthorized)
       end
 
       it 'does render the right error' do
