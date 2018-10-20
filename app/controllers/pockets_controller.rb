@@ -6,7 +6,7 @@ class PocketsController < AuthenticateController
   def edit_serial_number
     return render_error(1, 'Missing serial number') if params[:serial_number].blank?
 
-    if pocket.update(serial_number: params[:serial_number])
+    if pocket.update(edit_serial_number_params)
       render json: pocket
     else
       render_error(1, pocket.errors)
@@ -16,9 +16,8 @@ class PocketsController < AuthenticateController
   def edit_weight
     return render_error(1, 'Missing weight') if params[:weight].blank?
     return render_error(1, 'Unweighead pocket') if pocket.Unweighed?
-    return render_error(1, 'Negative weight') if params[:weight].negative?
 
-    if pocket.update(weight: params[:weight])
+    if pocket.update(weight_params)
       render json: pocket
     else
       render_error(1, pocket.errors)
@@ -28,9 +27,8 @@ class PocketsController < AuthenticateController
   def add_weight
     return render_error(1, 'Missing weight') if params[:weight].blank?
     return render_error(1, 'Weighead pocket') if pocket.Weighed?
-    return render_error(1, 'Negative weight') if params[:weight].negative?
 
-    if pocket.update(weight: params[:weight], state: 'Weighed')
+    if pocket.update(weight_params.merge(state: 'Weighed'))
       render json: pocket
     else
       render_error(1, pocket.errors)
@@ -41,5 +39,13 @@ class PocketsController < AuthenticateController
 
   def pocket
     @pocket ||= Pocket.find_by!(id: params[:id], organization: logged_user.organization)
+  end
+
+  def edit_serial_number_params
+    params.permit(:serial_number)
+  end
+
+  def weight_params
+    params.permit(:weight)
   end
 end

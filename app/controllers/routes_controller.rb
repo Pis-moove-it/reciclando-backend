@@ -10,7 +10,6 @@ class RoutesController < AuthenticateController
 
   def update
     return render_error(1, 'Missing length') if route_params['length'].blank?
-    return render_error(1, 'Negative length') if route_params['length'].negative?
     return render_error(1, 'Missing travel image') if route_params['travel_image'].blank?
     return render_error(1, 'Route already ended') if route.ended?
 
@@ -28,7 +27,7 @@ class RoutesController < AuthenticateController
   private
 
   def route
-    @route ||= Route.find_by!(id: params[:id], organization: logged_user.organization)
+    @route ||= Route.find_by!(id: params[:id], user_id: [logged_user.organization.user_ids])
   end
 
   def route_params
