@@ -26,10 +26,6 @@ paths:
           name: organization_id
           required: true
           type: integer
-        - in: header
-          name: ApiKey
-          required: true
-          type: string
       responses:
         200:
           description: OK
@@ -49,6 +45,8 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+      security:
+        - ApiKey: []
 
   /organizations/{organization_id}/users/{id}:
     get:
@@ -65,10 +63,6 @@ paths:
           name: id
           required: true
           type: integer
-        - in: header
-          name: ApiKey
-          required: true
-          type: string
       responses:
         200:
           description: OK
@@ -86,6 +80,8 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+      security:
+        - ApiKey: []
 
   /organizations/{organization_id}/users/{id}/login:
     post:
@@ -94,10 +90,6 @@ paths:
       operationId: userEnterSystem
       summary: User enter to the app.
       parameters:
-        - in: header
-          name: ApiKey
-          required: true
-          type: string
         - in: path
           name: organization_id
           required: true
@@ -175,6 +167,7 @@ paths:
         - "Bales"
       operationId: getBales
       summary: List bales.
+<<<<<<< HEAD
       parameters:
 <<<<<<< HEAD
         - in: query
@@ -198,6 +191,8 @@ paths:
           required: true
           type: string
 >>>>>>> add ApiKey parameter in authenticated services
+=======
+>>>>>>> add ApiKey in security section
       responses:
         200:
           description: OK
@@ -218,17 +213,17 @@ paths:
           schema:
             $ref: '#/definitions/Error'
       security:
+<<<<<<< HEAD
       - ApiKey: []
+=======
+        - ApiKey: []
+>>>>>>> add ApiKey in security section
     post:
       tags:
         - "Bales"
       operationId: createBale
       summary: Create a bale.
       parameters:
-        - in: header
-          name: ApiKey
-          required: true
-          type: string
         - in: body
           name: bale
           schema:
@@ -248,6 +243,9 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+      security:
+        - ApiKey: []
+
 
   /bales/{bale_id}:
     get:
@@ -256,10 +254,6 @@ paths:
       operationId: getBale
       summary: Get one bale.
       parameters:
-        - in: header
-          name: ApiKey
-          required: true
-          type: string
         - in: path
           name: bale_id
           required: true
@@ -281,16 +275,14 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+      security:
+        - ApiKey: []
     put:
       tags:
         - "Bales"
       operationId: updateBale
       summary: Update a bale.
       parameters:
-        - in: header
-          name: ApiKey
-          required: true
-          type: string
         - in: path
           name: bale_id
           required: true
@@ -314,6 +306,73 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+<<<<<<< HEAD
+=======
+      security:
+        - ApiKey: []
+  /bales/show_by_material:
+    get:
+      tags:
+        - "Bales"
+      operationId: showBalesByMaterial
+      summary: Return all bales which matches certain material.
+      parameters:
+        - in: query
+          name: material
+          required: true
+          type: string
+          enum: ['Trash', 'Glass', 'Plastic']
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad request.
+        401:
+          description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+        - ApiKey: []
+
+  /bales/show_by_date:
+    get:
+      tags:
+        - "Bales"
+      operationId: showBalesByDate
+      summary: Return all the bales contains in the range of dates.
+      parameters:
+        - in: query
+          name: init_date
+          required: true
+          type: string
+          format: date
+        - in: query
+          name: end_date
+          required: true
+          type: string
+          format: date
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/Error'
+        401:
+          description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+        - ApiKey: []
+>>>>>>> add ApiKey in security section
 
   /pockets:
     get:
@@ -321,11 +380,6 @@ paths:
         - "Pockets"
       operationId: getUnclassifiedPockets
       summary: List unclassified pockets.
-      parameters:
-        - in: header
-          name: ApiKey
-          required: true
-          type: string
       responses:
         200:
           description: OK
@@ -341,6 +395,8 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+      security:
+        - ApiKey: []
 
   /pockets/{pocket_id}/edit_serial_number:
     put:
@@ -353,10 +409,6 @@ paths:
           name: pocket_id
           required: true
           type: integer
-        - in: header
-          name: ApiKey
-          required: true
-          type: string
         - in: body
           name: serial_number
           required: true
@@ -376,6 +428,8 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+      security:
+        - ApiKey: []
 
   /pockets/{pocket_id}/edit_weight:
     put:
@@ -384,10 +438,6 @@ paths:
       operationId: editWeight
       summary: Edit the weight of weighed pockets.
       parameters:
-        - in: header
-          name: ApiKey
-          required: true
-          type: string
         - in: path
           name: pocket_id
           required: true
@@ -414,6 +464,8 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+      security:
+        - ApiKey: []
 
   /pockets/{pocket_id}/add_weight:
     put:
@@ -445,6 +497,8 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+      security:
+        - ApiKey: []
 
   /containers/{container_id}:
     put:
@@ -453,10 +507,6 @@ paths:
       operationId: updateContainer
       summary: Update the container status.
       parameters:
-        - in: header
-          name: ApiKey
-          required: true
-          type: string
         - in: path
           name: container_id
           required: true
@@ -480,6 +530,8 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+      security:
+        - ApiKey: []
 
   /routes/{route_id}/collections:
     post:
@@ -488,10 +540,6 @@ paths:
       operationId: addPocket
       summary: Add a pocket.
       parameters:
-        - in: header
-          name: ApiKey
-          required: true
-          type: string
         - in: path
           name: route_id
           required: true
@@ -515,6 +563,8 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+      security:
+        - ApiKey: []
 
   /routes:
     post:
@@ -522,11 +572,6 @@ paths:
         - "Routes"
       operationId: createRoute
       summary: Create a route.
-      parameters:
-        - in: header
-          name: ApiKey
-          required: true
-          type: string
       responses:
         200:
           description: OK
@@ -538,6 +583,8 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+      security:
+        - ApiKey: []
 
   /questions:
     get:
@@ -558,6 +605,8 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+      security:
+        - ApiKey: []
 
   /routes/{route_id}:
     put:
