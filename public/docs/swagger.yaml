@@ -167,9 +167,7 @@ paths:
         - "Bales"
       operationId: getBales
       summary: List bales.
-<<<<<<< HEAD
       parameters:
-<<<<<<< HEAD
         - in: query
           name: material
           required: false
@@ -185,14 +183,6 @@ paths:
           required: false
           type: string
           format: date
-=======
-        - in: header
-          name: ApiKey
-          required: true
-          type: string
->>>>>>> add ApiKey parameter in authenticated services
-=======
->>>>>>> add ApiKey in security section
       responses:
         200:
           description: OK
@@ -213,11 +203,7 @@ paths:
           schema:
             $ref: '#/definitions/Error'
       security:
-<<<<<<< HEAD
       - ApiKey: []
-=======
-        - ApiKey: []
->>>>>>> add ApiKey in security section
     post:
       tags:
         - "Bales"
@@ -245,7 +231,6 @@ paths:
             $ref: '#/definitions/Error'
       security:
         - ApiKey: []
-
 
   /bales/{bale_id}:
     get:
@@ -294,6 +279,10 @@ paths:
       responses:
         200:
           description: OK
+        400:
+          description: Malformed request.
+          schema:
+            $ref: '#/definitions/Error'
         401:
           description: Unauthorized request.
           schema:
@@ -306,73 +295,8 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
-<<<<<<< HEAD
-=======
       security:
         - ApiKey: []
-  /bales/show_by_material:
-    get:
-      tags:
-        - "Bales"
-      operationId: showBalesByMaterial
-      summary: Return all bales which matches certain material.
-      parameters:
-        - in: query
-          name: material
-          required: true
-          type: string
-          enum: ['Trash', 'Glass', 'Plastic']
-      responses:
-        200:
-          description: OK
-        400:
-          description: Bad request.
-        401:
-          description: Unauthorized request.
-          schema:
-            $ref: '#/definitions/Error'
-        500:
-          description: Unexpected error.
-          schema:
-            $ref: '#/definitions/Error'
-      security:
-        - ApiKey: []
-
-  /bales/show_by_date:
-    get:
-      tags:
-        - "Bales"
-      operationId: showBalesByDate
-      summary: Return all the bales contains in the range of dates.
-      parameters:
-        - in: query
-          name: init_date
-          required: true
-          type: string
-          format: date
-        - in: query
-          name: end_date
-          required: true
-          type: string
-          format: date
-      responses:
-        200:
-          description: OK
-        400:
-          description: Bad request.
-          schema:
-            $ref: '#/definitions/Error'
-        401:
-          description: Unauthorized request.
-          schema:
-            $ref: '#/definitions/Error'
-        500:
-          description: Unexpected error.
-          schema:
-            $ref: '#/definitions/Error'
-      security:
-        - ApiKey: []
->>>>>>> add ApiKey in security section
 
   /pockets:
     get:
@@ -416,6 +340,10 @@ paths:
       responses:
         200:
           description: Ok
+        400:
+          description: Malformed request.
+          schema:
+            $ref: '#/definitions/Error'
         401:
           description: Unauthorized request.
           schema:
@@ -452,6 +380,10 @@ paths:
       responses:
         200:
           description: Ok
+        400:
+          description: Malformed request.
+          schema:
+            $ref: '#/definitions/Error'
         401:
           description: Unauthorized request.
           schema:
@@ -485,6 +417,10 @@ paths:
       responses:
         200:
           description: Ok
+        400:
+          description: Malformed request.
+          schema:
+            $ref: '#/definitions/Error'
         401:
           description: Unauthorized request.
           schema:
@@ -519,11 +455,15 @@ paths:
         200:
           description: Ok
         400:
-          description: A container with specified Id was not found.
+          description: Malformed request.
           schema:
             $ref: '#/definitions/Error'
         401:
           description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: A container with specified Id was not found.
           schema:
             $ref: '#/definitions/Error'
         500:
@@ -537,8 +477,8 @@ paths:
     post:
       tags:
         - "Collections"
-      operationId: addPocket
-      summary: Add a pocket.
+      operationId: createCollection
+      summary: Add a pocket to the created collection.
       parameters:
         - in: path
           name: route_id
@@ -551,6 +491,10 @@ paths:
       responses:
         200:
           description: OK
+        400:
+          description: A container with specified Id was not found.
+          schema:
+            $ref: '#/definitions/Error'
         401:
           description: Unauthorized request.
           schema:
@@ -623,6 +567,27 @@ paths:
             name: route
             schema:
               $ref: '#/definitions/Route'
+        responses:
+          200:
+            description: OK
+          400:
+            description: Malformed request.
+            schema:
+              $ref: '#/definitions/Error'
+          401:
+            description: Unauthorized request.
+            schema:
+              $ref: '#/definitions/Error'
+          404:
+            description: A route with the specified ID was not found.
+            schema:
+              $ref: '#/definitions/Error'
+          500:
+            description: Unexpected error.
+            schema:
+              $ref: '#/definitions/Error'
+        security:
+          - ApiKey: []
     get:
       tags:
         - "Routes"
@@ -648,6 +613,8 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+      security:
+        - ApiKey: []
 
 definitions:
   Organization:
