@@ -4,40 +4,42 @@ class PocketsController < AuthenticateController
   end
 
   def edit_serial_number
-    pocket = Pocket.find(params[:id])
-    return render_error(1, 'Missing serial number') if check_invalid_entry('serial_number')
+    return render_error(1, 'Missing serial number') if params[:serial_number].blank?
 
-    pocket.update!(serial_number: params['serial_number'])
-    render json: pocket
+    if pocket.update(serial_number: params[:serial_number])
+      render json: pocket
+    else
+      render_error(1, pocket.errors)
+    end
   end
 
   def edit_weight
-    pocket = Pocket.find(params[:id])
-    return render_error(1, 'Missing weight') if check_invalid_entry('weight')
-    return render_error(1, 'Unweighead pocket') if pocket.state == 'Unweighed'
-    return render_error(1, 'Negative weight') if negative_weight?
+    return render_error(1, 'Missing weight') if params[:weight].blank?
+    return render_error(1, 'Unweighead pocket') if pocket.Unweighed?
+    return render_error(1, 'Negative weight') if params[:weight].negative?
 
-    pocket.update!(weight: params['weight'])
-    render json: pocket
+    if pocket.update(weight: params[:weight])
+      render json: pocket
+    else
+      render_error(1, pocket.errors)
+    end
   end
 
   def add_weight
-    pocket = Pocket.find(params[:id])
-    return render_error(1, 'Missing weight') if check_invalid_entry('weight')
+    return render_error(1, 'Missing weight') if params[:weight].blank?
     return render_error(1, 'Weighead pocket') if pocket.Weighed?
-    return render_error(1, 'Negative weight') if negative_weight?
+    return render_error(1, 'Negative weight') if params[:weight].negative?
 
-    pocket.update!(weight: params['weight'], state: 'Weighed')
-    render json: pocket
+    if pocket.update(weight: params[:weight], state: 'Weighed')
+      render json: pocket
+    else
+      render_error(1, pocket.errors)
+    end
   end
 
   private
 
-  def check_invalid_entry(entry)
-    params[entry].nil? || params[entry].blank?
-  end
-
-  def negative_weight?
-    params[:weight].negative?
+  def pocket
+    @pocket ||= Pocket.find_by!(id: params[:id], organization: logged_user.organization)
   end
 end

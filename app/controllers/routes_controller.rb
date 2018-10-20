@@ -28,7 +28,7 @@ class RoutesController < AuthenticateController
   private
 
   def route
-    @route ||= Route.find(params[:id])
+    @route ||= Route.find_by!(id: params[:id], organization: logged_user.organization)
   end
 
   def route_params

@@ -30,7 +30,7 @@ class BalesController < AuthenticateController
   private
 
   def bale
-    @bale ||= Bale.find(params[:id])
+    @bale ||= Bale.find_by!(id: params[:id], organization: logged_user.organization)
   end
 
   def bale_params
