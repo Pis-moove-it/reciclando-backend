@@ -94,6 +94,10 @@ paths:
       operationId: userEnterSystem
       summary: User enter to the app.
       parameters:
+        - in: header
+          name: ApiKey
+          required: true
+          type: string
         - in: path
           name: organization_id
           required: true
