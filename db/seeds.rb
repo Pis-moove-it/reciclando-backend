@@ -48,12 +48,6 @@ unless Route.count.positive?
   end
 end
 
-unless CollectionPoint.count.positive?
-  Fixtures::COLLECTION_POINTS.each do |collection_point|
-    CollectionPoint.create!(collection_point)
-  end
-end
-
 unless Collection.count.positive?
   Fixtures::COLLECTIONS.each do |col|
     Collection.create!(col)
