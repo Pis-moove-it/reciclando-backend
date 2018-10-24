@@ -127,9 +127,9 @@ RSpec.describe PocketsController, type: :controller do
         let!(:another_organization) { create(:organization) }
         let!(:another_user) { create(:user, organization: another_organization) }
         let!(:another_route) { create(:route, user: another_user) }
-        let!(:collection_point) { create(:collection_point) }
+        let!(:container) { create(:container, organization: another_organization) }
         let!(:another_collection) do
-          create(:collection, route: another_route, collection_point: collection_point)
+          create(:collection, route: another_route, collection_point: container)
         end
         let!(:another_pocket) { create(:pocket, collection: another_collection) }
 
@@ -234,9 +234,9 @@ RSpec.describe PocketsController, type: :controller do
         let!(:another_organization) { create(:organization) }
         let!(:another_user) { create(:user, organization: another_organization) }
         let!(:another_route) { create(:route, user: another_user) }
-        let!(:collection_point) { create(:collection_point) }
+        let!(:container) { create(:container, organization: another_organization) }
         let!(:another_collection) do
-          create(:collection, route: another_route, collection_point: collection_point)
+          create(:collection, route: another_route, collection_point: container)
         end
         let!(:another_pocket) { create(:pocket, collection: another_collection) }
 
@@ -340,9 +340,9 @@ RSpec.describe PocketsController, type: :controller do
         let!(:another_organization) { create(:organization) }
         let!(:another_user) { create(:user, organization: another_organization) }
         let!(:another_route) { create(:route, user: another_user) }
-        let!(:collection_point) { create(:collection_point) }
+        let!(:container) { create(:container, organization: another_organization) }
         let!(:another_collection) do
-          create(:collection, route: another_route, collection_point: collection_point)
+          create(:collection, route: another_route, collection_point: container)
         end
         let!(:another_pocket) { create(:pocket, collection: another_collection) }
 
