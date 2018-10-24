@@ -1,4 +1,8 @@
-class Container < ApplicationRecord
+class Container < CollectionPoint
   enum status: %i[Ok Damaged Removed]
-  validates :status, presence: true
+  validates :status, :active, presence: true
+
+  before_validation(on: :create) do
+    self.active = true
+  end
 end
