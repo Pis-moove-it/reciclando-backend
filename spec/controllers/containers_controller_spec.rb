@@ -4,7 +4,8 @@ RSpec.describe ContainersController, type: :controller do
   let(:json_response) { JSON.parse(response.body, symbolize_names: true) }
 
   describe 'PUT #update' do
-    let!(:container) { FactoryBot.create(:container) }
+    let!(:organization) { create(:organization) }
+    let!(:container) { FactoryBot.create(:container, organization: organization) }
     let(:invalid_id) { Container.pluck(:id).max + 1 }
     let(:serializer) { ContainerSerializer }
 

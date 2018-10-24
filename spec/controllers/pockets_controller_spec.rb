@@ -5,8 +5,9 @@ RSpec.describe PocketsController, type: :controller do
   let!(:organization) { create(:organization) }
   let!(:user) { create(:user, organization: organization) }
   let!(:route) { create(:route, user: user) }
-  let!(:collection_point) { create(:collection_point) }
-  let!(:collection) { create(:collection, route: route, collection_point: collection_point) }
+  let!(:container) { create(:container, organization: organization) }
+  let!(:collection) { create(:collection, route: route, collection_point: container) }
+  let!(:organization) { create(:organization) }
 
   let(:serializer) { PocketSerializer }
 
@@ -19,9 +20,9 @@ RSpec.describe PocketsController, type: :controller do
       let!(:another_organization) { create(:organization) }
       let!(:another_user) { create(:user, organization: another_organization) }
       let!(:another_route) { create(:route, user: another_user) }
-      let!(:collection_point) { create(:collection_point) }
+      let!(:container) { create(:container, organization: another_organization) }
       let!(:another_collection) do
-        create(:collection, route: another_route, collection_point: collection_point)
+        create(:collection, route: another_route, collection_point: container)
       end
 
       let!(:auth_user) { create_an_authenticated_user_with(organization, '1', 'android') }
