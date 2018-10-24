@@ -46,7 +46,7 @@ RSpec.describe RoutesController, type: :controller do
     let(:ended_route) { build(:ended_route) }
 
     def end_route_call(route_id, length, travel_image)
-      put :update, params: { id: route_id, length: length, travel_image: travel_image }, as: :json
+      put :update, params: { id: route_id, length: length, travel_image: travel_image }
     end
 
     context 'when user is authenticated' do
@@ -89,8 +89,8 @@ RSpec.describe RoutesController, type: :controller do
           expect(response).to have_http_status(400)
         end
 
-        it 'does return negative length' do
-          expect(json_response[:details]).to eql 'Negative length'
+        it 'does return the specified error code' do
+          expect(json_response[:error_code]).to eql 1
         end
       end
 
@@ -119,6 +119,22 @@ RSpec.describe RoutesController, type: :controller do
           expect(json_response[:details]).to eql 'Route already ended'
         end
       end
+
+      context 'when the route is from another organization' do
+        let!(:another_organization) { create(:organization) }
+        let!(:another_user) { create(:user, organization: another_organization) }
+        let!(:another_route) { create(:route, user: another_user) }
+
+        before(:each) { end_route_call(another_route.id, ended_route[:length], ended_route[:travel_image]) }
+
+        it 'does return an error' do
+          expect(response).to have_http_status(404)
+        end
+
+        it 'does render the right error' do
+          expect(json_response[:error_code]).to eql 3
+        end
+      end
     end
 
     context 'when user is not authenticated' do
@@ -144,10 +160,9 @@ RSpec.describe RoutesController, type: :controller do
 
     context 'when user is authenticated' do
       let!(:auth_user) { create_an_authenticated_user_with(organization, '1', 'android') }
+      let!(:route) { create(:route, user: auth_user) }
 
       context 'when the route exists' do
-        let!(:route) { create(:route, user: auth_user) }
-
         before(:each) { get_routes_call(route.id) }
 
         it 'does return success' do
@@ -160,9 +175,23 @@ RSpec.describe RoutesController, type: :controller do
       end
 
       context 'when the route does not exist' do
-        let!(:route) { create(:route, user: auth_user) }
-
         before(:each) { get_routes_call(Route.pluck(:id).max + 1) }
+
+        it 'does return an error' do
+          expect(response).to have_http_status(404)
+        end
+
+        it 'does render the right error' do
+          expect(json_response[:error_code]).to eql 3
+        end
+      end
+
+      context 'when the route is from another organization' do
+        let!(:another_organization) { create(:organization) }
+        let!(:another_user) { create(:user, organization: another_organization) }
+        let!(:another_route) { create(:route, user: another_user) }
+
+        before(:each) { get_routes_call(another_route.id) }
 
         it 'does return an error' do
           expect(response).to have_http_status(404)

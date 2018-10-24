@@ -18,6 +18,7 @@ RSpec.describe Pocket, type: :model do
 
   describe 'validations' do
     let(:pocket) { build(:pocket, organization: organization, collection: collection) }
+    let(:negative_weight) { Faker::Number.negative }
 
     it 'is valid with valid attributes' do
       expect(pocket).to be_valid
@@ -25,6 +26,16 @@ RSpec.describe Pocket, type: :model do
 
     it 'is not valid without serial number' do
       pocket.serial_number = nil
+      expect(pocket).not_to be_valid
+    end
+
+    it 'is not valid with an invalid wieght' do
+      pocket.weight = 0
+      expect(pocket).not_to be_valid
+    end
+
+    it 'is not valid with an invalid wieght' do
+      pocket.weight = negative_weight
       expect(pocket).not_to be_valid
     end
   end

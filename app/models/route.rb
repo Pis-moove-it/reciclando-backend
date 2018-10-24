@@ -5,7 +5,9 @@ class Route < ApplicationRecord
 
   has_many :collections, dependent: :destroy
 
+  validates :length, numericality: { greater_than: 0 }, allow_nil: true
+
   def ended?
-    !length.nil? && !travel_image.nil?
+    length.present? && travel_image.present?
   end
 end

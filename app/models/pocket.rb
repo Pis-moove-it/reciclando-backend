@@ -5,6 +5,7 @@ class Pocket < ApplicationRecord
   belongs_to :collection
 
   validates :serial_number, presence: true
+  validates :weight, numericality: { greater_than: 0 }, allow_nil: true
 
   delegate :organization, to: :collection
 

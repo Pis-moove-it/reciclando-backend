@@ -20,6 +20,6 @@ FactoryBot.define do
 
   factory :unweighed_pocket, parent: :pocket do
     state { 'Unweighed' }
-    weight 0
+    weight nil
   end
 end
