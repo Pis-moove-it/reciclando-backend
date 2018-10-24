@@ -13,7 +13,8 @@ class CollectionsController < AuthenticateController
   private
 
   def container
-    @container ||= Container.find_by(id: collection_params['collection_point_id'], organization: logged_user.organization)
+    @container ||= Container.find_by(id: collection_params['collection_point_id'],
+                                     organization: logged_user.organization)
   end
 
   def collection_params
