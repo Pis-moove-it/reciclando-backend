@@ -14,8 +14,20 @@ RSpec.describe Route, type: :model do
     end
 
     context 'when create routes with wrong values' do
+      let(:negative_length) { Faker::Number.negative.to_i }
+
       it 'does not let create new ones without user' do
         route.user = nil
+        expect(route).not_to be_valid
+      end
+
+      it 'does not let create new ones with an invalid length' do
+        route.length = 0
+        expect(route).not_to be_valid
+      end
+
+      it 'does not let create new ones with an invalid length' do
+        route.length = negative_length
         expect(route).not_to be_valid
       end
     end
