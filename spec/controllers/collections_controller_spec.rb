@@ -19,21 +19,20 @@ RSpec.describe CollectionsController, type: :controller do
       let!(:auth_route) { create(:route, user: auth_user) }
       let(:invalid_route_id) { Route.pluck(:id).max + 1 }
 
+      before(:each) { create_collection_call(auth_route.id, container.id, serial_numbers) }
+
       context 'when creating valid collections' do
         it 'does return success' do
-          create_collection_call(auth_route.id, container.id, serial_numbers)
           expect(response).to have_http_status(:ok)
         end
 
         it 'does return the correct collection_point_id and the route_id' do
-          create_collection_call(auth_route.id, container.id, serial_numbers)
           %i[collection_point_id route_id].each do |collection_param|
             expect(json_response[collection_param]).to eql collection_params[collection_param]
           end
         end
 
         it 'does return pockets with correct serial numbers' do
-          create_collection_call(auth_route.id, container.id, serial_numbers)
           expect(json_response['pockets'].collect { |p| p.slice('serial_number').symbolize_keys }).to eql serial_numbers
         end
       end

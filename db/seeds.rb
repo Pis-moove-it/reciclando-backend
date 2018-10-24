@@ -9,7 +9,6 @@ require_relative 'fixtures/bales'
 require_relative 'fixtures/pockets'
 require_relative 'fixtures/routes'
 require_relative 'fixtures/collections'
-require_relative 'fixtures/collection_points'
 require_relative 'fixtures/questions'
 
 unless AdminUser.count.positive?
