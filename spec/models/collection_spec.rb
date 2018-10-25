@@ -4,9 +4,9 @@ RSpec.describe Collection, type: :model do
   let!(:organization) { create(:organization) }
   let!(:user) { create(:user, organization: organization) }
   let!(:route) { create(:route, user: user) }
-  let!(:collection_point) { create(:collection_point) }
+  let!(:container) { create(:container, organization: organization) }
   let!(:pocket) { build(:pocket, organization: organization) }
-  let!(:collection) { create(:collection, route: route, collection_point: collection_point, pockets: [pocket]) }
+  let!(:collection) { create(:collection, route: route, collection_point: container, pockets: [pocket]) }
 
   describe 'serializer' do
     let(:serializer) { CollectionSerializer }
