@@ -1,7 +1,7 @@
 class CollectionsController < AuthenticateController
   def create
     return render_error(1, 'Missing pockets') if collection_params[:pockets_attributes].blank?
-    return render_error(1, 'Invalid collection_point_id') if container.blank?
+    return render_error(1, 'Invalid collection_point_id') unless container
     collection = Collection.new(collection_params.merge(route_id: params[:route_id]))
     if collection.save
       render json: collection
