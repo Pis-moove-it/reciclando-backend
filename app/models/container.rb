@@ -1,9 +1,9 @@
 class Container < CollectionPoint
   enum status: %i[Ok Damaged Removed]
-  validates :status, :active, presence: true
+  validates :status, presence: true
 
   before_validation(on: :create) do
-    self.active = true
+    self.active = true if active.nil?
   end
 
   class << self

@@ -1,5 +1,8 @@
-# TODO, authenticate this services
-class ContainersController < BaseController
+class ContainersController < AuthenticateController
+  def index
+    render json: Container.available.where(organization_id: logged_user.organization.id)
+  end
+
   def update
     if container.update(container_params)
       render json: container
