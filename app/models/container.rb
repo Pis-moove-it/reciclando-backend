@@ -5,4 +5,10 @@ class Container < CollectionPoint
   before_validation(on: :create) do
     self.active = true
   end
+
+  class << self
+    def available
+      where(status: %w[Ok Damaged], active: true)
+    end
+  end
 end
