@@ -129,7 +129,7 @@ RSpec.describe BalesController, type: :controller do
           end
 
           it 'does return only the organization bales' do
-            expect(json_response).to eql [b_serializer.new(bale).as_json, b_serializer.new(second_bale).as_json ]
+            expect(json_response).to eql [b_serializer.new(bale).as_json, b_serializer.new(second_bale).as_json]
           end
 
           it 'does not return bales from another organization' do
