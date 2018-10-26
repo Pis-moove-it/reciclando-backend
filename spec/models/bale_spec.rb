@@ -33,7 +33,7 @@ RSpec.describe Bale, type: :model do
 
   describe 'serializer' do
     it 'does return bales, as specified in the serializer' do
-      expect(b_serializer.new(bale).attributes.keys).to eq %i[id weight material]
+      expect(b_serializer.new(bale).attributes.keys).to eq %i[id weight material_id]
     end
   end
 end
