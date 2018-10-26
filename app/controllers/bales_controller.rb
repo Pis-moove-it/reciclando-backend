@@ -3,7 +3,7 @@ class BalesController < AuthenticateController
     return render_error(1, 'Material must be Trash, Glass or Plastic.') unless valid_material?
     return render_error(1, 'Invalid dates') unless valid_dates?
 
-    render json: Bale.where(bales_query.merge(organization: logged_user.organization))
+    render json: Bale.where(bales_query.merge(organization: logged_user.organization)).order(:id)
   end
 
   def create

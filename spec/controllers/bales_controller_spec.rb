@@ -65,6 +65,7 @@ RSpec.describe BalesController, type: :controller do
       let!(:another_user) { create(:user, organization: another_organization) }
 
       let!(:bale) { create(:bale, user: auth_user) }
+      let!(:second_bale) { create(:bale, user: auth_user) }
       let!(:another_bale) { create(:bale, user: another_user) }
 
       context 'when getting all the bales' do
@@ -75,7 +76,11 @@ RSpec.describe BalesController, type: :controller do
         end
 
         it 'does return only the organization bales' do
-          expect(json_response).to eql [b_serializer.new(bale).as_json]
+          expect(json_response).to eql [b_serializer.new(bale).as_json, b_serializer.new(second_bale).as_json]
+        end
+
+        it 'does return the bales in order by id' do
+          expect(json_response.first[:id] < json_response.second[:id])
         end
 
         it 'does not return bales from another organization' do
@@ -92,7 +97,7 @@ RSpec.describe BalesController, type: :controller do
           end
 
           it 'does return only the organization bales' do
-            expect(json_response).to eql [b_serializer.new(bale).as_json]
+            expect(json_response).to eql [b_serializer.new(bale).as_json, b_serializer.new(second_bale).as_json]
           end
 
           it 'does not return bales from another organization' do
@@ -124,7 +129,7 @@ RSpec.describe BalesController, type: :controller do
           end
 
           it 'does return only the organization bales' do
-            expect(json_response).to eql [b_serializer.new(bale).as_json]
+            expect(json_response).to eql [b_serializer.new(bale).as_json, b_serializer.new(second_bale).as_json ]
           end
 
           it 'does not return bales from another organization' do
