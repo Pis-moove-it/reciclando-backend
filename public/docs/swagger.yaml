@@ -436,6 +436,30 @@ paths:
       security:
         - ApiKey: []
 
+  /containers:
+    get:
+      tags:
+        - "Containers"
+      operationId: getContainers
+      summary: List available containers.
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Container'
+        401:
+          description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+        - ApiKey: []
+
   /containers/{container_id}:
     put:
       tags:
@@ -693,13 +717,21 @@ definitions:
       required:
         - status
       properties:
+        id:
+          type: integer
+        latitude:
+          type: string
+        longitude:
+          type: string
         status:
           type: string
           enum:
             - Ok
             - Damaged
-            - Removed
       example:
+        id: 5
+        latitude: '-13.843669'
+        longitude: '-60.894236'
         status: Ok
   Collection:
     type: object
