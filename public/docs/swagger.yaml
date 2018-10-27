@@ -543,6 +543,26 @@ paths:
       responses:
         200:
           description: OK
+          schema:
+            $ref: '#/definitions/Create_route'
+        401:
+          description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+        - ApiKey: []
+    get:
+      tags:
+        - "Routes"
+      operationId: listingRoutes
+      summary: Listing all the routes from the organization.
+      responses:
+        200:
+          description: OK
         401:
           description: Unauthorized request.
           schema:
@@ -765,6 +785,50 @@ definitions:
       example:
         length: 17.5
         travel_image: "https://sfbaytransit.org/samtrans/route/61"
+  Create_route:
+    type: object
+    properties:
+      id:
+        type: integer
+      length:
+        type: number
+      travel_image:
+        type: string
+      created_at:
+        type: string
+      user:
+        type: object
+        properties:
+          id:
+            type: integer
+          name:
+            type: string
+          surname:
+            type: string
+          ci:
+            type: string
+          email:
+            type: string
+      pockets:
+        type: array
+        items:
+          type: object
+          properties:
+            serial_number:
+              type: string
+    example:
+      id: 6
+      length: nil
+      travel_image: nil
+      created_at: "2018-10-27 19:16:25 UTC"
+      user: {
+        id: 1,
+        name: "Federico",
+        surname: "Balarini",
+        email: "bala@email.com",
+        ci: "12345678"
+      }
+      pockets: []
   Error:
     type: object
     properties:
