@@ -24,6 +24,10 @@ class RoutesController < AuthenticateController
     render json: route
   end
 
+  def index
+    render json: Route.where(user_id: logged_user.organization.user_ids)
+  end
+
   private
 
   def route
