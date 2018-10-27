@@ -12,7 +12,7 @@ RSpec.describe Pocket, type: :model do
     let(:serializer) { PocketSerializer }
 
     it 'does return pockets as specified in the serializer' do
-      expect(serializer.new(pocket).attributes.keys).to eq %i[id serial_number state weight]
+      expect(serializer.new(pocket).attributes.keys).to eq %i[id serial_number state weight check_in]
     end
   end
 
