@@ -7,4 +7,8 @@ class Collection < ApplicationRecord
   delegate :organization, to: :route, allow_nil: true
 
   accepts_nested_attributes_for :pockets
+
+  def check_in_pockets
+    pockets.update(check_in: Time.current)
+  end
 end
