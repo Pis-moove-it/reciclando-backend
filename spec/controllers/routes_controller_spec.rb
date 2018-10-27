@@ -68,6 +68,16 @@ RSpec.describe RoutesController, type: :controller do
         it 'does return the route as specified in the serializer' do
           expect(json_response).to eql r_serializer.new(route.reload).as_json
         end
+
+        it 'does check in pockets' do
+          route.reload
+
+          route.collections.each do |collection|
+            collection.pockets.each do |pocket|
+              expect(pocket.check_in).not_to eql nil
+            end
+          end
+        end
       end
 
       context 'when length is missing' do

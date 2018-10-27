@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_24_170835) do
+ActiveRecord::Schema.define(version: 2018_10_27_143228) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -106,6 +106,7 @@ ActiveRecord::Schema.define(version: 2018_10_24_170835) do
     t.bigint "organization_id"
     t.float "weight"
     t.bigint "collection_id"
+    t.datetime "check_in"
     t.index ["collection_id"], name: "index_pockets_on_collection_id"
     t.index ["organization_id"], name: "index_pockets_on_organization_id"
   end

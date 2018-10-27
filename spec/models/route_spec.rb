@@ -39,4 +39,19 @@ RSpec.describe Route, type: :model do
       expect(r_serializer.new(route).associations.map(&:key)).to eq %i[user pockets]
     end
   end
+
+  describe 'callback' do
+    context 'when updating a route' do
+      let(:collections) { route.collections }
+      before(:each) { route.update(length: Faker::Number.number(2)) }
+
+      it 'does update pockets check in' do
+        collections.each do |collection|
+          collection.pockets.each do |pocket|
+            expect(pocket.check_in).not_to eql nil
+          end
+        end
+      end
+    end
+  end
 end
