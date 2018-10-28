@@ -560,6 +560,15 @@ paths:
         - "Routes"
       operationId: listingRoutes
       summary: Listing all the routes from the organization.
+      parameters:
+        - in: path
+          name: page
+          required: true
+          type: integer
+        - in: path
+          name: per_page
+          required: true
+          type: integer
       responses:
         200:
           description: OK
