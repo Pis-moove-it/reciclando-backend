@@ -18,9 +18,15 @@ class BaseController < ApplicationController
 
   def paginated_render(query, page, per_page)
     count = query.count
-    page_count = (count / per_page.to_f).ceil
-    response.headers['total'] = page_count
     response.headers['records'] = count
-    render json: query.page(page).per(per_page)
+    if page && per_page
+      count = query.count
+      page_count = (count / per_page.to_f).ceil
+      response.headers['total_pages'] = page_count
+      render json: query.page(page).per(per_page)
+    else
+      response.headers['total_pages'] = 1
+      render json: query
+    end
   end
 end

@@ -561,13 +561,11 @@ paths:
       operationId: listingRoutes
       summary: Listing all the routes from the organization.
       parameters:
-        - in: path
+        - in: query
           name: page
-          required: true
           type: integer
-        - in: path
+        - in: query
           name: per_page
-          required: true
           type: integer
       responses:
         200:

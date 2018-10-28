@@ -236,27 +236,45 @@ RSpec.describe RoutesController, type: :controller do
       let!(:another_user) { create(:user, organization: another_organization) }
 
       let!(:route) { create(:route, user: auth_user) }
+      let!(:second_route) { create(:route, user: auth_user) }
+      let!(:third_route) { create(:route, user: auth_user) }
       let!(:another_route) { create :route, user: another_user }
 
-      before(:each) { get :index, params: { page: 1, per_page: 2 } }
-
       context 'when listing all the routes from the organization' do
+        before(:each) { get :index }
+
         it 'does return succes' do
           expect(response).to have_http_status(:ok)
         end
 
-        it 'does return the route as specified in the serializer' do
-          expect(json_response).to eql [r_serializer.new(route).as_json]
+        it 'does return the routes as specified in the serializer' do
+          expect(json_response).to eql [r_serializer.new(route).as_json,
+                                        r_serializer.new(second_route).as_json, r_serializer.new(third_route).as_json]
         end
 
         it 'does not return routes from another organization' do
           expect(json_response.pluck(:id)).not_to include(another_route.id)
         end
       end
+
+      context 'when listing paginated routes' do
+        let!(:second_route) { create(:route, user: auth_user) }
+        let!(:third_route) { create(:route, user: auth_user) }
+
+        before(:each) { get :index, params: { page: 1, per_page: 2 } }
+
+        it 'does return succes' do
+          expect(response).to have_http_status(:ok)
+        end
+
+        it 'does return the route as specified in the serializer' do
+          expect(json_response).to eql [r_serializer.new(route).as_json, r_serializer.new(second_route).as_json]
+        end
+      end
     end
 
     context 'when user is not authenticated' do
-      before(:each) { get :index, params: { page: 1, per_page: 2 } }
+      before(:each) { get :index }
 
       it 'does return an error' do
         expect(response).to have_http_status(:unauthorized)
