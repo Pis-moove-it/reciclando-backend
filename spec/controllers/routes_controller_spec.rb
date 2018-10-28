@@ -238,7 +238,7 @@ RSpec.describe RoutesController, type: :controller do
       let!(:route) { create(:route, user: auth_user) }
       let!(:another_route) { create :route, user: another_user }
 
-      before(:each) { get :index }
+      before(:each) { get :index, params: { page: 1, per_page: 2 } }
 
       context 'when listing all the routes from the organization' do
         it 'does return succes' do
@@ -256,7 +256,7 @@ RSpec.describe RoutesController, type: :controller do
     end
 
     context 'when user is not authenticated' do
-      before(:each) { get :index }
+      before(:each) { get :index, params: { page: 1, per_page: 2 } }
 
       it 'does return an error' do
         expect(response).to have_http_status(:unauthorized)

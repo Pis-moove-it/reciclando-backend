@@ -25,7 +25,8 @@ class RoutesController < AuthenticateController
   end
 
   def index
-    render json: Route.where(user_id: logged_user.organization.user_ids)
+    query = Route.where(user_id: logged_user.organization.user_ids)
+    paginated_render(query, params[:page], params[:per_page])
   end
 
   private

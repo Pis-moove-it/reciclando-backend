@@ -563,6 +563,10 @@ paths:
       responses:
         200:
           description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Create_route'
         401:
           description: Unauthorized request.
           schema:
@@ -797,18 +801,8 @@ definitions:
       created_at:
         type: string
       user:
-        type: object
-        properties:
-          id:
-            type: integer
-          name:
-            type: string
-          surname:
-            type: string
-          ci:
-            type: string
-          email:
-            type: string
+        schema:
+          $ref: '#/definitions/User'
       pockets:
         type: array
         items:
