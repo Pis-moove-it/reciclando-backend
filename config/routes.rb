@@ -18,7 +18,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :routes, only: %i[create update show] do
+  resources :routes, only: %i[create update show index] do
     resources :collections, only: %i[create]
   end
 
