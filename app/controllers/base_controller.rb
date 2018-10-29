@@ -17,16 +17,16 @@ class BaseController < ApplicationController
   end
 
   def paginated_render(query, page, per_page)
-    count = query.count
-    response.headers['records'] = count
-    if page && per_page
-      count = query.count
-      page_count = (count / per_page.to_f).ceil
-      response.headers['total_pages'] = page_count
-      render json: query.page(page).per(per_page)
-    else
-      response.headers['total_pages'] = 1
-      render json: query
-    end
+    return render json: query unless page && per_page
+    records = query.count
+    response.headers['records'] = records
+    set_total_pages(records, per_page)
+    render json: query.page(page).per(per_page)
+  end
+
+  def set_total_pages(records, per_page)
+    total_pages = 1
+    total_pages = per_page.to_i % records if records > per_page.to_i
+    response.headers['total_pages'] = total_pages
   end
 end
