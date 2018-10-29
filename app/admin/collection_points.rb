@@ -1,14 +1,10 @@
 ActiveAdmin.register CollectionPoint do
-  # See permitted parameters documentation:
-  # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-  #
-  # permit_params :kg_recycled_paper
-  #
-  # or
-  #
-  # permit_params do
-  # permitted = [:permitted, :attributes]
-  # permitted << :other if params[:action] == 'create' && current_user.admin?
-  # permitted
-  # end
+  permit_params :latitude, :longitude, :status, :active, :kg_recycled_paper, :kg_recycled_glass, :kg_recycled_plastic
+
+  filter :latitude
+  filter :longitude
+  filter :kg_recycled_paper
+  filter :kg_recycled_plastic
+  filter :kg_recycled_glass
+
 end
