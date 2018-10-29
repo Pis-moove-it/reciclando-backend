@@ -6,5 +6,4 @@ ActiveAdmin.register CollectionPoint do
   filter :kg_recycled_paper
   filter :kg_recycled_plastic
   filter :kg_recycled_glass
-
 end
