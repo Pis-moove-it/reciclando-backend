@@ -1,6 +1,7 @@
 class ContainersController < AuthenticateController
   def index
-    render json: Container.available.where(organization_id: logged_user.organization.id)
+    query = Container.available.where(organization_id: logged_user.organization.id)
+    paginated_render(query)
   end
 
   def update
