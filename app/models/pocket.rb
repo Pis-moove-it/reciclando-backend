@@ -6,6 +6,8 @@ class Pocket < ApplicationRecord
 
   validates :serial_number, presence: true
   validates :weight, presence: true, numericality: { greater_than_or_equal_to: 0.001 }, unless: :unweighed?
+  validates :kg_trash, :kg_recycled_plastic, :kg_recycled_glass,
+            numericality: { greater_than: 0 }, allow_nil: true
 
   delegate :organization, to: :collection
 
@@ -23,5 +25,13 @@ class Pocket < ApplicationRecord
 
   def unweighed?
     self.Unweighed?
+  end
+
+  def classify(total_weight, kg_trash, kg_plastic, kg_glass)
+    percentage = weight / total_weight.to_f
+    self.kg_trash = kg_trash * percentage
+    self.kg_recycled_plastic = kg_plastic * percentage
+    self.kg_recycled_glass = kg_glass * percentage
+    self.state = 'Classified'
   end
 end
