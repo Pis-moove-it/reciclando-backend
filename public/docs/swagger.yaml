@@ -567,6 +567,16 @@ paths:
         - in: query
           name: per_page
           type: integer
+        - in: query
+          name: init_date
+          required: false
+          type: string
+          format: date
+        - in: query
+          name: end_date
+          required: false
+          type: string
+          format: date
       responses:
         200:
           description: OK

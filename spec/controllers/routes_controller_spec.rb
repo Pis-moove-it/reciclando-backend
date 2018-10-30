@@ -263,12 +263,74 @@ RSpec.describe RoutesController, type: :controller do
 
         before(:each) { get :index, params: { page: 1, per_page: 2 } }
 
-        it 'does return succes' do
+        it 'does return success' do
           expect(response).to have_http_status(:ok)
         end
 
         it 'does return the route as specified in the serializer' do
           expect(json_response).to eql [r_serializer.new(route).as_json, r_serializer.new(second_route).as_json]
+        end
+      end
+
+      context 'when filtering by date' do
+        context 'when the are routes in the given range' do
+          let(:init_date) { Date.current - 1 }
+          let(:end_date) { Date.current + 1 }
+          before(:each) { get :index, params: { init_date: init_date, end_date: end_date } }
+
+          it 'does return success' do
+            expect(response).to have_http_status(:ok)
+          end
+
+          it 'does return only the organization routes' do
+            expect(json_response).to eql [r_serializer.new(route).as_json, r_serializer.new(second_route).as_json,
+                                          r_serializer.new(third_route).as_json]
+          end
+
+          it 'does not return routes from another organization' do
+            expect(json_response.pluck(:id)).not_to include(another_route.id)
+          end
+        end
+
+        context 'when the are not routes in that range' do
+          let(:init_date) { Date.current + 1 }
+          let(:end_date) { Date.current + 2 }
+          before(:each) { get :index, params: { init_date: init_date, end_date: end_date } }
+
+          it 'does return success' do
+            expect(response).to have_http_status(:ok)
+          end
+
+          it 'does return no routes' do
+            expect(json_response).to eql []
+          end
+        end
+
+        context 'when a date is missing' do
+          let(:end_date) { Date.current + 1 }
+          before(:each) { get :index, params: { end_date: end_date } }
+
+          it 'does return an error' do
+            expect(response).to have_http_status(400)
+          end
+
+          it 'does return the specified error code' do
+            expect(json_response[:error_code]).to eql 1
+          end
+        end
+
+        context 'when init date happens after end date' do
+          let(:init_date) { Date.current + 10 }
+          let(:end_date) { Date.current + 2 }
+          before(:each) { get :index, params: { init_date: init_date, end_date: end_date } }
+
+          it 'does return success' do
+            expect(response).to have_http_status(400)
+          end
+
+          it 'does return the specified error code' do
+            expect(json_response[:error_code]).to eql 1
+          end
         end
       end
     end
