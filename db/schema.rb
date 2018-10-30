@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2018_11_02_181633) do
+=======
+ActiveRecord::Schema.define(version: 2018_10_30_192638) do
+>>>>>>> Kg of trash, plastic and glass fields added to pockets
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -119,6 +123,9 @@ ActiveRecord::Schema.define(version: 2018_11_02_181633) do
     t.float "weight"
     t.bigint "collection_id"
     t.datetime "check_in"
+    t.float "kg_trash"
+    t.float "kg_recycled_plastic"
+    t.float "kg_recycled_glass"
     t.index ["collection_id"], name: "index_pockets_on_collection_id"
     t.index ["organization_id"], name: "index_pockets_on_organization_id"
   end
