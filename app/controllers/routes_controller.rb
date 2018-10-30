@@ -1,5 +1,4 @@
 class RoutesController < AuthenticateController
-  skip_before_action :authenticated_user
   def create
     route = Route.new(user: logged_user)
     if route.save
