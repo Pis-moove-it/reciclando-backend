@@ -1,4 +1,5 @@
 class RoutesController < AuthenticateController
+  skip_before_action :authenticated_user
   def create
     route = Route.new(user: logged_user)
     if route.save
@@ -25,7 +26,8 @@ class RoutesController < AuthenticateController
   end
 
   def index
-    query = Route.where(user_id: logged_user.organization.user_ids)
+    return render_error(1, 'Invalid dates') unless valid_dates?
+    query = Route.where(date_query.merge(user_id: logged_user.organization.user_ids))
     paginated_render(query, params[:page], params[:per_page])
   end
 
@@ -37,5 +39,19 @@ class RoutesController < AuthenticateController
 
   def route_params
     params.permit(:length, :travel_image)
+  end
+
+  def date_query
+    return { created_at: params[:init_date]..params[:end_date] + ' 23:59:59' } if are_dates_present?
+    {}
+  end
+
+  def valid_dates?
+    return params[:init_date] <= params[:end_date] if are_dates_present?
+    !(params[:init_date].present? || params[:end_date].present?)
+  end
+
+  def are_dates_present?
+    params[:init_date].present? && params[:end_date].present?
   end
 end
