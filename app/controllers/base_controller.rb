@@ -1,4 +1,5 @@
 class BaseController < ApplicationController
+  include Rails::Pagination
   protect_from_forgery with: :null_session
 
   rescue_from StandardError do |exception|
@@ -16,17 +17,7 @@ class BaseController < ApplicationController
            status: Error.status_for(error_code)
   end
 
-  def paginated_render(query, page, per_page)
-    return render json: query unless page && per_page
-    records = query.count
-    response.headers['records'] = records
-    set_total_pages(records, per_page)
-    render json: query.page(page).per(per_page)
-  end
-
-  def set_total_pages(records, per_page)
-    total_pages = 1
-    total_pages = per_page.to_i % records if records > per_page.to_i
-    response.headers['total_pages'] = total_pages
+  def paginated_render(query)
+    paginate json: query, per_page: 10
   end
 end
