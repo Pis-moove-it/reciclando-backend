@@ -18,6 +18,8 @@ class BaseController < ApplicationController
   end
 
   def paginated_render(query)
-    paginate json: query, per_page: 10
+    per_page = 10
+    per_page = params[:per_page] if params[:per_page]
+    paginate json: query, per_page: per_page
   end
 end

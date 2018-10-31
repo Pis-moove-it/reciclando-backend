@@ -257,6 +257,18 @@ RSpec.describe RoutesController, type: :controller do
         end
       end
 
+      context 'when listing paged routes' do
+        before(:each) { get :index, params: { per_page: 2 } }
+
+        it 'does return success' do
+          expect(response).to have_http_status(:ok)
+        end
+
+        it 'does return routes as specified in the serializer' do
+          expect(json_response).to eql [r_serializer.new(route).as_json, r_serializer.new(second_route).as_json]
+        end
+      end
+
       context 'when filtering by date' do
         context 'when the are routes in the given range' do
           let(:init_date) { Date.current - 1 }

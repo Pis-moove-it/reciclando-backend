@@ -45,6 +45,18 @@ RSpec.describe ContainersController, type: :controller do
       it 'does not return inactive containers' do
         expect(json_response.pluck(:id)).not_to include(inactive_container.id)
       end
+
+      context 'when listing paged containers' do
+        before(:each) { get :index, params: { per_page: 2 } }
+
+        it 'does return success' do
+          expect(response).to have_http_status(:ok)
+        end
+
+        it 'does return containers as specified in the serializer' do
+          expect(json_response).to eql serialize_containers(organization_containers)
+        end
+      end
     end
 
     context 'when the user is not authenticated' do
