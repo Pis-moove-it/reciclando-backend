@@ -7,7 +7,7 @@ class Pocket < ApplicationRecord
   validates :serial_number, presence: true
   validates :weight, presence: true, numericality: { greater_than_or_equal_to: 0.001 }, unless: :unweighed?
   validates :kg_trash, :kg_recycled_plastic, :kg_recycled_glass,
-            numericality: { greater_than: 0 }, allow_nil: true
+            numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
 
   delegate :organization, to: :collection
 

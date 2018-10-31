@@ -1,7 +1,6 @@
 class ClassificationController < AuthenticateController
-  skip_before_action :authenticated_user
   def create
-    pockets = Pocket.where(id: classification_params[:pocket_ids])
+    pockets = Pocket.where(id: classification_params[:pocket_ids], organization: logged_user.organization)
     return render_error(1, 'Negative kg of trash') if classification_params[:kg_trash].negative?
     return render_error(1, 'Negative kg of plastic') if classification_params[:kg_plastic].negative?
     return render_error(1, 'Negative kg of glass') if classification_params[:kg_glass].negative?
