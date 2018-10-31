@@ -7,7 +7,6 @@ RSpec.describe PocketsController, type: :controller do
   let!(:route) { create(:route, user: user) }
   let!(:container) { create(:container, organization: organization) }
   let!(:collection) { create(:collection, route: route, collection_point: container) }
-  let!(:organization) { create(:organization) }
 
   let(:serializer) { PocketSerializer }
 
