@@ -12,7 +12,8 @@ RSpec.describe Pocket, type: :model do
     let(:serializer) { PocketSerializer }
 
     it 'does return pockets as specified in the serializer' do
-      expect(serializer.new(pocket).attributes.keys).to eq %i[id serial_number state weight check_in]
+      expect(serializer.new(pocket).attributes.keys).to eq %i[id serial_number state weight kg_trash
+                                                              kg_recycled_plastic kg_recycled_glass check_in]
     end
   end
 
@@ -38,6 +39,21 @@ RSpec.describe Pocket, type: :model do
     it 'is not valid when the pocket is weighed and has negative weight' do
       pocket.state = 'Weighed'
       pocket.weight = negative_weight
+      expect(pocket).not_to be_valid
+    end
+
+    it 'is not valid with a negative kg_trash' do
+      pocket.kg_trash = negative_weight
+      expect(pocket).not_to be_valid
+    end
+
+    it 'is not valid with a negative kg_recycled_plastic' do
+      pocket.kg_recycled_plastic = negative_weight
+      expect(pocket).not_to be_valid
+    end
+
+    it 'is not valid with a negative kg_recycled_glass' do
+      pocket.kg_recycled_glass = negative_weight
       expect(pocket).not_to be_valid
     end
   end
