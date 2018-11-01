@@ -1,6 +1,6 @@
 require 'rails_helper'
 RSpec.describe ClassificationController, type: :controller do
-  let(:json_response) { JSON.parse(response.body, symbolize_keys: true) }
+  let(:json_response) { JSON.parse(response.body, symbolize_names: true) }
 
   let!(:organization) { create(:organization) }
   let!(:user) { create(:user, organization: organization) }
@@ -17,13 +17,14 @@ RSpec.describe ClassificationController, type: :controller do
 
   let!(:p_serializer) { PocketSerializer }
 
-  def serialize_pockets(pockets)
-    pockets.collect { |p| p_serializer.new(p).as_json }
-  end
+  let!(:kg_trash) { Faker::Number.decimal(2, 2).to_f }
+  let!(:kg_plastic) { Faker::Number.decimal(2, 2).to_f }
+  let!(:kg_glass) { Faker::Number.decimal(2, 2).to_f }
 
   describe 'POST #create' do
     def classify_pockets_call(pocket_ids, kg_trash, kg_plastic, kg_glass)
-      post :create, params: { pocket_ids: pocket_ids, kg_trash: kg_trash, kg_plastic: kg_plastic, kg_glass: kg_glass }
+      post :create, params: { pocket_ids: pocket_ids, kg_trash: kg_trash,
+                              kg_plastic: kg_plastic, kg_glass: kg_glass }, as: :json
     end
 
     context 'when the user is authenticated' do
@@ -37,24 +38,22 @@ RSpec.describe ClassificationController, type: :controller do
         let!(:another_collection) { create(:collection, route: another_route, collection_point: another_container) }
         let!(:another_weighed_pocket) { create(:weighed_pocket, collection: another_collection) }
 
-        let!(:kg_trash) { Faker::Number.decimal(2, 2).to_f }
-        let!(:kg_plastic) { Faker::Number.decimal(2, 2).to_f }
-        let!(:kg_glass) { Faker::Number.decimal(2, 2).to_f }
-
         before(:each) do
           classify_pockets_call(pockets.push(another_weighed_pocket).pluck(:id), kg_trash, kg_plastic, kg_glass)
+          pockets.each(&:reload)
+          pockets.pop
         end
 
         it 'does return success' do
           expect(response).to have_http_status(:ok)
         end
 
-        it 'does return expected pockets as specified in serializer' do
-          expect(json_response).to serialize_pockets(pockets)
+        it 'does return expected pockets' do
+          expect(json_response.pluck(:id)).to eql pockets.pluck(:id)
         end
 
         it 'does return classified pockets' do
-          expect(json_response.all?(&:Classified?)).to eql true
+          expect(json_response.all? { |p| p[:state] == 'Classified' }).to eql true
         end
 
         it 'does not classify pockets from another organization' do
@@ -97,7 +96,7 @@ RSpec.describe ClassificationController, type: :controller do
       context 'when kg of trash is negative' do
         let!(:negative_kg_trash) { Faker::Number.negative }
 
-        before(:each) { classify_pockets_call(pocket_ids, negative_kg_trash, kg_plastic, kg_glass) }
+        before(:each) { classify_pockets_call(pockets.pluck(:id), negative_kg_trash, kg_plastic, kg_glass) }
 
         it 'does return an error' do
           expect(response).to have_http_status(400)
@@ -111,7 +110,7 @@ RSpec.describe ClassificationController, type: :controller do
       context 'when kg of plastic is negative' do
         let!(:negative_kg_plastic) { Faker::Number.negative }
 
-        before(:each) { classify_pockets_call(pocket_ids, kg_trash, negative_kg_plastic, kg_glass) }
+        before(:each) { classify_pockets_call(pockets.pluck(:id), kg_trash, negative_kg_plastic, kg_glass) }
 
         it 'does return an error' do
           expect(response).to have_http_status(400)
@@ -125,7 +124,7 @@ RSpec.describe ClassificationController, type: :controller do
       context 'when kg of glass is negative' do
         let!(:negative_kg_glass) { Faker::Number.negative }
 
-        before(:each) { classify_pockets_call(pocket_ids, kg_trash, kg_plastic, negative_kg_glass) }
+        before(:each) { classify_pockets_call(pockets.pluck(:id), kg_trash, kg_plastic, negative_kg_glass) }
 
         it 'does return an error' do
           expect(response).to have_http_status(400)
@@ -139,14 +138,14 @@ RSpec.describe ClassificationController, type: :controller do
 
     context 'when the user is not authenticated' do
       let!(:no_auth_user) { create(:user, organization: organization) }
-      before(:each) { classify_pockets_call(pocket_ids, kg_trash, kg_plastic, kg_glass) }
+      before(:each) { classify_pockets_call(pockets.pluck(:id), kg_trash, kg_plastic, kg_glass) }
 
       it 'does return an error' do
         expect(response).to have_http_status(401)
       end
 
       it 'does render the right error' do
-        expect(json_response['error_code']).to eql 2
+        expect(json_response[:error_code]).to eql 2
       end
     end
   end
