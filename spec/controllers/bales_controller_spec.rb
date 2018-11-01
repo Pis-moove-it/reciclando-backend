@@ -88,6 +88,18 @@ RSpec.describe BalesController, type: :controller do
         end
       end
 
+      context 'when listing paged bales' do
+        before(:each) { get :index, params: { per_page: 2 } }
+
+        it 'does return success' do
+          expect(response).to have_http_status(:ok)
+        end
+
+        it 'does return bales as specified in the serializer' do
+          expect(json_response).to eql [b_serializer.new(bale).as_json, b_serializer.new(second_bale).as_json]
+        end
+      end
+
       context 'when filtering by material' do
         context 'when material is valid and the are bales' do
           before(:each) { get :index, params: { material: bale.material } }

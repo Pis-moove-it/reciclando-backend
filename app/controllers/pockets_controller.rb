@@ -1,6 +1,7 @@
 class PocketsController < AuthenticateController
   def index
-    render json: Pocket.unclassified.where(organization_id: logged_user.organization.id)
+    query = Pocket.unclassified.where(organization_id: logged_user.organization.id)
+    paginated_render(query)
   end
 
   def edit_serial_number

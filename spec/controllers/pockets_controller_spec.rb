@@ -30,6 +30,9 @@ RSpec.describe PocketsController, type: :controller do
       let!(:unclassified_pocket) do
         create(:unclassified_pocket, collection: collection)
       end
+      let!(:second_unclassified_pocket) do
+        create(:unclassified_pocket, collection: collection)
+      end
       let!(:classified_pocket) do
         create(:classified_pocket, collection: collection)
       end
@@ -44,7 +47,8 @@ RSpec.describe PocketsController, type: :controller do
       end
 
       it 'does return all the unclassified pockets' do
-        expect(json_response).to eql [serializer.new(unclassified_pocket).as_json]
+        expect(json_response).to eql [serializer.new(unclassified_pocket).as_json,
+                                      serializer.new(second_unclassified_pocket).as_json]
       end
 
       it 'does not return the classfied pockets' do
@@ -53,6 +57,19 @@ RSpec.describe PocketsController, type: :controller do
 
       it 'does not return the pockets from another organization' do
         expect(json_response.pluck(:id)).not_to include another_unclassified_pocket.id
+      end
+
+      context 'when listing paged pockets' do
+        before(:each) { get :index, params: { per_page: 2 } }
+
+        it 'does return success' do
+          expect(response).to have_http_status(:ok)
+        end
+
+        it 'does return pockets as specified in the serializer' do
+          expect(json_response).to eql [serializer.new(unclassified_pocket).as_json,
+                                        serializer.new(second_unclassified_pocket).as_json]
+        end
       end
     end
 
