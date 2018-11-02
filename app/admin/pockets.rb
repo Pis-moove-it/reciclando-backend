@@ -1,5 +1,5 @@
 ActiveAdmin.register Pocket do
-  permit_params :serial_number, :weight, :state
+  permit_params :serial_number, :weight
   actions :index, :show, :edit, :update
 
   index do
@@ -25,11 +25,7 @@ ActiveAdmin.register Pocket do
   form do |f|
     f.inputs do
       f.input :serial_number
-      if f.object.state != 'Unweighed'
-        f.input :weight
-      else
-        f.input :state
-      end
+      f.input :weight if f.object.state == 'Weighed'
     end
     f.actions
   end

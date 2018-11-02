@@ -27,17 +27,17 @@ RSpec.describe PocketsController, type: :controller do
 
       let!(:auth_user) { create_an_authenticated_user_with(organization, '1', 'android') }
 
-      let!(:unclassified_pocket) do
-        create(:unclassified_pocket, collection: collection)
+      let!(:weighed_pocket) do
+        create(:weighed_pocket, collection: collection)
       end
-      let!(:second_unclassified_pocket) do
-        create(:unclassified_pocket, collection: collection)
+      let!(:unweighed_pocket) do
+        create(:unweighed_pocket, collection: collection)
       end
       let!(:classified_pocket) do
         create(:classified_pocket, collection: collection)
       end
-      let!(:another_unclassified_pocket) do
-        create(:unclassified_pocket, collection: another_collection)
+      let!(:another_unweighed_pocket) do
+        create(:unweighed_pocket, collection: another_collection)
       end
 
       before(:each) { list_pockets_call }
@@ -47,8 +47,8 @@ RSpec.describe PocketsController, type: :controller do
       end
 
       it 'does return all the unclassified pockets' do
-        expect(json_response).to eql [serializer.new(unclassified_pocket).as_json,
-                                      serializer.new(second_unclassified_pocket).as_json]
+        expect(json_response).to eql [serializer.new(weighed_pocket).as_json,
+                                      serializer.new(unweighed_pocket).as_json]
       end
 
       it 'does not return the classfied pockets' do
@@ -56,7 +56,7 @@ RSpec.describe PocketsController, type: :controller do
       end
 
       it 'does not return the pockets from another organization' do
-        expect(json_response.pluck(:id)).not_to include another_unclassified_pocket.id
+        expect(json_response.pluck(:id)).not_to include another_unweighed_pocket.id
       end
 
       context 'when listing paged pockets' do
@@ -67,8 +67,8 @@ RSpec.describe PocketsController, type: :controller do
         end
 
         it 'does return pockets as specified in the serializer' do
-          expect(json_response).to eql [serializer.new(unclassified_pocket).as_json,
-                                        serializer.new(second_unclassified_pocket).as_json]
+          expect(json_response).to eql [serializer.new(weighed_pocket).as_json,
+                                        serializer.new(unweighed_pocket).as_json]
         end
       end
     end
