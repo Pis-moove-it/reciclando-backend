@@ -74,7 +74,7 @@ RSpec.describe ContainersController, type: :controller do
 
   describe 'PUT #update' do
     let!(:organization) { create(:organization) }
-    let!(:container) { FactoryBot.create(:container, organization: organization) }
+    let!(:container) { FactoryBot.create(:available_container, organization: organization) }
     let(:invalid_id) { Container.pluck(:id).max + 1 }
     let(:serializer) { ContainerSerializer }
 
@@ -104,6 +104,37 @@ RSpec.describe ContainersController, type: :controller do
         end
       end
 
+      context 'when updating removed containers' do
+        let!(:removed_container) { create(:removed_container, organization: organization) }
+
+        it 'does return not found' do
+          update_container_call(removed_container.id, %w[Ok Damaged Removed].sample)
+          expect(response).to have_http_status(404)
+          expect(json_response[:error_code]).to eq 3
+        end
+      end
+
+      context 'when updating inactive containers' do
+        let!(:inactive_container) { create(:inactive_container, organization: organization) }
+
+        it 'does return not found' do
+          update_container_call(inactive_container.id, %w[Ok Damaged Removed].sample)
+          expect(response).to have_http_status(404)
+          expect(json_response[:error_code]).to eq 3
+        end
+      end
+
+      context 'when updating containers from another organization' do
+        let!(:another_organization) { create(:organization) }
+        let!(:another_container) { create(:available_container, organization: another_organization) }
+
+        it 'does return not found' do
+          update_container_call(another_container.id, %w[Ok Damaged Removed].sample)
+          expect(response).to have_http_status(404)
+          expect(json_response[:error_code]).to eq 3
+        end
+      end
+
       context 'when updating containers with wrong values' do
         it 'does return bad request, nil status value' do
           update_container_call(container.id, nil)
@@ -120,6 +151,101 @@ RSpec.describe ContainersController, type: :controller do
 
     context 'when the user is not authenticated' do
       before(:each) { update_container_call(container.id, %w[Ok Damaged Removed].sample) }
+
+      it 'does return an error' do
+        expect(response).to have_http_status(401)
+      end
+
+      it 'does render the right error' do
+        expect(json_response[:error_code]).to eql 2
+      end
+    end
+  end
+
+  describe 'GET #show' do
+    let!(:organization) { create(:organization) }
+
+    def container_by_id_call(container_id)
+      get :show, params: { id: container_id }
+    end
+
+    let(:web_serializer) { ContainerWebSerializer }
+
+    context 'when user is authenticated' do
+      let!(:auth_user) { create_an_authenticated_user_with(organization, '1', 'android') }
+
+      context 'when showing a available container' do
+        let!(:container) { create(:available_container, organization: organization) }
+
+        before(:each) { container_by_id_call(container.id) }
+
+        it 'does return success' do
+          expect(response).to have_http_status(:ok)
+        end
+
+        it 'does return the serialized container' do
+          expect(json_response).to eql web_serializer.new(container).as_json
+        end
+      end
+
+      context 'when searching for removed containers' do
+        let!(:container) { create(:removed_container, organization: organization) }
+        before(:each) { container_by_id_call(container.id) }
+
+        it 'does return an error' do
+          expect(response).to have_http_status(:not_found)
+        end
+
+        it 'does return the specified error code' do
+          expect(json_response[:error_code]).to eql 3
+        end
+      end
+
+      context 'when searching for inactive containers' do
+        let!(:container) { create(:inactive_container, organization: organization) }
+        before(:each) { container_by_id_call(container.id) }
+
+        it 'does return an error' do
+          expect(response).to have_http_status(:not_found)
+        end
+
+        it 'does return the specified error code' do
+          expect(json_response[:error_code]).to eql 3
+        end
+      end
+
+      context 'when searching for unexistent containers' do
+        before(:each) { container_by_id_call(1) }
+
+        it 'does return an error' do
+          expect(response).to have_http_status(:not_found)
+        end
+
+        it 'does return the specified error code' do
+          expect(json_response[:error_code]).to eql 3
+        end
+      end
+
+      context 'when searching for containers from another organization' do
+        let!(:another_organization) { create(:organization) }
+        let!(:another_container) { create(:available_container, organization: another_organization) }
+
+        before(:each) { container_by_id_call(another_container.id) }
+
+        it 'does return an error' do
+          expect(response).to have_http_status(:not_found)
+        end
+
+        it 'does return the specified error code' do
+          expect(json_response[:error_code]).to eql 3
+        end
+      end
+    end
+
+    context 'when user is not authenticated' do
+      let!(:container) { create(:container, organization: organization) }
+
+      before(:each) { container_by_id_call(container.id) }
 
       it 'does return an error' do
         expect(response).to have_http_status(401)
