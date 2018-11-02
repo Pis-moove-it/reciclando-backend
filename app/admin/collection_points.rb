@@ -10,6 +10,7 @@ ActiveAdmin.register CollectionPoint do
     column :kg_recycled_glass
     column :kg_recycled_plastic
     column :kg_trash
+    actions :index, :show, :edit, :update
   end
 
   filter :latitude
