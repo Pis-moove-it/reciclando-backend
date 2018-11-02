@@ -66,9 +66,9 @@ ActiveRecord::Schema.define(version: 2018_11_02_181633) do
     t.integer "status"
     t.boolean "active"
     t.bigint "organization_id"
-    t.integer "kg_recycled_plastic"
-    t.integer "kg_recycled_glass"
-    t.integer "kg_trash"
+    t.float "kg_recycled_plastic"
+    t.float "kg_recycled_glass"
+    t.float "kg_trash"
     t.index ["organization_id"], name: "index_collection_points_on_organization_id"
   end
 
