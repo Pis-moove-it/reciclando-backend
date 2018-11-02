@@ -24,7 +24,7 @@ Rails.application.routes.draw do
 
   resources :bales, only: %i[index create show update]
 
-  resources :containers, only: %i[index update]
+  resources :containers, only: %i[index show update]
 
   resources :questions, only: %i[index]
 
