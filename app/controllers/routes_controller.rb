@@ -11,7 +11,7 @@ class RoutesController < AuthenticateController
   def update
     byebug
     return render_error(1, 'Missing length') if route_params['length'].blank?
-    return render_error(1, 'Missing travel image') if route_params['travel_image'].blank?
+    #return render_error(1, 'Missing travel image') if route_params['travel_image'].blank?
     return render_error(1, 'Route already ended') if route.ended?
 
     if route.update(route_params)
@@ -38,7 +38,7 @@ class RoutesController < AuthenticateController
   end
 
   def route_params
-    params.permit(:length, :travel_image)
+    params.permit(:length) #, :locations)
   end
 
   def date_query
