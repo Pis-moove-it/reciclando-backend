@@ -13,6 +13,7 @@ tags:
   - "Containers"
   - "Collections"
   - "Routes"
+  - "Classification"
 
 paths:
   /organizations/{organization_id}/users:
@@ -761,6 +762,37 @@ paths:
             $ref: '#/definitions/Error'
       security:
         - ApiKey: []
+  /classification:
+    post:
+      tags:
+        - "Classification"
+      operationId: classifyPockets
+      summary: Classify a list of pockets.
+      parameters:
+        - in: body
+          schema:
+            $ref: '#/definitions/Classification'
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ClassifiedPocket'
+        400:
+          description: Malformed request.
+          schema:
+            $ref: '#/definitions/Error'
+        401:
+          description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+        - ApiKey: []
 
 definitions:
   Organization:
@@ -834,6 +866,12 @@ definitions:
       state:
         enum:
         - "Classified"
+      kg_trash:
+        type: number
+      kg_recycled_plastic:
+        type: number
+      kg_recycled_glass:
+        type: number
   Container:
       type: object
       required:
@@ -952,6 +990,24 @@ definitions:
         ci: "12345678"
       }
       pockets: []
+  Classification:
+    type: object
+    properties:
+      kg_trash:
+        type: number
+      kg_plastic:
+        type: number
+      kg_glass:
+        type: number
+      pocket_ids:
+        type: array
+        items:
+          integer
+    example:
+      kg_trash: 120
+      kg_plastic: 20.8
+      kg_glass: 50
+      pocket_ids: [1,3,5]
   Error:
     type: object
     properties:
