@@ -9,7 +9,6 @@ class Collection < ApplicationRecord
   accepts_nested_attributes_for :pockets
 
   def check_in_pockets
-    byebug
     pockets.update(check_in: Time.current)
   end
 end
