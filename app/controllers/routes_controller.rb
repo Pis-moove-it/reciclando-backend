@@ -9,6 +9,7 @@ class RoutesController < AuthenticateController
   end
 
   def update
+    byebug
     return render_error(1, 'Missing length') if route_params['length'].blank?
     return render_error(1, 'Missing travel image') if route_params['travel_image'].blank?
     return render_error(1, 'Route already ended') if route.ended?

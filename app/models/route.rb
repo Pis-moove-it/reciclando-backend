@@ -6,6 +6,7 @@ class Route < ApplicationRecord
   delegate :organization, to: :user
 
   has_many :collections, dependent: :destroy
+  has_many :locations, dependent: :destroy
 
   validates :length, numericality: { greater_than: 0 }, allow_nil: true
 
