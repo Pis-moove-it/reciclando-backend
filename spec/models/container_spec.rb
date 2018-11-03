@@ -33,6 +33,21 @@ RSpec.describe Container, type: :model do
         container.organization = nil
         expect(container).not_to be_valid
       end
+
+      it 'does not let create new ones, nil kg_trash' do
+        container.kg_trash = nil
+        expect(container).not_to be_valid
+      end
+
+      it 'does not let create new ones, nil kg_recycled_plastic' do
+        container.kg_recycled_plastic = nil
+        expect(container).not_to be_valid
+      end
+
+      it 'does not let create new ones, nil kg_recycled_glass' do
+        container.kg_recycled_glass = nil
+        expect(container).not_to be_valid
+      end
     end
   end
 

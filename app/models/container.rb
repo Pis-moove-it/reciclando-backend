@@ -1,6 +1,6 @@
 class Container < CollectionPoint
   enum status: %i[Ok Damaged Removed]
-  validates :status, presence: true
+  validates :status, :kg_trash, :kg_recycled_plastic, :kg_recycled_glass, presence: true
   validates :active, exclusion: { in: [nil] }
 
   before_validation(on: :create) do
