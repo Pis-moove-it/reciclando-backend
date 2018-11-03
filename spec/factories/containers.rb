@@ -6,6 +6,10 @@ FactoryBot.define do
     active { Faker::Boolean.boolean }
   end
 
+  factory :available_container, parent: :container do
+    status { %w[Ok Damaged].sample }
+    active true
+  end
   factory :ok_container, parent: :container do
     status { 'Ok' }
     active true

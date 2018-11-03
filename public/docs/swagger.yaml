@@ -500,6 +500,35 @@ paths:
         - ApiKey: []
 
   /containers/{container_id}:
+    get:
+      tags:
+        - "Containers"
+      operationId: getContainer
+      summary: Get one container.
+      parameters:
+        - in: path
+          name: container_id
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/WebContainer'
+        401:
+          description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: A container with the specified ID was not found.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+        - ApiKey: []
     put:
       tags:
         - "Containers"
@@ -826,6 +855,36 @@ definitions:
         latitude: '-13.843669'
         longitude: '-60.894236'
         status: Ok
+  WebContainer:
+      type: object
+      required:
+        - status
+      properties:
+        id:
+          type: integer
+        latitude:
+          type: string
+        longitude:
+          type: string
+        status:
+          type: string
+          enum:
+            - Ok
+            - Damaged
+        kg_trash:
+          type: number
+        kg_recycled_plastic:
+          type: number
+        kg_recycled_glass:
+          type: number
+      example:
+        id: 5
+        latitude: '-13.843669'
+        longitude: '-60.894236'
+        status: Ok
+        kg_trash: 120
+        kg_recycled_plastic: 20.8
+        kg_recycled_glass: 50
   Collection:
     type: object
     required:

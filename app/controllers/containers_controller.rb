@@ -12,10 +12,14 @@ class ContainersController < AuthenticateController
     end
   end
 
+  def show
+    render json: container, serializer: ContainerWebSerializer
+  end
+
   private
 
   def container
-    @container ||= Container.find(params[:id])
+    @container ||= Container.available.find_by!(id: params[:id], organization: logged_user.organization)
   end
 
   def container_params
