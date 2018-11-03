@@ -11,7 +11,7 @@ class Route < ApplicationRecord
   validates :length, numericality: { greater_than: 0 }, allow_nil: true
 
   def ended?
-    length.present? && travel_image.present?
+    length.present?
   end
 
   private

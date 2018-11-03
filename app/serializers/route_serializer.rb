@@ -1,5 +1,5 @@
 class RouteSerializer < ActiveModel::Serializer
-  attributes :id, :length, :travel_image
+  attributes :id, :length  #, :travel_image
 
   attribute :created_at do
     object.created_at.to_s
@@ -9,5 +9,9 @@ class RouteSerializer < ActiveModel::Serializer
 
   has_many :pockets, each_serializer: PocketSerializer do
     object.collections.map(&:pockets).flatten
+  end
+
+  has_many :locations, each_serializer: LocationSerializer do
+    object.collections.map(&:locations).flatten
   end
 end

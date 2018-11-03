@@ -9,12 +9,12 @@ class RoutesController < AuthenticateController
   end
 
   def update
-    byebug
     return render_error(1, 'Missing length') if route_params['length'].blank?
-    #return render_error(1, 'Missing travel image') if route_params['travel_image'].blank?
-    return render_error(1, 'Route already ended') if route.ended?
+    return render_error(1, 'Missing points') if params['points'].blank? || params['points'].length.zero?
 
-    if route.update(route_params)
+    #return render_error(1, 'Route already ended') if route.ended?
+
+    if route_add_points
       render json: route
     else
       render_error(1, route.errors)
@@ -53,5 +53,9 @@ class RoutesController < AuthenticateController
 
   def are_dates_present?
     params[:init_date].present? && params[:end_date].present?
+  end
+
+  def route_add_points
+    params['points'].map { |coord| Location.create(route_id: 1, latitude: coord.first, longitude: coord.last)}
   end
 end
