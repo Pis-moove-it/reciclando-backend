@@ -10,6 +10,7 @@ ActiveAdmin.register Bale do
     column :weight
     column :material
     column :organization
+    actions
   end
 
   show title: :id do
