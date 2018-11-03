@@ -5,7 +5,7 @@ class Pocket < ApplicationRecord
   belongs_to :collection
 
   validates :serial_number, presence: true
-  validates :weight, numericality: { greater_than: 0 }, allow_nil: true
+  validates :weight, presence: true, numericality: { greater_than_or_equal_to: 0.001 }, unless: :unweighed?
 
   delegate :organization, to: :collection
 
@@ -17,5 +17,11 @@ class Pocket < ApplicationRecord
     def unclassified
       where(state: %w[Unweighed Weighed])
     end
+  end
+
+  private
+
+  def unweighed?
+    self.Unweighed?
   end
 end

@@ -29,12 +29,14 @@ RSpec.describe Pocket, type: :model do
       expect(pocket).not_to be_valid
     end
 
-    it 'is not valid with an invalid wieght' do
+    it 'is not valid when the pocket is weighed and weight is 0' do
+      pocket.state = 'Weighed'
       pocket.weight = 0
       expect(pocket).not_to be_valid
     end
 
-    it 'is not valid with an invalid wieght' do
+    it 'is not valid when the pocket is weighed and has negative weight' do
+      pocket.state = 'Weighed'
       pocket.weight = negative_weight
       expect(pocket).not_to be_valid
     end

@@ -15,8 +15,7 @@ class PocketsController < AuthenticateController
   end
 
   def edit_weight
-    return render_error(1, 'Missing weight') if params[:weight].blank?
-    return render_error(1, 'Unweighead pocket') if pocket.Unweighed?
+    return render_error(1, 'Unweighed pocket') if pocket.Unweighed?
 
     if pocket.update(weight_params)
       render json: pocket
@@ -26,8 +25,7 @@ class PocketsController < AuthenticateController
   end
 
   def add_weight
-    return render_error(1, 'Missing weight') if params[:weight].blank?
-    return render_error(1, 'Weighead pocket') if pocket.Weighed?
+    return render_error(1, 'Weighed pocket') if pocket.Weighed?
 
     if pocket.update(weight_params.merge(state: 'Weighed'))
       render json: pocket
