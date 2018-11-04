@@ -46,7 +46,11 @@ RSpec.describe RoutesController, type: :controller do
     let(:ended_route) { build(:ended_route) }
 
     def end_route_call(route_id, length, location)
-      put :update, params: { id: route_id, length: length, points: [location] }
+      if location
+        put :update, params: { id: route_id, length: length, points: [location] }
+      else
+        put :update, params: { id: route_id, length: length, points: [] }
+      end
     end
 
     context 'when user is authenticated' do
