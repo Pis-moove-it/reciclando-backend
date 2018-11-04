@@ -908,15 +908,15 @@ definitions:
       type: object
       required:
         - length
-        - travel_image
+        - points
       properties:
         length:
           type: number
-        travel_image:
-          type: string
+        points:
+          type: integer
       example:
         length: 17.5
-        travel_image: "https://sfbaytransit.org/samtrans/route/61"
+        points: [[1,2],[3,4],[5,6]]
   Create_route:
     type: object
     properties:
