@@ -151,7 +151,7 @@ RSpec.describe RoutesController, type: :controller do
       let!(:user) { create(:user, organization: organization) }
       let!(:route) { create(:route, user: user) }
 
-      before(:each) { end_route_call(route.id, ended_route[:length], ended_route[:travel_image]) }
+      before(:each) { end_route_call(route.id, ended_route[:length]) }
 
       it 'does return an error' do
         expect(response).to have_http_status(401)
