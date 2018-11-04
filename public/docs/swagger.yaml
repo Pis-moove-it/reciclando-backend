@@ -913,7 +913,11 @@ definitions:
         length:
           type: number
         points:
-          type: integer
+          type: array
+          items:
+            type: array
+            items:
+              type: number
       example:
         length: 17.5
         points: [[1,2],[3,4],[5,6]]
