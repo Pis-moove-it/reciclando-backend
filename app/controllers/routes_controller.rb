@@ -56,7 +56,7 @@ class RoutesController < AuthenticateController
 
   def route_add_length_and_points
     route.update(length: params[:length])
-    params['points'].map { |coord| Location.create(route_id: 1, latitude: coord.first, longitude: coord.last) }
+    params['points'].map { |coord| Location.create(route_id: route.id, latitude: coord.first, longitude: coord.last) }
   end
 
   def check_invalid_length_entry
