@@ -14,7 +14,7 @@ class RoutesController < AuthenticateController
     return render_error(1, 'Missing points') if check_invalid_points_entry
 
     if route.update(length: params[:length])
-      route_add_length_and_points
+      route_add_points
       render json: route
     else
       render_error(1, route.errors)
@@ -55,7 +55,7 @@ class RoutesController < AuthenticateController
     params[:init_date].present? && params[:end_date].present?
   end
 
-  def route_add_length_and_points
+  def route_add_points
     params['points'].map { |coord| Location.create(route_id: route.id, latitude: coord.first, longitude: coord.last) }
   end
 
