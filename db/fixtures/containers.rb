@@ -1,22 +1,36 @@
 module Fixtures
   CONTAINERS = [
     {
-      latitude: '30.267153',
-      longitude: '-97.7430608',
+      latitude: '-34.918591',
+      longitude: '-56.164705',
       status: 'Ok',
       active: 'True',
       organization_id: 1
     },
     {
-      latitude: '-13.843669',
-      longitude: '-60.894236',
+      latitude: '-34.914914',
+      longitude: '-56.165209',
+      status: 'Ok',
+      active: 'True',
+      organization_id: 1
+    },
+    {
+      latitude: '-34.919691',
+      longitude: '-56.166363',
+      status: 'Ok',
+      active: 'True',
+      organization_id: 1
+    },
+    {
+      latitude: '-34.916611',
+      longitude: '-56.162675',
       status: 'Damaged',
       active: 'True',
       organization_id: 1
     },
     {
-      latitude: '12.345678',
-      longitude: '98.765432',
+      latitude: '-34.919440',
+      longitude: '-56.162403',
       status: 'Removed',
       active: 'False',
       organization_id: 2

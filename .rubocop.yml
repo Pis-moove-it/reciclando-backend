@@ -41,3 +41,6 @@ Rails/ActiveRecordAliases:
 
 Rails:
   Enabled: true
+
+Rails/Delegate:
+  Enabled: false
