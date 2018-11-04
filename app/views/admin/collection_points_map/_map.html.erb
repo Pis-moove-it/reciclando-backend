@@ -12,6 +12,7 @@
       <%= form_tag '/collection_points', method: 'post', remote: true, html: { multipart: true }, :onsubmit => "return submitMarker();"  do %>
         <%= hidden_field_tag(:latitude, '0', id: 'lat') %>
         <%= hidden_field_tag(:longitude, '0', id: 'lng') %>
+        <%# FIXME: Fix this to have the ability to change the organization %>
         <%= hidden_field_tag(:organization_id, 1) %>
         <tr>
           <td><%= label_tag 'Tipo'%></td>

@@ -26,6 +26,13 @@ Rails.application.routes.draw do
 
   resources :containers, only: %i[index show update]
 
+  resources :collection_points, only: %i[create] do
+    collection do
+      delete :destroy
+      put :update
+    end
+  end
+
   resources :questions, only: %i[index]
 
   mount SwaggerUiEngine::Engine, at: '/api_docs'

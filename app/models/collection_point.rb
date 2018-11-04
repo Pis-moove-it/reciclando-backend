@@ -4,4 +4,8 @@ class CollectionPoint < ApplicationRecord
 
   belongs_to :organization
   has_many :collections, dependent: :nullify
+
+  before_validation(on: :create) do
+    self.status = 'Ok' if type.eql?('Container')
+  end
 end
