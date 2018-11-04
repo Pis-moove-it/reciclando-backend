@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :container do
     latitude { Faker::Address.latitude }
     longitude { Faker::Address.longitude }
-    status { Faker::Number.between(0, 2) }
+    status nil
     active { Faker::Boolean.boolean }
   end
 
@@ -10,6 +10,7 @@ FactoryBot.define do
     status { %w[Ok Damaged].sample }
     active true
   end
+
   factory :ok_container, parent: :container do
     status { 'Ok' }
     active true

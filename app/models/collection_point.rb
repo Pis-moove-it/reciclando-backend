@@ -6,6 +6,6 @@ class CollectionPoint < ApplicationRecord
   has_many :collections, dependent: :nullify
 
   before_validation(on: :create) do
-    self.status = 'Ok' if type.eql?('Container')
+    self.status = 'Ok' if status.nil? && type.eql?('Container')
   end
 end
