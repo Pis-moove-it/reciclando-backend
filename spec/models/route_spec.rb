@@ -35,8 +35,8 @@ RSpec.describe Route, type: :model do
 
   describe 'serializer' do
     it 'does return routes, as specified in the serializer' do
-      expect(r_serializer.new(route).attributes.keys).to eq %i[id length travel_image created_at]
-      expect(r_serializer.new(route).associations.map(&:key)).to eq %i[user pockets]
+      expect(r_serializer.new(route).attributes.keys).to eq %i[id length created_at]
+      expect(r_serializer.new(route).associations.map(&:key)).to eq %i[user pockets locations]
     end
   end
 
