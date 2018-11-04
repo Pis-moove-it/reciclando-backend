@@ -11,7 +11,5 @@ class RouteSerializer < ActiveModel::Serializer
     object.collections.map(&:pockets).flatten
   end
 
-  has_many :locations, each_serializer: LocationSerializer do
-    object.collections.map(&:locations).flatten
-  end
+  has_many :locations, each_serializer: LocationSerializer
 end
