@@ -95,8 +95,8 @@ ActiveRecord::Schema.define(version: 2018_11_02_143027) do
   end
 
   create_table "locations", force: :cascade do |t|
-    t.integer "latitude"
-    t.integer "longitude"
+    t.float "latitude"
+    t.float "longitude"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "route_id"
