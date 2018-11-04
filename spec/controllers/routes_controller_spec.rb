@@ -45,19 +45,19 @@ RSpec.describe RoutesController, type: :controller do
   describe 'PUT #update' do
     let(:ended_route) { build(:ended_route) }
 
-    def end_route_call(route_id, length)
-      put :update, params: { id: route_id, length: length}
+    def end_route_call(route_id, length, location)
+      put :update, params: { id: route_id, length: length, points: [location] }
     end
 
     context 'when user is authenticated' do
       let!(:auth_user) { create_an_authenticated_user_with(organization, '1', 'android') }
       let!(:route) { create(:route, user: auth_user) }
+      let!(:location) { create(:location, route: route) }
 
       context 'when inputs are valid' do
-        before(:each) { end_route_call(route.id, ended_route[:length]) }
+        before(:each) { end_route_call(route.id, ended_route[:length], location) }
 
         it 'does return success' do
-          byebug
           expect(response).to have_http_status(:ok)
         end
 
@@ -82,19 +82,19 @@ RSpec.describe RoutesController, type: :controller do
       end
 
       context 'when length is missing' do
-        before(:each) { end_route_call(route.id, nil) }
+        before(:each) { end_route_call(route.id, nil, location) }
 
         it 'does return the right error' do
           expect(response).to have_http_status(400)
         end
 
         it 'does return missing length' do
-          expect(json_response[:details]).to eql 'Missing length'
+          expect(json_response[:details]).to eql 'Missing or negative length'
         end
       end
 
       context 'when length is negative' do
-        before(:each) { end_route_call(route.id, -13) }
+        before(:each) { end_route_call(route.id, -13, location) }
 
         it 'does return the right error' do
           expect(response).to have_http_status(400)
@@ -105,22 +105,22 @@ RSpec.describe RoutesController, type: :controller do
         end
       end
 
-      #context 'when travel image is missing' do
-       # before(:each) { end_route_call(route.id, ended_route[:length], nil) }
+      context 'when points are missing' do
+        before(:each) { end_route_call(route.id, ended_route[:length], nil) }
 
-        #it 'does return the right error' do
-         # expect(response).to have_http_status(400)
-        #end
+        it 'does return the right error' do
+          expect(response).to have_http_status(400)
+        end
 
-        #it 'does return missing travel image' do
-         # expect(json_response[:details]).to eql 'Missing travel image'
-        #end
-      #end
+        # it 'does return missing travel image' do
+        # expect(json_response[:details]).to eql 'Missing travel image'
+        # end
+      end
 
       context 'when route is ended' do
         let(:another_ended_route) { create(:ended_route, user: auth_user) }
 
-        before(:each) { end_route_call(another_ended_route.id, ended_route[:length]) }
+        before(:each) { end_route_call(another_ended_route.id, ended_route[:length], location) }
 
         it 'does return the right error' do
           expect(response).to have_http_status(400)
@@ -136,7 +136,7 @@ RSpec.describe RoutesController, type: :controller do
         let!(:another_user) { create(:user, organization: another_organization) }
         let!(:another_route) { create(:route, user: another_user) }
 
-        before(:each) { end_route_call(another_route.id, ended_route[:length]) }
+        before(:each) { end_route_call(another_route.id, ended_route[:length], location) }
 
         it 'does return an error' do
           expect(response).to have_http_status(404)
@@ -151,8 +151,9 @@ RSpec.describe RoutesController, type: :controller do
     context 'when user is not authenticated' do
       let!(:user) { create(:user, organization: organization) }
       let!(:route) { create(:route, user: user) }
+      let!(:location) { create(:location, route: route) }
 
-      before(:each) { end_route_call(route.id, ended_route[:length]) }
+      before(:each) { end_route_call(route.id, ended_route[:length], location) }
 
       it 'does return an error' do
         expect(response).to have_http_status(401)

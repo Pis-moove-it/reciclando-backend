@@ -1,5 +1,5 @@
 class RouteSerializer < ActiveModel::Serializer
-  attributes :id, :length  #, :travel_image
+  attributes :id, :length
 
   attribute :created_at do
     object.created_at.to_s

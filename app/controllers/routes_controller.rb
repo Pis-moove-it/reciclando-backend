@@ -9,12 +9,11 @@ class RoutesController < AuthenticateController
   end
 
   def update
-    return render_error(1, 'Missing length') if route_params['length'].blank?
-    return render_error(1, 'Missing points') if params['points'].blank? || params['points'].length.zero?
+    return render_error(1, 'Route already ended') if route.ended?
+    return render_error(1, 'Missing or negative length') if check_invalid_length_entry
+    return render_error(1, 'Missing points') if check_invalid_points_entry
 
-    #return render_error(1, 'Route already ended') if route.ended?
-
-    if route_add_points
+    if route_add_length_and_points
       render json: route
     else
       render_error(1, route.errors)
@@ -38,7 +37,7 @@ class RoutesController < AuthenticateController
   end
 
   def route_params
-    params.permit(:length) #, :locations)
+    params.permit(:length)
   end
 
   def date_query
@@ -55,7 +54,16 @@ class RoutesController < AuthenticateController
     params[:init_date].present? && params[:end_date].present?
   end
 
-  def route_add_points
-    params['points'].map { |coord| Location.create(route_id: 1, latitude: coord.first, longitude: coord.last)}
+  def route_add_length_and_points
+    route.update(length: params[:length])
+    params['points'].map { |coord| Location.create(route_id: 1, latitude: coord.first, longitude: coord.last) }
+  end
+
+  def check_invalid_length_entry
+    route_params['length'].blank? || route_params['length'].to_f.negative?
+  end
+
+  def check_invalid_points_entry
+    params['points'].nil? || params['points'].blank? || params['points'].length.zero?
   end
 end
