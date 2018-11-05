@@ -21,17 +21,17 @@ class Pocket < ApplicationRecord
     end
   end
 
-  private
-
-  def unweighed?
-    self.Unweighed?
-  end
-
   def classify(total_weight, kg_trash, kg_plastic, kg_glass)
     percentage = weight / total_weight.to_f
     self.kg_trash = kg_trash * percentage
     self.kg_recycled_plastic = kg_plastic * percentage
     self.kg_recycled_glass = kg_glass * percentage
     self.state = 'Classified'
+  end
+
+  private
+
+  def unweighed?
+    self.Unweighed?
   end
 end
