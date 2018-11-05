@@ -1,8 +1,9 @@
 class ClassificationController < AuthenticateController
   def create
     return render_error(1, 'Unweighed or classified pockets') unless pockets.all?(&:Weighed?)
+    total_weight = pockets.sum(&:weight)
     pockets.each do |p|
-      p.classify(pockets.sum(&:weight), classification_params[:kg_trash],
+      p.classify(total_weight, classification_params[:kg_trash],
                  classification_params[:kg_plastic], classification_params[:kg_glass])
       return render_error(1, p.errors) unless p.save
     end
