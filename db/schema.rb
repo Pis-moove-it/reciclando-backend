@@ -119,6 +119,9 @@ ActiveRecord::Schema.define(version: 2018_11_02_181633) do
     t.float "weight"
     t.bigint "collection_id"
     t.datetime "check_in"
+    t.float "kg_trash"
+    t.float "kg_recycled_plastic"
+    t.float "kg_recycled_glass"
     t.index ["collection_id"], name: "index_pockets_on_collection_id"
     t.index ["organization_id"], name: "index_pockets_on_organization_id"
   end
