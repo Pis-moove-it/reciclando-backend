@@ -14,10 +14,7 @@
         <%= hidden_field_tag(:longitude, '0', id: 'lng') %>
         <%# FIXME: Fix this to have the ability to change the organization %>
         <%= hidden_field_tag(:organization_id, 1) %>
-        <tr>
-          <td><%= label_tag 'Tipo'%></td>
-          <td><%= select_tag :type, "<option SELECTED>Container</option><option>Event</option>".html_safe %></td>
-        </tr>
+        <%= hidden_field_tag(:type, 'Container') %>
         <tr>
           <td></td>
           <td><%= submit_tag 'Crear' %></td>
