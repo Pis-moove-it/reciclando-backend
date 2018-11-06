@@ -1,6 +1,6 @@
 class PocketsController < AuthenticateController
   def index
-    query = Pocket.unclassified.where(organization_id: logged_user.organization.id)
+    query = Pocket.unclassified.where(organization_id: logged_user.organization.id).order('created_at asc')
     paginated_render(query)
   end
 

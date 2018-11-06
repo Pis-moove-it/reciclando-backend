@@ -50,6 +50,10 @@ RSpec.describe PocketsController, type: :controller do
                                       serializer.new(unweighed_pocket).as_json]
       end
 
+      it 'does return the pockets ordered (ascendent) by their created date' do
+        expect(json_response.first[:id] < json_response.second[:id])
+      end
+
       it 'does not return the classfied pockets' do
         expect(json_response.pluck(:id)).not_to include classified_pocket.id
       end
