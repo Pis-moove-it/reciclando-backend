@@ -13,7 +13,7 @@ ActiveAdmin.register Pocket do
 
   filter :serial_number
   filter :weight
-  filter :state
+  filter :state, as: :select, multiple: true, collection: Pocket.states
   filter :organization
 
   show title: :serial_number do
