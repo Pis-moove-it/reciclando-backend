@@ -76,11 +76,11 @@ RSpec.describe BalesController, type: :controller do
         end
 
         it 'does return only the organization bales' do
-          expect(json_response).to eql [b_serializer.new(bale).as_json, b_serializer.new(second_bale).as_json]
+          expect(json_response).to eql [b_serializer.new(second_bale).as_json, b_serializer.new(bale).as_json]
         end
 
-        it 'does return the bales in order by id' do
-          expect(json_response.first[:id] < json_response.second[:id])
+        it 'does return the bales in order (desc) by id' do
+          expect(json_response.first[:id] > json_response.second[:id])
         end
 
         it 'does not return bales from another organization' do
@@ -96,7 +96,7 @@ RSpec.describe BalesController, type: :controller do
         end
 
         it 'does return bales as specified in the serializer' do
-          expect(json_response).to eql [b_serializer.new(bale).as_json, b_serializer.new(second_bale).as_json]
+          expect(json_response).to eql [b_serializer.new(second_bale).as_json, b_serializer.new(bale).as_json]
         end
       end
 
@@ -109,7 +109,7 @@ RSpec.describe BalesController, type: :controller do
           end
 
           it 'does return only the organization bales' do
-            expect(json_response).to eql [b_serializer.new(bale).as_json, b_serializer.new(second_bale).as_json]
+            expect(json_response).to eql [b_serializer.new(second_bale).as_json, b_serializer.new(bale).as_json]
           end
 
           it 'does not return bales from another organization' do
@@ -140,8 +140,8 @@ RSpec.describe BalesController, type: :controller do
             expect(response).to have_http_status(:ok)
           end
 
-          it 'does return only the organization bales' do
-            expect(json_response).to eql [b_serializer.new(bale).as_json, b_serializer.new(second_bale).as_json]
+          it 'does return only the organization\'s bales' do
+            expect(json_response).to eql [b_serializer.new(second_bale).as_json, b_serializer.new(bale).as_json]
           end
 
           it 'does not return bales from another organization' do
