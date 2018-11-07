@@ -157,7 +157,7 @@ ActiveAdmin.setup do |config|
 
   # == Setting a Favicon
   #
-  # config.favicon = 'favicon.ico'
+  config.favicon = '/assets/reciclando-logo.png'
 
   # == Meta Tags
   #
