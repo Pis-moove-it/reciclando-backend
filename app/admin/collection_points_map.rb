@@ -13,15 +13,22 @@ ActiveAdmin.register_page 'Collection Points Map' do
 
       marker.infowindow "<table>
         <tr><td><b>ID: #{collection_point.id}</b></td></tr>
-        <tr><td><form html='{:multipart=>true}' onsubmit='return submitMarker();'action='/collection_points' accept-charset='UTF-8'
-        data-remote='true' method='put'><select name='active' id='active'><option selected='' value='true'>Activo</option><option value='false'>Inactivo</option>
-        </select><input type='hidden' name='latitude' id='lat' value=#{collection_point.latitude}><input type='hidden' name='longitude' id='lng' value=#{collection_point.longitude}>
+        <tr><td><form html='{:multipart=>true}' onsubmit='return submitMarker();'action='/collection_points'
+        accept-charset='UTF-8'
+        data-remote='true' method='put'><select name='active' id='active'><option selected='' value='true'>Activo
+        </option><option value='false'>Inactivo</option>
+        </select><input type='hidden' name='latitude' id='lat' value=#{collection_point.latitude}>
+        <input type='hidden' name='longitude' id='lng' value=#{collection_point.longitude}>
         <input type='submit' name='commit' value='Actualizar' data-disable-with='Actualizar'>
-        <input type='hidden' name='latitude' id='lat' value=#{collection_point.latitude}><input type='hidden' name='longitude' id='lng' value=#{collection_point.longitude}>
+        <input type='hidden' name='latitude' id='lat' value=#{collection_point.latitude}>
+        <input type='hidden' name='longitude' id='lng' value=#{collection_point.longitude}>
         </td></form><td></td></tr>
-        <tr><td><form html='{:multipart=>true}' onsubmit='return submitMarker();'action='/collection_points' accept-charset='UTF-8' data-remote='true' method='delete'>
-        <input type='hidden' name='latitude' id='lat' value=#{collection_point.latitude}><input type='hidden' name='longitude' id='lng' value=#{collection_point.longitude}>
-        <input type='submit' name='commit' value='Borrar Punto de Recolección' data-disable-with='Borrar Punto de Recolección'></form>
+        <tr><td>
+        <form html='{:multipart=>true}' onsubmit='return submitMarker();'action=
+        '/collection_points' accept-charset='UTF-8' data-remote='true' method='delete'>
+        <input type='hidden' name='latitude' id='lat' value=#{collection_point.latitude}>
+        <input type='hidden' name='longitude' id='lng' value=#{collection_point.longitude}>
+        <input type='submit' name='commit' value='Eliminar' data-disable-with='Eliminar'></form>
         </td></tr></table>"
     end
 
