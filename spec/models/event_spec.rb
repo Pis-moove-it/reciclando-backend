@@ -6,7 +6,7 @@ RSpec.describe Event, type: :model do
   let!(:route) { create(:route, user: user) }
   let!(:event) { create(:event) }
   let!(:collection) { create(:collection_with_pockets, collection_point: event, route: route) }
-  let(:e_serializer) { EventSerializer }
+  let!(:e_serializer) { EventSerializer }
   describe 'validations' do
     context 'when create events with appropiate data' do
       it 'does let create new ones' do

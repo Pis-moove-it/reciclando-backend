@@ -6,7 +6,7 @@ RSpec.describe EventsController, type: :controller do
 
   let(:event_params) { attributes_for(:event) }
 
-  let!(:e_serializer){ EventSerializer }
+  let!(:e_serializer) { EventSerializer }
 
   describe 'POST #create' do
     def create_event_call(route_id, latitude, longitude, description, pocket_attributes)
