@@ -3,8 +3,6 @@ class Container < CollectionPoint
   validates :status, :kg_trash, :kg_recycled_plastic, :kg_recycled_glass, presence: true
   validates :active, exclusion: { in: [nil] }
 
-  has_many :collections, dependent: :nullify
-
   belongs_to :organization
 
   before_validation(on: :create) do

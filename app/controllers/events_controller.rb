@@ -1,13 +1,12 @@
 class EventsController < AuthenticateController
-  skip_before_action :authenticated_user
-
   def create
-    event = Event.new(event_params)
-    collection = Collection.new(collection_params.merge(route_id: params[:route_id], collection_point: event))
-    if collection.save
+    return render_error(1, 'Missing pockets') if collection_params[:pockets_attributes].blank?
+    collection = Collection.new(collection_params.merge(route_id: params[:route_id]))
+    event = Event.new(event_params.merge(collections: [collection]))
+    if event.save
       render json: event
     else
-      render_error(1, collection.errors)
+      render_error(1, event.errors)
     end
   end
 
