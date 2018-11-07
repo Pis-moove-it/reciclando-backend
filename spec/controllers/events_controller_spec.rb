@@ -1,13 +1,14 @@
 require 'rails_helper'
 RSpec.describe EventsController, type: :controller do
-  let(:json_response) { JSON.parse(response.body, symbolize_keys: true) }
+  let(:json_response) { JSON.parse(response.body, symbolize_names: true) }
   let!(:organization) { create(:organization) }
   let!(:serial_numbers) { %w[B03 B17 B59].collect { |sn| { serial_number: sn } } }
-  let(:event) { create(:event) }
+
+  let(:event_params) { attributes_for(:event) }
+
+  let!(:e_serializer){ EventSerializer }
 
   describe 'POST #create' do
-    let(:collection_params) { attributes_for(:collection) }
-
     def create_event_call(route_id, latitude, longitude, description, pocket_attributes)
       post :create, params: { route_id: route_id,
                               event: { latitude: latitude, longitude: longitude, description: description },
@@ -19,42 +20,69 @@ RSpec.describe EventsController, type: :controller do
       let!(:auth_route) { create(:route, user: auth_user) }
       let(:invalid_route_id) { Route.pluck(:id).max + 1 }
 
-      before(:each) { create_collection_call(auth_route.id, container.id, serial_numbers) }
+      context 'when creating valid events and collections' do
+        def get_serial_numbers(json_response)
+          json_response[:collections].first[:pockets].collect { |p| p.extract!(:serial_number) }
+        end
 
-      context 'when creating valid collections' do
+        before(:each) do
+          create_event_call(auth_route.id, event_params[:latitude], event_params[:longitude],
+                            event_params[:description], serial_numbers)
+        end
+
         it 'does return success' do
           expect(response).to have_http_status(:ok)
         end
 
-        it 'does return the correct collection_point_id and the route_id' do
-          %i[collection_point_id route_id].each do |collection_param|
-            expect(json_response[collection_param]).to eql collection_params[collection_param]
+        it 'does return correct event attributes' do
+          %i[latitude longitude description].each do |event_param|
+            expect(json_response[event_param]).to eql event_params[event_param]
           end
         end
 
-        it 'does return pockets with correct serial numbers' do
-          expect(json_response['pockets'].collect { |p| p.slice('serial_number').symbolize_keys }).to eql serial_numbers
+        it 'does return correct route_id for collections' do
+          expect(json_response[:collections].first[:route_id]).to eql auth_route.id
+        end
+
+        it 'does return correct pocket ammont' do
+          expect(json_response[:collections].first[:pockets].count).to eql 3
+        end
+
+        it 'does return correct pocket serial_numbers' do
+          expect(get_serial_numbers(json_response)).to eql serial_numbers
         end
       end
 
       context 'when creating invalid collections' do
-        it 'does not create a collection without route_id' do
-          create_collection_call(invalid_route_id, container.id, serial_numbers)
-          expect(response).to have_http_status(:bad_request)
-        end
-
-        it 'does not create a collection without collection_point_id' do
-          create_collection_call(auth_route.id, nil, serial_numbers)
-          expect(response).to have_http_status(:bad_request)
-        end
-
-        it 'does not create a collection without pocket_serial_numbers' do
-          create_collection_call(auth_route.id, container.id, nil)
+        it 'does not create collection without route_id' do
+          create_event_call(invalid_route_id, event_params[:latitude], event_params[:longitude],
+                            event_params[:description], serial_numbers)
           expect(response).to have_http_status(:bad_request)
         end
 
         it 'does not create a collection with empty pocket_serial_numbers' do
-          create_collection_call(auth_route.id, container.id, [])
+          create_event_call(auth_route.id, event_params[:latitude], event_params[:longitude],
+                            event_params[:description], [])
+          expect(response).to have_http_status(:internal_server_error)
+        end
+      end
+
+      context 'when creating invalid events' do
+        it 'does not create event without latitude' do
+          create_event_call(auth_route.id, nil, event_params[:longitude],
+                            event_params[:description], serial_numbers)
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it 'does not create event without longitude' do
+          create_event_call(auth_route.id, event_params[:latitude], nil,
+                            event_params[:description], serial_numbers)
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it 'does not create event without description' do
+          create_event_call(auth_route.id, event_params[:latitude], event_params[:longitude],
+                            nil, serial_numbers)
           expect(response).to have_http_status(:bad_request)
         end
       end
@@ -63,14 +91,16 @@ RSpec.describe EventsController, type: :controller do
     context 'when the user is not authenticated' do
       let!(:no_auth_user) { create(:user, organization: organization) }
       let!(:no_auth_route) { create(:route, user: no_auth_user) }
-      before(:each) { create_collection_call(no_auth_route.id, container.id, serial_numbers) }
-
+      before(:each) do
+        create_event_call(no_auth_route.id, event_params[:latitude], event_params[:longitude],
+                          event_params[:description], serial_numbers)
+      end
       it 'does return an error' do
         expect(response).to have_http_status(401)
       end
 
       it 'does render the right error' do
-        expect(json_response['error_code']).to eql 2
+        expect(json_response[:error_code]).to eql 2
       end
     end
   end
