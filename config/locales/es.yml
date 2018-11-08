@@ -35,12 +35,20 @@ es:
       bale:
         weight: "Peso"
         material: "Material"
+        materials:
+          Trash: "Basura"
+          Plastic: "Plástico"
+          Glass: "Vidrio"
         organization: "Organización"
         user: "Usuario"
       pocket:
         serial_number: "Número de serie"
         weight: "Peso"
         state: "Estado"
+        states:
+          Unweighed: "No pesado"
+          Weighed: "Pesado"
+          Classified: "Clasificado"
         organization: "Organización"
       organization:
         name: "Nombre"
@@ -52,12 +60,20 @@ es:
         latitude: "Latitud"
         longitude: "Longitud"
         status: "Estado"
+        statuses:
+          Ok: "OK"
+          Damaged: "Dañado"
+          Removed: "Removido"
         active: "Activo"
         kg_recycled_glass: "Kg de vidrio reciclado"
         kg_recycled_plastic: "Kg de plástico reciclado"
         kg_trash: "Kg de basura"
       container:
         state: "Estado"
+        statuses:
+          Ok: "OK"
+          Damaged: "Dañado"
+          Removed: "Removido"
         active: "Activo"
       question:
         question: "Pregunta"
