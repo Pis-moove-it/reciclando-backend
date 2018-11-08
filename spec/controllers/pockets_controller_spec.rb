@@ -27,16 +27,20 @@ RSpec.describe PocketsController, type: :controller do
       let!(:auth_user) { create_an_authenticated_user_with(organization, '1', 'android') }
 
       let!(:weighed_pocket) do
-        create(:weighed_pocket, collection: collection)
+        create(:weighed_pocket, collection: collection, check_in: Time.zone.now)
       end
       let!(:unweighed_pocket) do
-        create(:unweighed_pocket, collection: collection)
+        create(:unweighed_pocket, collection: collection, check_in: Time.zone.now)
       end
       let!(:classified_pocket) do
-        create(:classified_pocket, collection: collection)
+        create(:classified_pocket, collection: collection, check_in: Time.zone.now)
       end
       let!(:another_unweighed_pocket) do
-        create(:unweighed_pocket, collection: another_collection)
+        create(:unweighed_pocket, collection: another_collection, check_in: Time.zone.now)
+      end
+
+      let!(:not_checked_in_pocket) do
+        create(:weighed_pocket, collection: collection)
       end
 
       before(:each) { list_pockets_call }
@@ -45,7 +49,7 @@ RSpec.describe PocketsController, type: :controller do
         expect(response).to have_http_status(200)
       end
 
-      it 'does return all the unclassified pockets' do
+      it 'does return all the unclassified and checked_in pockets' do
         expect(json_response).to eql [serializer.new(weighed_pocket).as_json,
                                       serializer.new(unweighed_pocket).as_json]
       end
@@ -56,6 +60,10 @@ RSpec.describe PocketsController, type: :controller do
 
       it 'does not return the classfied pockets' do
         expect(json_response.pluck(:id)).not_to include classified_pocket.id
+      end
+
+      it 'does not return the unchecked_in pockets' do
+        expect(json_response.pluck(:id)).not_to include not_checked_in_pocket.id
       end
 
       it 'does not return the pockets from another organization' do

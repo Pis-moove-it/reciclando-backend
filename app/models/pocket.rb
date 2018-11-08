@@ -16,8 +16,8 @@ class Pocket < ApplicationRecord
   end
 
   class << self
-    def unclassified
-      where(state: %w[Unweighed Weighed])
+    def unclassified_and_checked_in
+      where(state: %w[Unweighed Weighed]).where.not(check_in: nil)
     end
   end
 
