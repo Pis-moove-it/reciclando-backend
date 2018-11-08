@@ -14,6 +14,7 @@ tags:
   - "Collections"
   - "Routes"
   - "Classification"
+  - "Events"
 
 paths:
   /organizations/{organization_id}/users:
@@ -571,7 +572,7 @@ paths:
       tags:
         - "Collections"
       operationId: createCollection
-      summary: Add a pocket to the created collection.
+      summary: Add pockets to the created collection.
       parameters:
         - in: path
           name: route_id
@@ -602,7 +603,46 @@ paths:
             $ref: '#/definitions/Error'
       security:
         - ApiKey: []
-
+  /routes/{route_id}/events:
+    post:
+      tags:
+        - "Events"
+      operationId: createEvent
+      summary: Creates an event, a collection for that event and pockets for that collection.
+      parameters:
+        - in: path
+          name: route_id
+          required: true
+          type: integer
+        - in: body
+          name: event
+          schema:
+            $ref: '#/definitions/Event'
+        - in: body
+          name: collection
+          schema:
+            $ref: '#/definitions/EventCollection'
+      responses:
+        200:
+          description: OK
+        400:
+          description: An attribute is missing.
+          schema:
+            $ref: '#/definitions/Error'
+        401:
+          description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: A route with the specified ID was not found.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+        - ApiKey: []
   /routes:
     post:
       tags:
@@ -942,6 +982,38 @@ definitions:
       collection_point_id: 1
       pocket_attributes: [{"serial_number": "B05"},
                           {"serial_number": "B18"}]
+  EventCollection:
+    type: object
+    required:
+      - pockets_attributes
+    properties:
+      pockets_attributes:
+        type: array
+        items:
+          type: object
+          properties:
+            serial_number:
+              type: string
+    example:
+      pocket_attributes: [{"serial_number": "B05"},
+                          {"serial_number": "B18"}]
+  Event:
+    type: object
+    required:
+      - latitude
+      - longitude
+      - description
+    properties:
+      latitude:
+        type: string
+      longitude:
+        type: string
+      description:
+        type: string
+    example:
+      latitude: '-13.843669'
+      longitude: '-60.894236'
+      description: 'School festival'
   Route:
       type: object
       required:

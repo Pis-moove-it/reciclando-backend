@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_02_181633) do
+ActiveRecord::Schema.define(version: 2018_11_06_194302) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,6 +69,7 @@ ActiveRecord::Schema.define(version: 2018_11_02_181633) do
     t.float "kg_recycled_plastic", default: 0.0
     t.float "kg_recycled_glass", default: 0.0
     t.float "kg_trash", default: 0.0
+    t.string "description"
     t.index ["organization_id"], name: "index_collection_points_on_organization_id"
   end
 

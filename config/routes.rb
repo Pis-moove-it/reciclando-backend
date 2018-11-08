@@ -20,6 +20,7 @@ Rails.application.routes.draw do
 
   resources :routes, only: %i[create update show index] do
     resources :collections, only: %i[create]
+    resources :events, only: %i[create]
   end
 
   resources :bales, only: %i[index create show update]
