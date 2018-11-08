@@ -27,7 +27,7 @@ RSpec.describe PocketsController, type: :controller do
       let!(:auth_user) { create_an_authenticated_user_with(organization, '1', 'android') }
 
       let!(:weighed_pocket) do
-        create(:weighed_pocket, collection: collection, check_in: Time.zone.now)
+        create(:weighed_pocket, collection: collection, check_in: Time.zone.now + 1)
       end
       let!(:unweighed_pocket) do
         create(:unweighed_pocket, collection: collection, check_in: Time.zone.now)
