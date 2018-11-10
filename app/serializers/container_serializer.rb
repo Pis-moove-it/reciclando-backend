@@ -1,3 +1,3 @@
 class ContainerSerializer < ActiveModel::Serializer
-  attributes :id, :latitude, :longitude, :status
+  attributes :id, :latitude, :longitude, :status, :description
 end

@@ -55,7 +55,7 @@ RSpec.describe Container, type: :model do
     let!(:container) { create(:container, organization: organization) }
 
     it 'does return containers, as specified in the main serializer' do
-      expect(c_serializer.new(container).attributes.keys).to eq %i[id latitude longitude status]
+      expect(c_serializer.new(container).attributes.keys).to eq %i[id latitude longitude status description]
     end
 
     it 'does return containers, as specified in the web serializer' do
