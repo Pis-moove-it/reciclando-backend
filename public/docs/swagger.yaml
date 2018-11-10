@@ -264,6 +264,8 @@ paths:
       responses:
         200:
           description: OK
+          schema:
+            $ref: '#/definitions/Bale'
         400:
           description: Malformed request.
           schema:
@@ -296,6 +298,8 @@ paths:
       responses:
         200:
           description: OK
+          schema:
+            $ref: '#/definitions/Bale'
         400:
           description: Malformed request.
           schema:
@@ -369,7 +373,9 @@ paths:
           type: float
       responses:
         200:
-          description: Ok
+          description: OK
+          schema:
+            $ref: '#/definitions/UnclassifiedPocket'
         400:
           description: Malformed request.
           schema:
@@ -400,16 +406,15 @@ paths:
           name: pocket_id
           required: true
           type: integer
-        - in: header
-          name: ApiKey
-          required: true
         - in: body
           name: weight
           required: true
           type: number
       responses:
         200:
-          description: Ok
+          description: OK
+          schema:
+            $ref: '#/definitions/UnclassifiedPocket'
         400:
           description: Malformed request.
           schema:
@@ -544,12 +549,16 @@ paths:
           required: true
           type: integer
         - in: body
-          name: container
-          schema:
-            $ref: '#/definitions/Container'
+          name: status
+          enum:
+            - "Ok"
+            - "Damaged"
+            - "Removed"
       responses:
         200:
-          description: Ok
+          description: OK
+          schema:
+            $ref: '#/definitions/Container'
         400:
           description: Malformed request.
           schema:
@@ -657,6 +666,8 @@ paths:
       responses:
         200:
           description: OK
+          schema:
+            $ref: '#/definitions/Create_route'
         401:
           description: Unauthorized request.
           schema:
@@ -688,6 +699,8 @@ paths:
         responses:
           200:
             description: OK
+            schema:
+              $ref: '#/definitions/Route'
           400:
             description: Malformed request.
             schema:
@@ -767,7 +780,7 @@ paths:
         200:
           description: OK
         400:
-          description: A container with specified Id was not found.
+          description: Pocket attributes are missing.
           schema:
             $ref: '#/definitions/Error'
         401:
@@ -899,6 +912,11 @@ definitions:
         enum:
         - "Unweighed"
         - "Weighed"
+    example:
+      id: 1
+      serial_number: 'B125'
+      weight: 20.5
+      state: 'Weighed'
   ClassifiedPocket:
     type: object
     properties:
@@ -933,11 +951,14 @@ definitions:
           enum:
             - Ok
             - Damaged
+        description:
+          type: string
       example:
         id: 5
         latitude: '-13.843669'
         longitude: '-60.894236'
         status: Ok
+        description: 'Old town'
   WebContainer:
       type: object
       required:
@@ -968,6 +989,7 @@ definitions:
         kg_trash: 120
         kg_recycled_plastic: 20.8
         kg_recycled_glass: 50
+        description: 'Old town'
   Collection:
     type: object
     required:
