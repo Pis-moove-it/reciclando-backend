@@ -17,6 +17,49 @@ tags:
   - "Events"
 
 paths:
+  /organizations/login:
+    post:
+      tags:
+        - "Organizations"
+      operationId: organizationLogin
+      summary: Organization login.
+      parameters:
+        - in: body
+          name: name
+          required: true
+          type: string
+        - in: body
+          name: password
+          required: true
+          type: string
+        - in: header
+          name: deviceIdHeader
+          type: string
+        - in: header
+          name: deviceTypeHeader
+          type: string
+          enum: ['SmartPhone', 'Tablet']
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Organization'
+          headers:
+            ApiKey:
+              type: string
+        400:
+          description: Malformed request.
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Organization not found by the given name.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+
   /organizations/{organization_id}/users:
     get:
       tags:
@@ -120,55 +163,12 @@ paths:
       security:
       - ApiKey: []
 
-  /organizations/login:
-    post:
-      tags:
-        - "Organizations"
-      operationId: organizationLogin
-      summary: Organization Login.
-      parameters:
-        - in: body
-          name: name
-          required: true
-          type: string
-        - in: body
-          name: password
-          required: true
-          type: string
-        - in: header
-          name: deviceIdHeader
-          type: string
-        - in: header
-          name: deviceTypeHeader
-          type: string
-          enum: ['SmartPhone', 'Tablet']
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: '#/definitions/Organization'
-          headers:
-            ApiKey:
-              type: string
-        400:
-          description: Malformed request.
-          schema:
-            $ref: '#/definitions/Error'
-        404:
-          description: Organization not found by the given name.
-          schema:
-            $ref: '#/definitions/Error'
-        500:
-          description: Unexpected error.
-          schema:
-            $ref: '#/definitions/Error'
-
   /bales:
     get:
       tags:
         - "Bales"
       operationId: getBales
-      summary: List bales.
+      summary: List bales from logged organization.
       parameters:
         - in: query
           name: material
@@ -219,40 +219,13 @@ paths:
             $ref: '#/definitions/Error'
       security:
       - ApiKey: []
-    post:
-      tags:
-        - "Bales"
-      operationId: createBale
-      summary: Create a bale.
-      parameters:
-        - in: body
-          name: bale
-          schema:
-            $ref: '#/definitions/Bale'
-      responses:
-        200:
-          description: OK
-        400:
-          description: Malformed request.
-          schema:
-            $ref: '#/definitions/Error'
-        401:
-          description: Unauthorized request.
-          schema:
-            $ref: '#/definitions/Error'
-        500:
-          description: Unexpected error.
-          schema:
-            $ref: '#/definitions/Error'
-      security:
-        - ApiKey: []
 
   /bales/{bale_id}:
     get:
       tags:
         - "Bales"
       operationId: getBale
-      summary: Get one bale.
+      summary: Get one bale from logged organization.
       parameters:
         - in: path
           name: bale_id
@@ -277,11 +250,40 @@ paths:
             $ref: '#/definitions/Error'
       security:
         - ApiKey: []
+
+    post:
+      tags:
+        - "Bales"
+      operationId: createBale
+      summary: Create a bale belonging to logged organization.
+      parameters:
+        - in: body
+          name: bale
+          schema:
+            $ref: '#/definitions/Bale'
+      responses:
+        200:
+          description: OK
+        400:
+          description: Malformed request.
+          schema:
+            $ref: '#/definitions/Error'
+        401:
+          description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+        - ApiKey: []
+
     put:
       tags:
         - "Bales"
       operationId: updateBale
-      summary: Update a bale.
+      summary: Update a bale from logged organization.
       parameters:
         - in: path
           name: bale_id
@@ -318,7 +320,7 @@ paths:
       tags:
         - "Pockets"
       operationId: getUnclassifiedPockets
-      summary: List unclassified pockets.
+      summary: List unclassified and checked-in pockets from logged organization.
       responses:
         200:
           description: OK
@@ -350,21 +352,21 @@ paths:
       security:
         - ApiKey: []
 
-  /pockets/{pocket_id}/edit_serial_number:
+  /pockets/{pocket_id}/add_weight:
     put:
       tags:
         - "Pockets"
-      operationId: editSerialNumber
-      summary: Edit the serial number of a pocket.
+      operationId: addWeight
+      summary: Add the weight of unweighed pockets from logged organization.
       parameters:
         - in: path
           name: pocket_id
           required: true
           type: integer
         - in: body
-          name: serial_number
+          name: weight
           required: true
-          type: string
+          type: float
       responses:
         200:
           description: Ok
@@ -392,7 +394,7 @@ paths:
       tags:
         - "Pockets"
       operationId: editWeight
-      summary: Edit the weight of weighed pockets.
+      summary: Edit the weight of weighed pockets from logged organization.
       parameters:
         - in: path
           name: pocket_id
@@ -427,21 +429,21 @@ paths:
       security:
         - ApiKey: []
 
-  /pockets/{pocket_id}/add_weight:
+  /pockets/{pocket_id}/edit_serial_number:
     put:
       tags:
         - "Pockets"
-      operationId: addWeight
-      summary: Add the weight of unweighed pockets.
+      operationId: editSerialNumber
+      summary: Edit the serial number of a pocket from logged organization.
       parameters:
         - in: path
           name: pocket_id
           required: true
           type: integer
         - in: body
-          name: weight
+          name: serial_number
           required: true
-          type: float
+          type: string
       responses:
         200:
           description: Ok
@@ -469,7 +471,7 @@ paths:
       tags:
         - "Containers"
       operationId: getContainers
-      summary: List available containers.
+      summary: List available containers from logged organization.
       responses:
         200:
           description: OK
@@ -506,7 +508,7 @@ paths:
       tags:
         - "Containers"
       operationId: getContainer
-      summary: Get one container.
+      summary: Get one container from logged organization.
       parameters:
         - in: path
           name: container_id
@@ -535,7 +537,7 @@ paths:
       tags:
         - "Containers"
       operationId: updateContainer
-      summary: Update the container status.
+      summary: Update the status of a container from logged organization.
       parameters:
         - in: path
           name: container_id
@@ -567,103 +569,7 @@ paths:
       security:
         - ApiKey: []
 
-  /routes/{route_id}/collections:
-    post:
-      tags:
-        - "Collections"
-      operationId: createCollection
-      summary: Add pockets to the created collection.
-      parameters:
-        - in: path
-          name: route_id
-          required: true
-          type: integer
-        - in: body
-          name: collection
-          schema:
-            $ref: '#/definitions/Collection'
-      responses:
-        200:
-          description: OK
-        400:
-          description: A container with specified Id was not found.
-          schema:
-            $ref: '#/definitions/Error'
-        401:
-          description: Unauthorized request.
-          schema:
-            $ref: '#/definitions/Error'
-        404:
-          description: A route with the specified ID was not found.
-          schema:
-            $ref: '#/definitions/Error'
-        500:
-          description: Unexpected error.
-          schema:
-            $ref: '#/definitions/Error'
-      security:
-        - ApiKey: []
-  /routes/{route_id}/events:
-    post:
-      tags:
-        - "Events"
-      operationId: createEvent
-      summary: Creates an event, a collection for that event and pockets for that collection.
-      parameters:
-        - in: path
-          name: route_id
-          required: true
-          type: integer
-        - in: body
-          name: event
-          schema:
-            $ref: '#/definitions/Event'
-        - in: body
-          name: collection
-          schema:
-            $ref: '#/definitions/EventCollection'
-      responses:
-        200:
-          description: OK
-        400:
-          description: An attribute is missing.
-          schema:
-            $ref: '#/definitions/Error'
-        401:
-          description: Unauthorized request.
-          schema:
-            $ref: '#/definitions/Error'
-        404:
-          description: A route with the specified ID was not found.
-          schema:
-            $ref: '#/definitions/Error'
-        500:
-          description: Unexpected error.
-          schema:
-            $ref: '#/definitions/Error'
-      security:
-        - ApiKey: []
   /routes:
-    post:
-      tags:
-        - "Routes"
-      operationId: createRoute
-      summary: Create a route.
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: '#/definitions/Create_route'
-        401:
-          description: Unauthorized request.
-          schema:
-            $ref: '#/definitions/Error'
-        500:
-          description: Unexpected error.
-          schema:
-            $ref: '#/definitions/Error'
-      security:
-        - ApiKey: []
     get:
       tags:
         - "Routes"
@@ -716,18 +622,16 @@ paths:
             $ref: '#/definitions/Error'
       security:
         - ApiKey: []
-
-  /questions:
-    get:
+    post:
       tags:
-        - "Questions"
-      operationId: getQuestions
-      summary: Get six random questions.
+        - "Routes"
+      operationId: createRoute
+      summary: Create a route belonging to logged organization.
       responses:
         200:
           description: OK
           schema:
-            $ref: '#/definitions/Question'
+            $ref: '#/definitions/Create_route'
         401:
           description: Unauthorized request.
           schema:
@@ -740,11 +644,38 @@ paths:
         - ApiKey: []
 
   /routes/{route_id}:
+    get:
+      tags:
+        - "Routes"
+      operationId: getRoute
+      summary: Show a route from logged organization.
+      parameters:
+        - in: path
+          name: route_id
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+        401:
+          description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: A route with the specified ID was not found.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+        - ApiKey: []
     put:
         tags:
           - "Routes"
         operationId: endRoute
-        summary: End a route.
+        summary: End a route from logged organization.
         parameters:
           - in: path
             name: route_id
@@ -775,19 +706,33 @@ paths:
               $ref: '#/definitions/Error'
         security:
           - ApiKey: []
-    get:
+
+  /routes/{route_id}/events:
+    post:
       tags:
-        - "Routes"
-      operationId: getRoute
-      summary: Show a route.
+        - "Events"
+      operationId: createEvent
+      summary: Add a collection to a route and creates an event and pockets for that collection.
       parameters:
         - in: path
           name: route_id
           required: true
           type: integer
+        - in: body
+          name: event
+          schema:
+            $ref: '#/definitions/Event'
+        - in: body
+          name: collection
+          schema:
+            $ref: '#/definitions/EventCollection'
       responses:
         200:
           description: OK
+        400:
+          description: An attribute is missing.
+          schema:
+            $ref: '#/definitions/Error'
         401:
           description: Unauthorized request.
           schema:
@@ -802,12 +747,50 @@ paths:
             $ref: '#/definitions/Error'
       security:
         - ApiKey: []
+
+  /routes/{route_id}/collections:
+    post:
+      tags:
+        - "Collections"
+      operationId: createCollection
+      summary: Add a collection to a route, associate it to a container and add pockets to created collection.
+      parameters:
+        - in: path
+          name: route_id
+          required: true
+          type: integer
+        - in: body
+          name: collection
+          schema:
+            $ref: '#/definitions/Collection'
+      responses:
+        200:
+          description: OK
+        400:
+          description: A container with specified Id was not found.
+          schema:
+            $ref: '#/definitions/Error'
+        401:
+          description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: A route with the specified ID was not found.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+        - ApiKey: []
+
   /classification:
     post:
       tags:
         - "Classification"
       operationId: classifyPockets
-      summary: Classify a list of pockets.
+      summary: Classify a list of pockets from logged organization.
       parameters:
         - in: body
           schema:
@@ -823,6 +806,28 @@ paths:
           description: Malformed request.
           schema:
             $ref: '#/definitions/Error'
+        401:
+          description: Unauthorized request.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+        - ApiKey: []
+
+  /questions:
+    get:
+      tags:
+        - "Questions"
+      operationId: getQuestions
+      summary: Get six random questions.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Question'
         401:
           description: Unauthorized request.
           schema:
