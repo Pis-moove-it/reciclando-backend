@@ -1,24 +1,38 @@
-# README
+# Reciclando
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Reciclando is an app that allows organizations to manage recycled flow in their cities.
 
-Things you may want to cover:
+##Getting Started
+###Prerequisites
 
-* Ruby version
+* Ruby  2.5
+* Rails Rails 5.2
+* Bundler
+* PostgreSQL
+* CAPISTRANO? AWS? GIT? SWAGGER?
 
-* System dependencies
+###Installing
+bundle install??
+rake install
+rake build
 
-* Configuration
 
-* Database creation
+##Database
 
-* Database initialization
+###Database creation
 
-* How to run the test suite
+###Database initialization
 
-* Services (job queues, cache servers, search engines, etc.)
+##Test
+An RSpec test suite is available to ensure proper API functionality. Do note that it uses the staging version of the API, and not the production version (to prevent hitting API limits should something go wrong). ?????????????Tests are set as the default rake target, so you can run them by simply executing `rake`
 
-* Deployment instructions
+##More information
+###API Documentation
+The main API is documented with swagger, and can be reached with:
+  testtest
 
-* ...
+(= License =
+
+This project is licensed under the MIT license, a copy of which can be found in the LICENSE file.
+
+)
