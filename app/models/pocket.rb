@@ -19,6 +19,10 @@ class Pocket < ApplicationRecord
     def unclassified
       where(state: %w[Unweighed Weighed])
     end
+
+    def unclassified_and_checked_in
+      unclassified.where.not(check_in: nil)
+    end
   end
 
   def classify(total_weight, kg_trash, kg_plastic, kg_glass)
