@@ -12,4 +12,18 @@ class Bale < ApplicationRecord
   before_validation(on: :create) do
     self.organization = organization
   end
+
+  class << self
+    def plastic
+      where(material: 'Trash')
+    end
+
+    def trash
+      where(material: 'Plastic')
+    end
+
+    def glass
+      where(material: 'Glass')
+    end
+  end
 end
