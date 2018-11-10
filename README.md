@@ -1,20 +1,22 @@
 # Reciclando
 
-Reciclando is an app that allows organizations to manage recycled flow in their cities.
+Reciclando :recycle: is an app that allows organizations to manage recycled flow in their cities.
 
 ##Getting Started
 ###Prerequisites
 
 * Ruby  2.5
-* Rails Rails 5.2
+* Rails 5.2
 * Bundler
 * PostgreSQL
 * CAPISTRANO? AWS? GIT? SWAGGER?
 
 ###Installing
-bundle install??
-rake install
-rake build
+```bash
+$ bundle install??
+$ rake install
+$ rake build
+```
 
 
 ##Database
