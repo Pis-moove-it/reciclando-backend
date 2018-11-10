@@ -60,7 +60,7 @@ RSpec.describe Container, type: :model do
 
     it 'does return containers, as specified in the web serializer' do
       expect(web_serializer.new(container).attributes.keys).to eq %i[id latitude longitude status kg_trash
-                                                                     kg_recycled_glass kg_recycled_plastic]
+                                                                     kg_recycled_glass kg_recycled_plastic description]
     end
   end
 end
