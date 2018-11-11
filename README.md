@@ -6,35 +6,79 @@ Reciclando :recycle: is an app that allows organizations to manage recycled flow
 ###Prerequisites
 
 * Ruby  2.5
-* Rails 5.2
 * Bundler
 * PostgreSQL
-* CAPISTRANO? AWS? GIT? SWAGGER?
 
 ###Installing
+####Dependencies
+After downloading the repository, run this command:
 ```bash
-$ bundle install??
-$ rake install
-$ rake build
+$ bundle install
 ```
 
+####Database
+Once installed the gems, run this command to set up the database:
+```
+rails db:setup
+```
+Note: fake data is also loaded for testing purposes.
+###Running Locally
+```
+rails server
+```
+This would start the server in `http://localhost:3000`.
 
-##Database
+This command starts both apps, all API services under root path (`/`) and the CMS (`/admin`).
+###Running Tests
+####Tests
+An RSpec test suite is available to ensure proper API functionality.
+To run this test, run:
+```
+bundle exec rspec
+```
+####Coding Style
+A linter is used to ensure proper code format.
 
-###Database creation
+To run this test, run:
+```
+bundle exec rubocop
+```
+##Deployment
+The apps are deployed in [AWS](https://aws.amazon.com), where two EC2 instances are currently running:
+* [Staging](http://34.213.11.120)
+* [Production](http://34.216.31.97)
 
-###Database initialization
+To setup EC2 instances for deployment, follow [this guide](https://www.digitalocean.com/community/tutorials/deploying-a-rails-app-on-ubuntu-14-04-with-capistrano-nginx-and-puma) step by step.
 
-##Test
-An RSpec test suite is available to ensure proper API functionality. Do note that it uses the staging version of the API, and not the production version (to prevent hitting API limits should something go wrong). ?????????????Tests are set as the default rake target, so you can run them by simply executing `rake`
+
+Some variables must be defined before deployment:
+```
+* REPO_URL
+* APP_NAME
+* EC2_USER
+* EC2_IP_STAGING
+* EC2_PORT_STAGING
+* EC2_IP_PRODUCTION
+* EC2_PORT_PRODUCTION
+```
+
+To automate the deployment, [Capistrano](https://github.com/capistrano/capistrano) is used. This gem gives you a `cap` tool to perform deployments. After setting up the neccessary rules in this files:
+* deploy.rb
+* staging.rb
+* production.rb
+
+the deployment can be perform in the command line, with the tool mentioned above.
+
+[CircleCi](https://circleci.com/) simplifies this process, by running the deployment commands after app build success. Take into account that the deployments belongs to a certain enviorment.
 
 ##More information
 ###API Documentation
-The main API is documented with swagger, and can be reached with:
-  testtest
+The main API is documented with swagger, and can be reached [here](http://34.216.31.97/api_docs).
 
-(= License =
+Note: credentials for access are `(reciclando, reciclando)`.
 
-This project is licensed under the MIT license, a copy of which can be found in the LICENSE file.
+###CMS
+The CMS is use by admin users to manage the content of the app, and it is implemented using [Active Admin](https://activeadmin.info)
+##License
 
-)
+This project is licensed under the MIT license.
