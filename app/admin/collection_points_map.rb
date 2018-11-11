@@ -1,4 +1,4 @@
-ActiveAdmin.register_page 'Collection Points Map' do
+ActiveAdmin.register_page 'Mapa de Islas' do
   content do
     active_picture = asset_path('map-point-icon.png')
     inactive_picture = asset_path('map-point-icon-red.png')
