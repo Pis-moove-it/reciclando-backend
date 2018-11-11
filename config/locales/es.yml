@@ -89,8 +89,16 @@ es:
       admin_user:
         email: "Mail"
         sign_in_count: "Veces logueado"
-        current_sign_in_at: "Logueado el"
-        created_at: "Creado el"
+        current_sign_in_at: "Fecha de logueo"
+        created_at: "Fecha de creación"
+        encrypted_password: "Contraseña encriptada"
+        reset_password_token: "Restablecer token de contraseña"
+        reset_password_sent_at: "Restablecer contraseña enviada"
+        remember_created_at: "Recordar creado en"
+        last_sign_in_at: "Último inicio de sesión"
+        current_sign_in_ip: "IP de logueo actual"
+        last_sign_in_ip: "Última IP de logueo"
+        updated_at: "Fecha de actualiación"
       active_admin/comment:
         namespace: "Espacio de nombres"
         body: "Cuerpo"
@@ -98,6 +106,14 @@ es:
         author_type: "Tipo de autor"
         created_at: "Fecha de creación"
         updated_at: "Fecha de actualización"
+  devise:
+    sessions:
+      admin_user:
+        signed_in: 'Bienvenido, has iniciado sesión.'
+    failure:
+      admin_user:
+        unauthenticated: 'Debe iniciar sesión'
+        invalid: 'Usuario y/o contraseña incorrectos'
   active_admin:
     dashboard: "Inicio"
     dashboard_welcome:
