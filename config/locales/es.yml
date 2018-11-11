@@ -59,6 +59,7 @@ es:
         name: "Nombre"
         surname: "Apellido"
         organization: "Organización"
+        created_at: "Fecha de creación"
       collection_point:
         latitude: "Latitud"
         longitude: "Longitud"
