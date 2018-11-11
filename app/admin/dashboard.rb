@@ -2,7 +2,9 @@ ActiveAdmin.register_page 'Dashboard' do
   menu priority: 1, label: proc { I18n.t('active_admin.dashboard') }
 
   page_action :report, method: :post do
-    redirect_to admin_dashboard_path(organization_id: params['organization_id'], all: params['all'])
+    redirect_to admin_dashboard_path(organization_id: params['organization_id'],
+                                     all: params['all'],
+                                     day: params['day'])
   end
 
   content title: proc { I18n.t('active_admin.dashboard') } do
@@ -27,9 +29,10 @@ ActiveAdmin.register_page 'Dashboard' do
                   end
                 end
               end
+              time = params[:day] || Time.current.strftime('%Y/%m/%d').gsub(/\//, '-')
               tr do
-                td { f.label 'Día: ' }
-                td { f.input :day, type: :string, name: 'day' }
+                td { f.label 'Día (mm/dd/YY): ' }
+                td { f.input :day, type: :date, name: 'day', value: time }
               end
               tr do
                 td { f.label 'Todos los eventos del día: ' }
