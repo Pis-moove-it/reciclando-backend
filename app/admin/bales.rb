@@ -2,7 +2,7 @@ ActiveAdmin.register Bale do
   permit_params :weight, :material, :organization_id, :user_id
 
   filter :weight
-  filter :material, as: :select, collection: {Basura:0, Plastico:1, Vidrio:2}
+  filter :material, as: :select, collection: { Basura: 0, Plastico: 1, Vidrio: 2 }
   filter :organization
 
   index do
