@@ -241,10 +241,11 @@ RSpec.describe RoutesController, type: :controller do
       let(:another_organization) { create(:organization) }
       let!(:another_user) { create(:user, organization: another_organization) }
 
-      let!(:route) { create(:route, user: auth_user) }
-      let!(:second_route) { create(:route, user: auth_user) }
-      let!(:third_route) { create(:route, user: auth_user) }
-      let!(:another_route) { create :route, user: another_user }
+      let!(:route) { create(:ended_route, user: auth_user) }
+      let!(:second_route) { create(:ended_route, user: auth_user) }
+      let!(:third_route) { create(:ended_route, user: auth_user) }
+      let!(:not_ended_route) { create(:route, user: auth_user) }
+      let!(:another_route) { create :ended_route, user: another_user }
 
       context 'when listing all the routes from the organization' do
         before(:each) { get :index }
@@ -260,6 +261,10 @@ RSpec.describe RoutesController, type: :controller do
 
         it 'does not return routes from another organization' do
           expect(json_response.pluck(:id)).not_to include(another_route.id)
+        end
+
+        it 'does not return routes not ended' do
+          expect(json_response.pluck(:length)).not_to include(nil)
         end
       end
 
@@ -292,6 +297,10 @@ RSpec.describe RoutesController, type: :controller do
 
           it 'does not return routes from another organization' do
             expect(json_response.pluck(:id)).not_to include(another_route.id)
+          end
+
+          it 'does not return routes not ended' do
+            expect(json_response.pluck(:length)).not_to include(nil)
           end
         end
 

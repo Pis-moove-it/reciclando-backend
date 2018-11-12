@@ -27,7 +27,7 @@ class RoutesController < AuthenticateController
 
   def index
     return render_error(1, 'Invalid dates') unless valid_dates?
-    query = Route.where(date_query.merge(user_id: logged_user.organization.user_ids))
+    query = Route.ended.where(date_query.merge(user_id: logged_user.organization.user_ids))
     paginated_render(query)
   end
 
