@@ -45,6 +45,7 @@ RSpec.describe ClassificationController, type: :controller do
         end
 
         it 'does return success' do
+          byebug
           expect(response).to have_http_status(:ok)
         end
 
