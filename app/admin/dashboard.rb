@@ -55,6 +55,9 @@ ActiveAdmin.register_page 'Dashboard' do
           end
         end
 
+        pocket_query = Pocket.where(organization_id: organization_id,
+                                    created_at: date.beginning_of_day..date.end_of_day)
+
         panel 'Bolsones' do
           table do
             thead do
@@ -64,8 +67,6 @@ ActiveAdmin.register_page 'Dashboard' do
                 th :Peso
               end
             end
-            pocket_query = Pocket.where(organization_id: organization_id,
-                                        created_at: date.beginning_of_day..date.end_of_day)
             tbody do
               tr style: 'font-size: 150%' do
                 td 'Totales: '
@@ -86,6 +87,9 @@ ActiveAdmin.register_page 'Dashboard' do
           end
         end
 
+        bale_query = Bale.where(organization_id: organization_id,
+                                created_at: date.beginning_of_day..date.end_of_day)
+
         # Show this panel only if checkbox is checked
         if params[:all]
           panel 'Fardos' do
@@ -97,8 +101,6 @@ ActiveAdmin.register_page 'Dashboard' do
                   th :Peso
                 end
               end
-              bale_query = Bale.where(organization_id: organization_id,
-                                      created_at: date.beginning_of_day..date.end_of_day)
               tbody do
                 tr style: 'font-size: 150%' do
                   td 'Basura: '
