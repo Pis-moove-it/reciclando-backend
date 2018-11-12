@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
   resources :organizations, only: [] do
+    member do
+      post :amount_recycled_by_month
+    end
     collection do
       post :login
     end
