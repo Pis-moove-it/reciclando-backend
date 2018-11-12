@@ -4,12 +4,20 @@ ActiveAdmin.register_page 'Dashboard' do
   page_action :report, method: :post do
     redirect_to admin_dashboard_path(organization_id: params['organization_id'],
                                      all: params['all'],
-                                     day: params['day'])
+                                     date: params['date'])
   end
 
   content title: proc { I18n.t('active_admin.dashboard') } do
     # Use organization_id param to filter pockets and bales
     organization_id = params[:organization_id] || 1
+
+    # Use current time if date param is not present
+    # If date param is present, change it to a time object in UTC
+    date = if params[:date]
+             params[:date].to_time(:utc)
+           else
+             Time.current
+           end
 
     columns do
       column do
@@ -29,10 +37,11 @@ ActiveAdmin.register_page 'Dashboard' do
                   end
                 end
               end
-              time = params[:day] || Time.current.strftime('%Y/%m/%d').gsub(/\//, '-')
+              current_time = Time.current.strftime('%Y/%m/%d').gsub(/\//, '-')
+              time = params[:date] || current_time
               tr do
                 td { f.label 'Día (mm/dd/YY): ' }
-                td { f.input :day, type: :date, name: 'day', value: time }
+                td { f.input :date, type: :date, name: 'date', value: time, max: current_time }
               end
               tr do
                 td { f.label 'Todos los eventos del día: ' }
@@ -55,21 +64,23 @@ ActiveAdmin.register_page 'Dashboard' do
                 th :Peso
               end
             end
+            pocket_query = Pocket.where(organization_id: organization_id,
+                                        created_at: date.beginning_of_day..date.end_of_day)
             tbody do
               tr style: 'font-size: 150%' do
                 td 'Totales: '
-                td Pocket.where(organization_id: organization_id).count
-                td Pocket.where(organization_id: organization_id).pluck(:weight).map { |weight| weight || 0 }.sum.round
+                td pocket_query.count
+                td pocket_query.pluck(:weight).map { |weight| weight || 0 }.sum.round
               end
               tr style: 'font-size: 150%' do
                 td 'No Pesados: '
-                td Pocket.where(organization_id: organization_id).unweighed.count
+                td pocket_query.unweighed.count
                 td '-'
               end
               tr style: 'font-size: 150%' do
                 td 'Pesados: '
-                td Pocket.where(organization_id: organization_id).weighed.count
-                td Pocket.where(organization_id: organization_id).weighed.pluck(:weight).sum.round
+                td pocket_query.weighed.count
+                td pocket_query.weighed.pluck(:weight).sum.round
               end
             end
           end
@@ -86,30 +97,31 @@ ActiveAdmin.register_page 'Dashboard' do
                   th :Peso
                 end
               end
+              bale_query = Bale.where(organization_id: organization_id,
+                                      created_at: date.beginning_of_day..date.end_of_day)
               tbody do
                 tr style: 'font-size: 150%' do
                   td 'Basura: '
-                  td Bale.where(organization_id: organization_id).trash.count
-                  td Bale.where(organization_id: organization_id).trash.pluck(:weight).sum.round
+                  td bale_query.trash.count
+                  td bale_query.trash.pluck(:weight).sum.round
                 end
                 tr style: 'font-size: 150%' do
                   td 'Plástico: '
-                  td Bale.where(organization_id: organization_id).plastic.count
-                  td Bale.where(organization_id: organization_id).plastic.pluck(:weight).sum.round
+                  td bale_query.plastic.count
+                  td bale_query.plastic.pluck(:weight).sum.round
                 end
                 tr style: 'font-size: 150%' do
                   td 'Vidrio: '
-                  td Bale.where(organization_id: organization_id).glass.count
-                  td Bale.where(organization_id: organization_id).glass.pluck(:weight).sum.round
+                  td bale_query.glass.count
+                  td bale_query.glass.pluck(:weight).sum.round
                 end
               end
             end
           end
           h2 style: 'text-align: center;' do
             "Diferencia entre enfardado y pesado (Enfardado - Pesado):
-              #{Bale.where(organization_id: organization_id).pluck(:weight).sum.round -
-                Pocket.where(organization_id: organization_id).pluck(:weight)
-                .map { |weight| weight || 0 }.sum.round} kg"
+              #{bale_query.pluck(:weight).sum.round -
+                pocket_query.pluck(:weight).map { |weight| weight || 0 }.sum.round} kg"
           end
         end
       end
