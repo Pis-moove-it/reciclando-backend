@@ -11,6 +11,8 @@ class Pocket < ApplicationRecord
 
   delegate :organization, to: :collection
 
+  delegate :collection_point, to: :collection
+
   before_validation(on: :create) do
     self.organization = organization
   end
@@ -43,11 +45,15 @@ class Pocket < ApplicationRecord
   end
 
   def classify(total_weight, kg_trash, kg_plastic, kg_glass)
+    # Calculates the amount of trash and recycled material in the pocket
     percentage = weight / total_weight.to_f
     self.kg_trash = kg_trash * percentage
     self.kg_recycled_plastic = kg_plastic * percentage
     self.kg_recycled_glass = kg_glass * percentage
+    # Changes the state of the pocket to Classified
     self.state = 'Classified'
+    # Updates recycled material and trash in container
+    collection_point.classify(self.kg_trash, kg_recycled_plastic, kg_recycled_glass)
   end
 
   private

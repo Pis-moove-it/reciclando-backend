@@ -7,4 +7,11 @@ class CollectionPoint < ApplicationRecord
   before_validation(on: :create) do
     self.status = 'Ok' if status.nil? && type.eql?('Container')
   end
+
+  def classify(kg_trash, kg_plastic, kg_glass)
+    self.kg_trash += kg_trash
+    self.kg_recycled_plastic += kg_plastic
+    self.kg_recycled_glass += kg_glass
+    save
+  end
 end
