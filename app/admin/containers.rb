@@ -5,6 +5,7 @@ ActiveAdmin.register Container do
     id_column
     column :status
     column :active
+    column :organization
     actions
   end
 
@@ -17,7 +18,7 @@ ActiveAdmin.register Container do
            :active, :organization
     end
 
-    panel 'Collections' do
+    panel 'Levantadas de bolsones' do
       table_for(container.collections) do |_collection|
         column(:id) { |collection| link_to(collection.id, admin_collection_path(collection.id)) }
         column(:created_at, &:created_at)
