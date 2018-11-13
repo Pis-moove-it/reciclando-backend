@@ -38,6 +38,10 @@ RSpec.describe ClassificationController, type: :controller do
         let!(:another_collection) { create(:collection, route: another_route, collection_point: another_container) }
         let!(:another_weighed_pocket) { create(:weighed_pocket, collection: another_collection) }
 
+        def material_weights(array)
+          array.collect { |elem| [elem.kg_trash, elem.kg_recycled_plastic, elem.kg_recycled_glass] }
+        end
+
         before(:each) do
           classify_pockets_call(pockets.push(another_weighed_pocket).pluck(:id), kg_trash, kg_plastic, kg_glass)
           pockets.each(&:reload)
@@ -58,6 +62,10 @@ RSpec.describe ClassificationController, type: :controller do
 
         it 'does not classify pockets from another organization' do
           expect(another_weighed_pocket.state).not_to eql 'Classified'
+        end
+
+        it 'does classify collection_point of pockets' do
+          expect(material_weights([first_container, second_container].each(&:reload))).to eql material_weights(pockets)
         end
       end
 
