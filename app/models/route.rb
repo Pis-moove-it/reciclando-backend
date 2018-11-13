@@ -14,6 +14,12 @@ class Route < ApplicationRecord
     length.present?
   end
 
+  class << self
+    def ended
+      where.not(length: nil)
+    end
+  end
+
   private
 
   def check_in_pockets
