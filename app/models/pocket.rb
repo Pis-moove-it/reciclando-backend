@@ -31,6 +31,15 @@ class Pocket < ApplicationRecord
     def unweighed
       where(state: 'Unweighed')
     end
+
+    def classified
+      where(state: 'Classified')
+    end
+
+    def monthly(month)
+      where(created_at: month.to_time(:utc).beginning_of_month..
+                        month.to_time(:utc).end_of_month)
+    end
   end
 
   def classify(total_weight, kg_trash, kg_plastic, kg_glass)
