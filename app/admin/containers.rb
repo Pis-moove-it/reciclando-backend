@@ -1,4 +1,6 @@
 ActiveAdmin.register Container do
+  menu priority: 8
+
   actions :all, except: %i[new edit destroy]
 
   index do

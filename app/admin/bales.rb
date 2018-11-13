@@ -1,4 +1,6 @@
 ActiveAdmin.register Bale do
+  menu priority: 6
+
   permit_params :weight, :material, :organization_id, :user_id
 
   filter :weight

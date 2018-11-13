@@ -1,4 +1,6 @@
 ActiveAdmin.register Pocket do
+  menu priority: 5
+
   permit_params :serial_number, :weight
   actions :index, :show, :edit, :update
 
