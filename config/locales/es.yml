@@ -22,6 +22,12 @@ es:
       container:
           one: "Contenedor"
           other: "Contenedores"
+      collection:
+          one: "Levantada"
+          other: "Levantadas"
+      route:
+          one: "Recorrido"
+          other: "Recorridos"
       question:
           one: "Pregunta"
           other: "Preguntas"
@@ -69,9 +75,13 @@ es:
           Damaged: "Dañado"
           Removed: "Removido"
         active: "Activo"
+        created_at: "Fecha de creación"
+        updated_at: "Fecha de modificación"
+        description: "Descripción"
         kg_recycled_glass: "Kg de vidrio reciclado"
         kg_recycled_plastic: "Kg de plástico reciclado"
         kg_trash: "Kg de basura"
+        organization_id: "Id de organización"
       container:
         state: "Estado"
         statuses:
@@ -79,6 +89,18 @@ es:
           Damaged: "Dañado"
           Removed: "Removido"
         active: "Activo"
+        organization: "Organización"
+      collection:
+        created_at: "Fecha de creación"
+        updated_at: "Fecha de actualización"
+        route_id: "Id de recorrido"
+        route: "Recorrido"
+      route:
+        length: "Longitud"
+        user_id: "Id de usuario"
+        user: "Usuario"
+        created_at: "Fecha de creación"
+        updated_at: "Fecha de actualización"
       question:
         question: "Pregunta"
         option_a: "Opción A"
@@ -98,7 +120,7 @@ es:
         last_sign_in_at: "Último inicio de sesión"
         current_sign_in_ip: "IP de logueo actual"
         last_sign_in_ip: "Última IP de logueo"
-        updated_at: "Fecha de actualiación"
+        updated_at: "Fecha de actualización"
       active_admin/comment:
         namespace: "Espacio de nombres"
         body: "Cuerpo"
