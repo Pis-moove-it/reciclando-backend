@@ -59,6 +59,40 @@ paths:
           description: Unexpected error.
           schema:
             $ref: '#/definitions/Error'
+  /organizations/{organization_id}/amount_recycled_by_month:
+    post:
+      tags:
+        - "Organizations"
+      operationId: recycledByMonth
+      summary: Amount recycled materials in the specified month.
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          type: integer
+        - in: body
+          name: month
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/RecycledByMonth'
+        400:
+          description: Malformed request.
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Organization not found by the given name.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error.
+          schema:
+            $ref: '#/definitions/Error'
+      security:
+        - ApiKey: []
 
   /organizations/{organization_id}/users:
     get:
@@ -868,6 +902,26 @@ definitions:
     example:
       id: 1
       name: Abrojo
+
+  RecycledByMonth:
+    type: json
+    properties:
+      organization:
+        type: string
+      month:
+        type: string
+      kg_trash:
+        type: float
+      kg_plastic:
+        type: float
+      kg_glass:
+        type: float
+    example:
+      organization: 'Abrojo'
+      month: 'November'
+      kg_trash: 291
+      kg_plastic: 32
+      kg_glass: 9.5
 
   User:
     type: object

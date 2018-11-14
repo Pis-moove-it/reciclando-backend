@@ -156,11 +156,23 @@ RSpec.describe OrganizationsController, type: :controller do
         end
       end
 
-      context 'when month is invalid or missing' do
+      context 'when month is missing' do
         before(:each) { amount_recycled_by_month_call(organization.id, nil) }
 
         it 'does return an error' do
           expect(response).to have_http_status(400)
+        end
+
+        it 'does return an error' do
+          expect(response).to have_http_status(400)
+        end
+      end
+
+      context 'when month is invalid' do
+        before(:each) { amount_recycled_by_month_call(organization.id, 150) }
+
+        it 'does return the specified error code' do
+          expect(json_response[:error_code]).to eql 1
         end
 
         it 'does return the specified error code' do
