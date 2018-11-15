@@ -25,7 +25,7 @@ rails db:setup
 ```
 Note: Fake data is also loaded for testing purposes.
 
-### Running Locally
+## Running Locally
 
 ```
 rails server
@@ -34,8 +34,8 @@ This would start the server in `http://localhost:3000`.
 
 This command starts both apps, all API services under root path (`/`) and the CMS (`/admin`).
 
-### Running Tests
-#### Tests
+## Running Tests
+### Tests
 
 An RSpec test suite is available to ensure proper API functionality.
 To run this test, run:
@@ -43,7 +43,7 @@ To run this test, run:
 bundle exec rspec
 ```
 
-#### Coding Style
+### Coding Style
 
 A linter is used to ensure proper code format.
 
@@ -81,16 +81,12 @@ the deployment can be perform in the command line, with the tool mentioned above
 [CircleCi](https://circleci.com/) simplifies this process, by running the deployment commands after app build success. Take into account that the deployments belongs to a certain enviorment.
 
 ## More information
-## #API Documentation
+### API Documentation
 
 The main API is documented with swagger, and can be reached [here](http://34.216.31.97/api_docs).
 
 Note: credentials for access are `(reciclando, reciclando)`.
 
-###CMS
+### CMS
 
 The CMS is use by admin users to manage the content of the app, and it is implemented using [Active Admin](https://activeadmin.info)
-
-## License
-
-This project is licensed under the MIT license.
