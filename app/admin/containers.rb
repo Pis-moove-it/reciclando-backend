@@ -11,7 +11,7 @@ ActiveAdmin.register Container do
     actions
   end
 
-  filter :status
+  filter :status, as: :select, collection: { Ok: 0, Dañado: 1, Removido: 2 }
   filter :active
 
   show title: :id do
