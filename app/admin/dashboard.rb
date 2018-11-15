@@ -3,7 +3,6 @@ ActiveAdmin.register_page 'Dashboard' do
 
   page_action :report, method: :post do
     redirect_to admin_dashboard_path(organization_id: params['organization_id'],
-                                     all: params['all'],
                                      date: params['date'])
   end
 
@@ -42,10 +41,6 @@ ActiveAdmin.register_page 'Dashboard' do
               tr do
                 td { f.label 'Día (mm/dd/YY): ' }
                 td { f.input :date, type: :date, name: 'date', value: time, max: current_time }
-              end
-              tr do
-                td { f.label 'Todos los eventos del día: ' }
-                td { f.input :all, type: :checkbox, name: 'all', checked: params[:all] }
               end
               tr do
                 td {}
@@ -90,41 +85,38 @@ ActiveAdmin.register_page 'Dashboard' do
         bale_query = Bale.where(organization_id: organization_id,
                                 created_at: date.beginning_of_day..date.end_of_day)
 
-        # Show this panel only if checkbox is checked
-        if params[:all]
-          panel 'Fardos' do
-            table do
-              thead do
-                tr do
-                  th ''
-                  th :Cantidad
-                  th :Peso
-                end
+        panel 'Fardos' do
+          table do
+            thead do
+              tr do
+                th ''
+                th :Cantidad
+                th :Peso
               end
-              tbody do
-                tr style: 'font-size: 150%' do
-                  td 'Basura: '
-                  td bale_query.trash.count
-                  td bale_query.trash.pluck(:weight).sum.round
-                end
-                tr style: 'font-size: 150%' do
-                  td 'Plástico: '
-                  td bale_query.plastic.count
-                  td bale_query.plastic.pluck(:weight).sum.round
-                end
-                tr style: 'font-size: 150%' do
-                  td 'Vidrio: '
-                  td bale_query.glass.count
-                  td bale_query.glass.pluck(:weight).sum.round
-                end
+            end
+            tbody do
+              tr style: 'font-size: 150%' do
+                td 'Basura: '
+                td bale_query.trash.count
+                td bale_query.trash.pluck(:weight).sum.round
+              end
+              tr style: 'font-size: 150%' do
+                td 'Plástico: '
+                td bale_query.plastic.count
+                td bale_query.plastic.pluck(:weight).sum.round
+              end
+              tr style: 'font-size: 150%' do
+                td 'Vidrio: '
+                td bale_query.glass.count
+                td bale_query.glass.pluck(:weight).sum.round
               end
             end
           end
-          h2 style: 'text-align: center;' do
-            "Diferencia entre enfardado y pesado (Enfardado - Pesado):
-              #{bale_query.pluck(:weight).sum.round -
-                pocket_query.pluck(:weight).map { |weight| weight || 0 }.sum.round} kg"
-          end
+        end
+        h2 style: 'text-align: center;' do
+          "Diferencia entre enfardado y pesado (Enfardado - Pesado):
+            #{bale_query.pluck(:weight).sum.round -
+              pocket_query.pluck(:weight).map { |weight| weight || 0 }.sum.round} kg"
         end
       end
     end

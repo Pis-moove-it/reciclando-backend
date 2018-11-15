@@ -1,4 +1,6 @@
 ActiveAdmin.register Question do
+  menu priority: 10
+
   permit_params :question, :option_a, :option_b, :option_c, :option_d, :correct_option
 
   index do

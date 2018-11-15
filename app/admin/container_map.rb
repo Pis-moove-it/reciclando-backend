@@ -1,4 +1,6 @@
 ActiveAdmin.register_page 'Mapa de Islas' do
+  menu priority: 9
+
   page_action :create, method: :post do
     container_params = {
       latitude: params[:latitude],

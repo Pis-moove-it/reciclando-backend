@@ -1,4 +1,6 @@
 ActiveAdmin.register CollectionPoint do
+  menu priority: 7
+
   permit_params :latitude, :longitude, :status, :active, :kg_recycled_glass, :kg_trash, :kg_recycled_plastic
   actions :index, :show, :edit, :update
 
