@@ -1,4 +1,6 @@
 ActiveAdmin.register User do
+  menu priority: 4
+
   belongs_to :organization, optional: true
 
   permit_params :ci, :name, :surname, :email, :organization_id

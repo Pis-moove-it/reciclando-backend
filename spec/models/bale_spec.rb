@@ -2,7 +2,8 @@ require 'rails_helper'
 
 RSpec.describe Bale, type: :model do
   let!(:organization) { create(:organization) }
-  let!(:bale) { create(:bale, organization: organization) }
+  let!(:user) { create(:user, organization: organization) }
+  let!(:bale) { create(:bale, organization: organization, user: user) }
   let(:b_serializer) { BaleSerializer }
 
   describe 'validations' do
@@ -23,8 +24,8 @@ RSpec.describe Bale, type: :model do
         expect(bale).not_to be_valid
       end
 
-      it 'does not let create new ones without organization' do
-        bale.organization = nil
+      it 'does not let create new ones without user' do
+        bale.user = nil
         expect(bale).not_to be_valid
       end
     end

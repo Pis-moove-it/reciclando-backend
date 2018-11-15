@@ -145,7 +145,9 @@ ActiveAdmin.setup do |config|
   # You can add before, after and around filters to all of your
   # Active Admin resources and pages from here.
   #
+  config.before_action :set_admin_timezone
   # config.before_action :do_something_awesome
+  config.before_action :set_admin_locale
 
   # == Localize Date/Time Format
   #
@@ -157,7 +159,7 @@ ActiveAdmin.setup do |config|
 
   # == Setting a Favicon
   #
-  # config.favicon = 'favicon.ico'
+  config.favicon = '/assets/reciclando-logo.png'
 
   # == Meta Tags
   #

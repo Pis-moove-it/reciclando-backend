@@ -1,8 +1,4 @@
 class UsersController < AuthenticateController
-  # TODO: Authenticate index and show methods.
-  #       Note: To do that, remove the line below.
-  skip_before_action :authenticated_user, except: [:login]
-
   def index
     render json: organization.users
   end

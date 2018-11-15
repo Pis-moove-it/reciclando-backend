@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_30_222516) do
+ActiveRecord::Schema.define(version: 2018_11_06_194302) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,16 +52,9 @@ ActiveRecord::Schema.define(version: 2018_09_30_222516) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "organization_id"
+    t.bigint "user_id"
     t.index ["organization_id"], name: "index_bales_on_organization_id"
-  end
-
-  create_table "collection_pockets", force: :cascade do |t|
-    t.bigint "pocket_id"
-    t.bigint "collection_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["collection_id"], name: "index_collection_pockets_on_collection_id"
-    t.index ["pocket_id"], name: "index_collection_pockets_on_pocket_id"
+    t.index ["user_id"], name: "index_bales_on_user_id"
   end
 
   create_table "collection_points", force: :cascade do |t|
@@ -69,22 +62,24 @@ ActiveRecord::Schema.define(version: 2018_09_30_222516) do
     t.string "longitude"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "type"
+    t.integer "status"
+    t.boolean "active"
+    t.bigint "organization_id"
+    t.float "kg_recycled_plastic", default: 0.0
+    t.float "kg_recycled_glass", default: 0.0
+    t.float "kg_trash", default: 0.0
+    t.string "description"
+    t.index ["organization_id"], name: "index_collection_points_on_organization_id"
   end
 
   create_table "collections", force: :cascade do |t|
-    t.integer "pocket_weigth"
-    t.datetime "date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "collection_point_id"
+    t.bigint "route_id"
     t.index ["collection_point_id"], name: "index_collections_on_collection_point_id"
-  end
-
-  create_table "containers", force: :cascade do |t|
-    t.integer "status"
-    t.boolean "active", default: true
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.index ["route_id"], name: "index_collections_on_route_id"
   end
 
   create_table "devices", force: :cascade do |t|
@@ -100,6 +95,15 @@ ActiveRecord::Schema.define(version: 2018_09_30_222516) do
     t.index ["user_id"], name: "index_devices_on_user_id"
   end
 
+  create_table "locations", force: :cascade do |t|
+    t.float "latitude"
+    t.float "longitude"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "route_id"
+    t.index ["route_id"], name: "index_locations_on_route_id"
+  end
+
   create_table "organizations", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -113,11 +117,29 @@ ActiveRecord::Schema.define(version: 2018_09_30_222516) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "organization_id"
+    t.float "weight"
+    t.bigint "collection_id"
+    t.datetime "check_in"
+    t.float "kg_trash"
+    t.float "kg_recycled_plastic"
+    t.float "kg_recycled_glass"
+    t.index ["collection_id"], name: "index_pockets_on_collection_id"
     t.index ["organization_id"], name: "index_pockets_on_organization_id"
   end
 
+  create_table "questions", force: :cascade do |t|
+    t.string "question"
+    t.string "option_a"
+    t.string "option_b"
+    t.string "option_c"
+    t.string "option_d"
+    t.integer "correct_option"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "routes", force: :cascade do |t|
-    t.integer "length"
+    t.float "length"
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -136,11 +158,14 @@ ActiveRecord::Schema.define(version: 2018_09_30_222516) do
   end
 
   add_foreign_key "bales", "organizations"
-  add_foreign_key "collection_pockets", "collections"
-  add_foreign_key "collection_pockets", "pockets"
+  add_foreign_key "bales", "users"
+  add_foreign_key "collection_points", "organizations"
   add_foreign_key "collections", "collection_points"
+  add_foreign_key "collections", "routes"
   add_foreign_key "devices", "organizations"
   add_foreign_key "devices", "users"
+  add_foreign_key "locations", "routes"
+  add_foreign_key "pockets", "collections"
   add_foreign_key "pockets", "organizations"
   add_foreign_key "routes", "users"
   add_foreign_key "users", "organizations"

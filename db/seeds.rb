@@ -7,6 +7,10 @@ require_relative 'fixtures/users'
 require_relative 'fixtures/containers'
 require_relative 'fixtures/bales'
 require_relative 'fixtures/pockets'
+require_relative 'fixtures/routes'
+require_relative 'fixtures/collections'
+require_relative 'fixtures/questions'
+require_relative 'fixtures/locations'
 
 unless AdminUser.count.positive?
   Fixtures::ADMIN_USERS.each do |admin|
@@ -38,8 +42,32 @@ unless Bale.count.positive?
   end
 end
 
+unless Route.count.positive?
+  Fixtures::ROUTES.each do |route|
+    Route.create!(route)
+  end
+end
+
+unless Collection.count.positive?
+  Fixtures::COLLECTIONS.each do |col|
+    Collection.create!(col)
+  end
+end
+
 unless Pocket.count.positive?
   Fixtures::POCKETS.each do |pocket|
     Pocket.create!(pocket)
+  end
+end
+
+unless Question.count.positive?
+  Fixtures::QUESTIONS.each do |question|
+    Question.create!(question)
+  end
+end
+
+unless Location.count.positive?
+  Fixtures::LOCATIONS.each do |location|
+    Location.create!(location)
   end
 end

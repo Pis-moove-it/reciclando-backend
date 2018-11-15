@@ -3,15 +3,19 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.5.1'
 
+gem 'active_admin-humanized_enum'
 gem 'active_admin_theme', '1.0.3'
 gem 'active_model_serializers', '0.10.7'
 gem 'activeadmin', '~> 1.3.1'
+gem 'api-pagination', '4.8.1'
 gem 'bcrypt', '3.1.12'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'byebug', '10.0.2'
 gem 'devise', '4.4.3'
 gem 'execjs', '2.7.0'
 gem 'foreman', '0.85.0'
+gem 'gmaps4rails', '2.1.2'
+gem 'kaminari', '1.1.1'
 gem 'listen', '>= 3.0.5', '< 3.2'
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 3.11'

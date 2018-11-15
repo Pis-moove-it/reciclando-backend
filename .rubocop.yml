@@ -8,7 +8,7 @@ AllCops:
 
 # 15 is too low, but 20 seems like a good goal for us
 Metrics/AbcSize:
-  Max: 20
+  Max: 25
 
 # 80 is too low, but 250 seems like a good goal for us
 Metrics/LineLength:
@@ -22,7 +22,7 @@ Metrics/ClassLength:
   Max: 120
 
 Metrics/BlockLength:
-  Max: 200
+  Max: 400
 
 Style/ClassAndModuleChildren:
   Enabled: false
@@ -36,8 +36,14 @@ Style/FrozenStringLiteralComment:
 Style/ModuleFunction:
   Enabled: false
 
+Style/RegexpLiteral:
+  Enabled: false
+
 Rails/ActiveRecordAliases:
   Enabled: false
 
 Rails:
   Enabled: true
+
+Rails/Delegate:
+  Enabled: false

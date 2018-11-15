@@ -2,6 +2,13 @@ class Collection < ApplicationRecord
   belongs_to :route
   belongs_to :collection_point
 
-  has_many :collection_pockets, dependent: :destroy
-  has_many :pockets, through: :collection_pockets
+  has_many :pockets, dependent: :destroy
+
+  delegate :organization, to: :route, allow_nil: true
+
+  accepts_nested_attributes_for :pockets
+
+  def check_in_pockets
+    pockets.update(check_in: Time.current)
+  end
 end

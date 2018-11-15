@@ -104,7 +104,6 @@ RSpec.describe OrganizationsController, type: :controller do
         create(:device, device_id: '1', device_type: 'android',
                         organization: another_organization)
       end
-
       before(:each) { organization_login_call('1', 'android', organization.name, 'password') }
 
       it 'should return success' do
@@ -127,6 +126,86 @@ RSpec.describe OrganizationsController, type: :controller do
 
       it 'does return the logged organization' do
         expect(json_response).to eql serializer.new(organization).as_json
+      end
+    end
+  end
+
+  describe 'POST #amount_recycled_by_month' do
+    def amount_recycled_by_month_call(id, month)
+      post :amount_recycled_by_month, params: { id: id, month: month }
+    end
+
+    let(:month) { [1..12].sample }
+
+    context 'when user is authenticated' do
+      let!(:organization) { create(:organization) }
+      let!(:auth_user) { create_an_authenticated_user_with(organization, '1', 'android') }
+      let!(:user) { create(:user, organization: organization) }
+      let!(:route) { create(:route, user: user) }
+      let!(:container) { create(:container, organization: organization) }
+      let!(:collection) { create(:collection, route: route, collection_point: container) }
+      let!(:classified_pocket) do
+        create(:classified_pocket, collection: collection, check_in: Time.zone.now)
+      end
+
+      context 'when month is valid' do
+        before(:each) { amount_recycled_by_month_call(organization.id, Time.zone.now.month) }
+
+        it 'does return success' do
+          expect(response).to have_http_status(:ok)
+        end
+      end
+
+      context 'when exists classified pockets in the specified month' do
+        it 'does return the sum of materials greater than zero' do
+          amount_recycled_by_month_call(organization.id, Time.zone.now.month)
+          expect(json_response[:kg_trash] + json_response[:kg_glass] + json_response[:kg_plastic]).to be_positive
+        end
+      end
+
+      context 'when not exists classified pockets in the specified month' do
+        it 'does return the sum of materials equal to zero' do
+          amount_recycled_by_month_call(organization.id, Time.zone.now.month + 1)
+          expect(json_response[:kg_trash] + json_response[:kg_glass] + json_response[:kg_plastic]).to eql 0
+        end
+      end
+
+      context 'when month is missing' do
+        before(:each) { amount_recycled_by_month_call(organization.id, nil) }
+
+        it 'does return an error' do
+          expect(response).to have_http_status(400)
+        end
+
+        it 'does return the specified error code' do
+          expect(json_response[:error_code]).to eql 1
+        end
+      end
+
+      context 'when month is invalid' do
+        before(:each) { amount_recycled_by_month_call(organization.id, 150) }
+
+        it 'does return an error' do
+          expect(response).to have_http_status(400)
+        end
+
+        it 'does return the specified error code' do
+          expect(json_response[:error_code]).to eql 1
+        end
+      end
+    end
+
+    context 'when user is not authenticated' do
+      let!(:user) { create(:user, organization: organization) }
+
+      before(:each) { amount_recycled_by_month_call(organization.id, month) }
+
+      it 'does return an error' do
+        expect(response).to have_http_status(401)
+      end
+
+      it 'does render the right error' do
+        expect(json_response[:error_code]).to eql 2
       end
     end
   end
