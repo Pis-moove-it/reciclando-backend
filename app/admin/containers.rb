@@ -24,7 +24,7 @@ ActiveAdmin.register Container do
       table_for(container.collections) do |_collection|
         column(:id) { |collection| link_to(collection.id, admin_collection_path(collection.id)) }
         column(:created_at, &:created_at)
-        column(:weight) { |collection| collection.pockets.pluck(:weight).map { |weight| weight || 0 }.sum.round }
+        column('Peso') { |collection| collection.pockets.pluck(:weight).map { |weight| weight || 0 }.sum.round }
         column(:route) do |collection|
           link_to(collection.route.id, admin_route_path(collection.route.id))
         end
