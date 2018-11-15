@@ -149,10 +149,24 @@ RSpec.describe OrganizationsController, type: :controller do
       end
 
       context 'when month is valid' do
-        before(:each) { amount_recycled_by_month_call(organization.id, month) }
+        before(:each) { amount_recycled_by_month_call(organization.id, Time.zone.now.month) }
 
         it 'does return success' do
           expect(response).to have_http_status(:ok)
+        end
+      end
+
+      context 'when exists classified pockets in the specified month' do
+        it 'does return the sum of materials greater than zero' do
+          amount_recycled_by_month_call(organization.id, Time.zone.now.month)
+          expect(json_response[:kg_trash] + json_response[:kg_glass] + json_response[:kg_plastic]).to be_positive
+        end
+      end
+
+      context 'when not exists classified pockets in the specified month' do
+        it 'does return the sum of materials equal to zero' do
+          amount_recycled_by_month_call(organization.id, Time.zone.now.month + 1)
+          expect(json_response[:kg_trash] + json_response[:kg_glass] + json_response[:kg_plastic]).to eql 0
         end
       end
 
@@ -163,16 +177,16 @@ RSpec.describe OrganizationsController, type: :controller do
           expect(response).to have_http_status(400)
         end
 
-        it 'does return an error' do
-          expect(response).to have_http_status(400)
+        it 'does return the specified error code' do
+          expect(json_response[:error_code]).to eql 1
         end
       end
 
       context 'when month is invalid' do
         before(:each) { amount_recycled_by_month_call(organization.id, 150) }
 
-        it 'does return the specified error code' do
-          expect(json_response[:error_code]).to eql 1
+        it 'does return an error' do
+          expect(response).to have_http_status(400)
         end
 
         it 'does return the specified error code' do
